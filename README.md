@@ -109,3 +109,6 @@ Dragging the slider thumb generates the following JSON:
 3. Attaching sensors to control pads
 4. TouchPad
 5. Directional Pad
+
+## Installlation
+Download APK from [Release Page](https://github.com/umer0586/DroidPad/releases)
