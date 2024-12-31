@@ -89,8 +89,10 @@ import com.github.umer0586.droidpad.data.properties.LabelProperties
  */
 
 import com.github.umer0586.droidpad.data.properties.SliderProperties
+import com.github.umer0586.droidpad.data.properties.SwitchProperties
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
@@ -154,6 +156,18 @@ fun ItemPropertiesEditorSheet(
                 )
             }
 
+        }
+        else if(controlPadItem.itemType == ItemType.SWITCH){
+            item {
+                SwitchPropertiesEditor(
+                    controlPadItem = controlPadItem,
+                    onSwitchPropertiesChange = { switchProperties ->
+                        modifiedControlPadItem = modifiedControlPadItem.copy(
+                            properties = switchProperties.toJson()
+                        )
+                    }
+                )
+            }
         }
         else if (controlPadItem.itemType == ItemType.SLIDER) {
             item {
@@ -603,6 +617,101 @@ private fun ButtonPropertiesEditor(
     }
 }
 
+
+@Composable
+private fun SwitchPropertiesEditor(
+    modifier: Modifier = Modifier,
+    controlPadItem: ControlPadItem,
+    onSwitchPropertiesChange: ((SwitchProperties) -> Unit)? = null,
+) {
+
+    var switchProperties by remember { mutableStateOf(SwitchProperties.fromJson(controlPadItem.properties)) }
+    var showColorPickerForTrack by remember { mutableStateOf(false) }
+    var showColorPickerForThumb by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        ControlPadSwitch(
+            offset = Offset.Zero,
+            scale = 1f,
+            rotation = 0f,
+            checked = true,
+            showControls = false,
+            properties = switchProperties,
+        )
+
+
+        AnimatedVisibility(visible = showColorPickerForTrack) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(switchProperties.trackColor),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    switchProperties =
+                        switchProperties.copy(trackColor = colorEnvelope.color.value)
+                    onSwitchPropertiesChange?.invoke(switchProperties)
+                    // do something
+                }
+            )
+        }
+
+        AnimatedVisibility(visible = showColorPickerForThumb) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(switchProperties.thumbColor),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    switchProperties = switchProperties.copy(thumbColor = colorEnvelope.color.value)
+                    onSwitchPropertiesChange?.invoke(switchProperties)
+                }
+            )
+        }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Thumb Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(switchProperties.thumbColor))
+                        .clickable {
+                            showColorPickerForThumb = !showColorPickerForThumb
+                            showColorPickerForTrack = false
+
+                        })
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Track Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(switchProperties.trackColor))
+                        .clickable {
+                            showColorPickerForTrack = !showColorPickerForTrack
+                            showColorPickerForThumb = false
+                        })
+            }
+        )
+
+
+    }
+}
+
 // Run this in emulator. Bottom Sheet doesn't work properly in interactive mode
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -655,7 +764,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "label",
                 controlPadId = 1,
-                itemType = ItemType.SLIDER,
+                itemType = ItemType.SWITCH,
             )
         )
     }
