@@ -147,7 +147,10 @@ fun ControlPadButton(
                     tint = Color(properties.iconColor),
                 )
             } else {
-                Text(properties.text)
+                Text(
+                    text = properties.text,
+                    color = Color(properties.textColor)
+                )
             }
         }
     }
