@@ -54,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -88,6 +89,8 @@ import com.github.umer0586.droidpad.data.properties.LabelProperties
  */
 
 import com.github.umer0586.droidpad.data.properties.SliderProperties
+import com.github.umer0586.droidpad.ui.components.ControlPadButton
+import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
@@ -258,6 +261,16 @@ private fun SliderPropertiesEditor(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        ControlPadSlider(
+            offset = Offset.Zero,
+            scale = 1f,
+            rotation = 0f,
+            showControls = false,
+            value = (sliderProperties.minValue + sliderProperties.maxValue)/2,
+            properties = sliderProperties,
+        )
+
         OutlinedTextField(
             modifier = Modifier.testTag("sliderMinValueTextField"),
             prefix = { Text("Min") },
@@ -356,7 +369,7 @@ private fun SliderPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Button Color") },
+            headlineContent = { Text(text = "Track Color") },
             trailingContent = {
                 Box(
                     Modifier
@@ -395,6 +408,14 @@ private fun ButtonPropertiesEditor(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        ControlPadButton(
+            offset = Offset.Zero,
+            scale = 1f,
+            rotation = 0f,
+            showControls = false,
+            properties = buttonProperties,
+        )
 
         OutlinedTextField(
             modifier = Modifier.testTag("buttonTextTextField"),
@@ -634,7 +655,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "label",
                 controlPadId = 1,
-                itemType = ItemType.CLICK_BUTTON,
+                itemType = ItemType.SLIDER,
             )
         )
     }
