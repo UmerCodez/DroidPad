@@ -1,0 +1,1 @@
+Changes in the item properties are now reflected in the properties editor
