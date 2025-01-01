@@ -110,15 +110,15 @@ fun ItemPropertiesEditorSheet(
 ) {
 
 
-    var modifiedControlPadItem = remember { controlPadItem.copy() }
+    var modifiedControlPadItem by remember { mutableStateOf(controlPadItem.copy()) }
     var hasError by remember { mutableStateOf(false) }
-
 
     Column(
         modifier = modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
 
         var itemIdentifier by remember { mutableStateOf(controlPadItem.itemIdentifier) }
 
@@ -269,8 +269,8 @@ private fun SliderPropertiesEditor(
             scale = 1f,
             rotation = 0f,
             showControls = false,
-            value = (sliderProperties.minValue + sliderProperties.maxValue)/2,
-            properties = sliderProperties,
+            value = 5f,
+            properties = sliderProperties.copy(minValue = 0f, maxValue = 10f),
         )
 
         OutlinedTextField(
