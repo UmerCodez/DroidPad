@@ -208,6 +208,9 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
 }
 
+private val JsonCon = Json {
+    encodeDefaults = true
+}
 
 
 @Serializable
@@ -217,7 +220,7 @@ data class SliderEvent(
     val value: Float
 ){
     fun toJson(): String {
-        return Json.encodeToString(this)
+        return JsonCon.encodeToString(this)
     }
 }
 
@@ -228,7 +231,7 @@ data class SwitchEvent(
     val state: Boolean
 ){
     fun toJson(): String {
-        return Json.encodeToString(this)
+        return JsonCon.encodeToString(this)
     }
 }
 
@@ -239,7 +242,7 @@ data class ButtonEvent(
     val state: String
 ){
     fun toJson(): String {
-        return Json.encodeToString(this)
+        return JsonCon.encodeToString(this)
     }
 }
 
