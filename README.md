@@ -73,22 +73,10 @@ Pressing or releasing a button generates this JSON:
   "state": "PRESS"
 }
 ```  
-- The `state` field can have two values:  
+- The `state` field can have following values:  
   - **"PRESS"**: When the button is being pressed (finger on the button).  
-  - **"RELEASE"**: When the button is released (finger lifted off after pressing).  
-
----
-
-### **Click Button**  
-A **Click Button** differs from a regular button as it sends a single **tap** gesture instead of separate **PRESS** or **RELEASE** events. The generated JSON is:  
-```json
-{
-  "id": "the id you specified",
-  "type": "CLICK_BUTTON",
-  "state": "CLICK"
-}
-```  
-- The `state` field is always **"CLICK"** to indicate the tap gesture.  
+  - **"RELEASE"**: When the button is released (finger lifted off after pressing).
+  - **"CLICK"**: Indicates tap gesture   
 
 ---
 
