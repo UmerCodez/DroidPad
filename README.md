@@ -18,8 +18,8 @@ Easily configure your control pad to act as a client for network protocols such 
 ### **Step 1: Create a Control Pad**  
 Start by creating a new control pad. Provide a unique name to identify your control pad.
 
-   <img src="https://github.com/user-attachments/assets/a9cfdf63-79ec-4e15-a5a1-1cda41aff1b8" width="240" height="426" />
-   <img src="https://github.com/user-attachments/assets/3d03c44a-4c5e-4e31-bd15-b2b8412a8eb1" width="240" height="426" />
+   <img src="https://github.com/user-attachments/assets/b0bb34e6-d2ab-4245-ada9-19a8a030ebdc" width="240" height="426" />
+   <img src="https://github.com/user-attachments/assets/e2ff23e0-cf4c-4c97-820f-69ec1efa935b" width="240" height="426" />
 
 ### **Step 2: Design Your Control Pad**  
 After creating the control pad, click on the **Build** icon and use the drag-and-drop interface to add components like switches, buttons, and sliders etc.
