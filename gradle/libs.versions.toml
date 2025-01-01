@@ -3,7 +3,7 @@ agp = "8.7.3"
 # Make sure that a KSP version aligned with project's Kotlin version
 # https://developer.android.com/build/migrate-to-ksp#add-ksp
 colorpickerCompose = "1.1.2"
-hiltAndroid = "2.52"
+hiltAndroid = "2.54"
 hiltNavigationCompose = "1.2.0"
 javaWebsocket = "1.5.7"
 kotlin = "2.1.0"
