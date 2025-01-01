@@ -61,7 +61,8 @@ fun ControlPadButton(
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     onPressed: (() -> Unit)? = null,
-    onRelease: (() -> Unit)? = null
+    onRelease: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
 ){
 
     ControlPadItemBase(
@@ -74,51 +75,20 @@ fun ControlPadButton(
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ) {
-/*        if(properties.useIcon){
-            IconButton(
-                modifier = Modifier.size(100.dp).padding(10.dp),
-                enabled = enabled,
-                colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = Color(properties.buttonColor),
-                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = Color(properties.buttonColor)
-                ),
-                onClick = { onClick?.invoke() }
-            ) {
-                Icon(
-                    modifier = Modifier.size(35.dp),
-                    painter = painterResource(ButtonProperties.getIconById(properties.iconId)),
-                    contentDescription = properties.text,
-                    tint = Color(properties.iconColor),
-                )
-            }
 
-        }else {
-            TextButton(
-                modifier = Modifier.size(100.dp).padding(10.dp),
-                enabled = enabled,
-                shape = shape,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = Color(properties.buttonColor),
-                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = Color(properties.buttonColor)
-                ),
-                onClick = { onClick?.invoke() },
-            ) { Text(properties.text)}
-        }*/
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
 
         if (isPressed){
             //Pressed
-            onPressed?.invoke()
+            if (!properties.useClickAction)
+                onPressed?.invoke()
             //Use if + DisposableEffect to wait for the press action is completed
             DisposableEffect(Unit) {
                 onDispose {
                     //released
-                    onRelease?.invoke()
+                    if (!properties.useClickAction)
+                        onRelease?.invoke()
                 }
             }
         }
@@ -136,7 +106,8 @@ fun ControlPadButton(
             ),
             interactionSource = interactionSource,
             onClick = {
-                //onClick?.invoke()
+                if (properties.useClickAction)
+                    onClick?.invoke()
             }
         ) {
             if(properties.useIcon){

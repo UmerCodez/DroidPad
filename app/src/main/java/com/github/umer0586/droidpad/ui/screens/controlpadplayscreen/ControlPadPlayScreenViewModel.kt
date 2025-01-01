@@ -176,7 +176,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             is ControlPadPlayScreenEvent.OnButtonClick -> {
                 viewModelScope.launch {
-                    connection?.sendData(ButtonEvent(id = event.id, type = ItemType.CLICK_BUTTON, state = "CLICK").toJson())
+                    connection?.sendData(ButtonEvent(id = event.id, state = "CLICK").toJson())
                 }
             }
 

@@ -55,6 +55,7 @@ data class ButtonProperties(
     val textColor: ULong = Color(0xFFFFFCFC).value,
     val buttonColor: ULong = Color(0xFF7D5260).value,
     val useIcon: Boolean = false,
+    val useClickAction: Boolean = false,
     val iconId: Int = 0,
     val iconColor: ULong = Color(0xFFFFFCFC).value
 ){

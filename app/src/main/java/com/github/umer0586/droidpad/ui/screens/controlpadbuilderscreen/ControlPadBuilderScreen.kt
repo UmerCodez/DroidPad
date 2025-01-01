@@ -338,33 +338,7 @@ fun ControlPadBuilderScreenContent(
                         }
                     )
                 }
-                else if(controlPadItem.itemType == ItemType.CLICK_BUTTON && uiState.transformableStatesMap[controlPadItem.id] != null){
 
-                    ControlPadClickButton(
-                        offset = controlPadItem.offset,
-                        rotation = controlPadItem.rotation,
-                        scale = controlPadItem.scale,
-                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
-                        properties = ButtonProperties.fromJson(controlPadItem.properties),
-                        enabled = false,
-                        onDeleteClick = {
-                            onUiEvent(
-                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
-                                    controlPadItem = controlPadItem
-                                )
-                            )
-                        },
-                        onEditClick = {
-                            onUiEvent(
-                                ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
-                                    controlPadItem = controlPadItem
-                                )
-                            )
-                        }
-                    )
-                }
 
             }
 
@@ -394,11 +368,6 @@ fun ControlPadBuilderScreenContent(
                                 ItemType.SLIDER -> SliderProperties(
                                     trackColor = primary.value,
                                     thumbColor = primary.value,
-                                ).toJson()
-                                ItemType.CLICK_BUTTON -> ButtonProperties(
-                                    buttonColor = primary.value,
-                                    textColor = onPrimary.value,
-                                    iconColor = onPrimary.value,
                                 ).toJson()
                                 else -> TODO("Not Yet Implemented")
                             }

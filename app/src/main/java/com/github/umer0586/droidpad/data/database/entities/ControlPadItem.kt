@@ -28,8 +28,7 @@ enum class ItemType{
     SWITCH,
     SLIDER,
     LABEL,
-    BUTTON,
-    CLICK_BUTTON
+    BUTTON
 }
 
 @Entity(

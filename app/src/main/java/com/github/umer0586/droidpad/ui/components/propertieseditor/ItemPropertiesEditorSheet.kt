@@ -177,7 +177,7 @@ fun ItemPropertiesEditorSheet(
             )
 
 
-        } else if (controlPadItem.itemType == ItemType.BUTTON || controlPadItem.itemType == ItemType.CLICK_BUTTON) {
+        } else if (controlPadItem.itemType == ItemType.BUTTON) {
 
             ButtonPropertiesEditor(
                 controlPadItem = controlPadItem,
@@ -439,6 +439,20 @@ private fun ButtonPropertiesEditor(
             },
             label = { Text("Text") },
             shape = textFieldShape
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Click Action") },
+            trailingContent = {
+                Switch(
+                    checked = buttonProperties.useClickAction,
+                    onCheckedChange = {
+                        buttonProperties = buttonProperties.copy(useClickAction = it)
+                        onButtonPropertiesChange?.invoke(buttonProperties)
+                    }
+                )
+            }
         )
 
 

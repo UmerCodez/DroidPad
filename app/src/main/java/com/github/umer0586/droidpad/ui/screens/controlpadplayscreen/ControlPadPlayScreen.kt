@@ -300,20 +300,7 @@ fun ControlPlayScreenContent(
                         properties = ButtonProperties.fromJson(controlPadItem.properties),
                         onPressed = { onUiEvent(ControlPadPlayScreenEvent.OnButtonPress(controlPadItem.itemIdentifier)) },
                         onRelease = { onUiEvent(ControlPadPlayScreenEvent.OnButtonRelease(controlPadItem.itemIdentifier)) },
-                    )
-                }
-
-                else if(controlPadItem.itemType == ItemType.CLICK_BUTTON){
-
-                    ControlPadClickButton(
-                        offset = controlPadItem.offset,
-                        rotation = controlPadItem.rotation,
-                        scale = controlPadItem.scale,
-                        showControls = false,
-                        properties = ButtonProperties.fromJson(controlPadItem.properties),
-                        onClick = {
-                            onUiEvent(ControlPadPlayScreenEvent.OnButtonClick(controlPadItem.itemIdentifier))
-                        }
+                        onClick = {onUiEvent(ControlPadPlayScreenEvent.OnButtonClick(controlPadItem.itemIdentifier))}
                     )
                 }
 
