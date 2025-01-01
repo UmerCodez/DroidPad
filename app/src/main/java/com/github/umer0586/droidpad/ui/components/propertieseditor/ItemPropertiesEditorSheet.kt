@@ -32,9 +32,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -112,114 +114,100 @@ fun ItemPropertiesEditorSheet(
     var hasError by remember { mutableStateOf(false) }
 
 
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
+    Column(
+        modifier = modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        item {
-            var itemIdentifier by remember { mutableStateOf(controlPadItem.itemIdentifier) }
+        var itemIdentifier by remember { mutableStateOf(controlPadItem.itemIdentifier) }
 
-            OutlinedTextField(
-                modifier = Modifier.testTag("itemIdentifierTextField"),
-                value = itemIdentifier,
-                isError = itemIdentifier.isEmpty(),
-                onValueChange = {
+        OutlinedTextField(
+            modifier = Modifier.testTag("itemIdentifierTextField"),
+            value = itemIdentifier,
+            isError = itemIdentifier.isEmpty(),
+            onValueChange = {
 
-                    if(it.isEmpty())
-                        hasError = true
-                    else
-                        hasError = false
+                if (it.isEmpty())
+                    hasError = true
+                else
+                    hasError = false
 
-                    if (it.length <= itemIdentifierMaxLength) {
-                        itemIdentifier = it
-                        modifiedControlPadItem = modifiedControlPadItem.copy(itemIdentifier = it)
-                    }
-                },
-                label = { Text("Item Identifier") },
-                shape = RoundedCornerShape(50.dp)
-            )
-        }
+                if (it.length <= itemIdentifierMaxLength) {
+                    itemIdentifier = it
+                    modifiedControlPadItem = modifiedControlPadItem.copy(itemIdentifier = it)
+                }
+            },
+            label = { Text("Item Identifier") },
+            shape = RoundedCornerShape(50.dp)
+        )
 
         if (controlPadItem.itemType == ItemType.LABEL) {
-            item {
-                LabelPropertiesEditor(
-                    labelTextMaxLength = labelTextMaxLength,
-                    controlPadItem = controlPadItem,
-                    onLabelPropertiesChange = { labelProperties ->
-                        modifiedControlPadItem = modifiedControlPadItem.copy(
-                            properties = labelProperties.toJson()
-                        )
-                    },
-                    hasError = { hasError = it }
-                )
-            }
 
-        }
-        else if(controlPadItem.itemType == ItemType.SWITCH){
-            item {
-                SwitchPropertiesEditor(
-                    controlPadItem = controlPadItem,
-                    onSwitchPropertiesChange = { switchProperties ->
-                        modifiedControlPadItem = modifiedControlPadItem.copy(
-                            properties = switchProperties.toJson()
-                        )
-                    }
-                )
-            }
-        }
-        else if (controlPadItem.itemType == ItemType.SLIDER) {
-            item {
-                SliderPropertiesEditor(
-                    controlPadItem = controlPadItem,
-                    onSliderPropertiesChange = { sliderProperties ->
-                        modifiedControlPadItem = modifiedControlPadItem.copy(
-                            properties = sliderProperties.toJson()
-                        )
-                    },
-                    hasError = { hasError = it }
-                )
-
-            }
-
-        }
-        else if (controlPadItem.itemType == ItemType.BUTTON || controlPadItem.itemType == ItemType.CLICK_BUTTON) {
-
-            item {
-                ButtonPropertiesEditor(
-                    controlPadItem = controlPadItem,
-                    buttonTextMaxLength = buttonTextMaxLength,
-                    onButtonPropertiesChange = { buttonProperties ->
-                        modifiedControlPadItem = modifiedControlPadItem.copy(
-                            properties = buttonProperties.toJson()
-                        )
-                    },
-                    hasError = { hasError = it }
-                )
-            }
-
-        }
-
-
-        item {
-            TextButton(
-                modifier = Modifier
-                    .testTag("saveBtn")
-                    .fillMaxWidth(0.5f),
-                colors = ButtonDefaults.textButtonColors().copy(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = MaterialTheme.colorScheme.primary
-                ),
-                enabled = !hasError,
-                onClick = {
-                    onSaveSubmit?.invoke(modifiedControlPadItem)
+            LabelPropertiesEditor(
+                labelTextMaxLength = labelTextMaxLength,
+                controlPadItem = controlPadItem,
+                onLabelPropertiesChange = { labelProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = labelProperties.toJson()
+                    )
                 },
-                content = {
-                    Text("Save")
+                hasError = { hasError = it }
+            )
+        } else if (controlPadItem.itemType == ItemType.SWITCH) {
+
+            SwitchPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onSwitchPropertiesChange = { switchProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = switchProperties.toJson()
+                    )
                 }
             )
+        } else if (controlPadItem.itemType == ItemType.SLIDER) {
+
+            SliderPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onSliderPropertiesChange = { sliderProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = sliderProperties.toJson()
+                    )
+                },
+                hasError = { hasError = it }
+            )
+
+
+        } else if (controlPadItem.itemType == ItemType.BUTTON || controlPadItem.itemType == ItemType.CLICK_BUTTON) {
+
+            ButtonPropertiesEditor(
+                controlPadItem = controlPadItem,
+                buttonTextMaxLength = buttonTextMaxLength,
+                onButtonPropertiesChange = { buttonProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = buttonProperties.toJson()
+                    )
+                },
+                hasError = { hasError = it }
+            )
         }
+
+
+        TextButton(
+            modifier = Modifier
+                .testTag("saveBtn")
+                .fillMaxWidth(0.5f),
+            colors = ButtonDefaults.textButtonColors().copy(
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
+            enabled = !hasError,
+            onClick = {
+                onSaveSubmit?.invoke(modifiedControlPadItem)
+            },
+            content = {
+                Text("Save")
+            }
+        )
 
 
     }
@@ -764,7 +752,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "label",
                 controlPadId = 1,
-                itemType = ItemType.SWITCH,
+                itemType = ItemType.SLIDER,
             )
         )
     }
