@@ -1,0 +1,3 @@
+Changes:
+ * CLICK_BUTTON type removed
+ * Fix : Default json values not sent to the server
