@@ -80,6 +80,24 @@ Pressing or releasing a button generates this JSON:
 
 ---
 
+### **DPAD (Directional Pad)**  
+Pressing or releasing a button on DPAD generates this JSON:  
+```json
+{
+  "id": "the id you specified",
+  "type": "DPAD",
+  "button": "RIGHT",
+  "state": "CLICK"
+}
+```  
+- The `state` field can have following values:  
+  - **"PRESS"**: When the button is being pressed (finger on the button).  
+  - **"RELEASE"**: When the button is released (finger lifted off after pressing).
+  - **"CLICK"**: Indicates tap gesture
+- The `button` field can be **"LEFT"**,**"RIGHT"**,**"UP"** or **"DOWN"**    
+
+---
+
 ### **Slider**  
 Dragging the slider thumb generates the following JSON:  
 ```json
@@ -94,12 +112,13 @@ Dragging the slider thumb generates the following JSON:
 
 --- 
 
+
+
 ### TODO
 1. Bluetooth classic support
 2. Bluetooth Low Energy support
 3. Attaching sensors to control pads
 4. TouchPad
-5. Directional Pad
 
 ## Installlation
 Download APK from [Release Page](https://github.com/umer0586/DroidPad/releases)
