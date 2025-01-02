@@ -73,11 +73,12 @@ import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.data.properties.ButtonProperties
+import com.github.umer0586.droidpad.data.properties.DpadProperties
 import com.github.umer0586.droidpad.data.properties.LabelProperties
 import com.github.umer0586.droidpad.data.properties.SliderProperties
 import com.github.umer0586.droidpad.data.properties.SwitchProperties
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
-import com.github.umer0586.droidpad.ui.components.ControlPadClickButton
+import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
@@ -301,6 +302,41 @@ fun ControlPlayScreenContent(
                         onPressed = { onUiEvent(ControlPadPlayScreenEvent.OnButtonPress(controlPadItem.itemIdentifier)) },
                         onRelease = { onUiEvent(ControlPadPlayScreenEvent.OnButtonRelease(controlPadItem.itemIdentifier)) },
                         onClick = {onUiEvent(ControlPadPlayScreenEvent.OnButtonClick(controlPadItem.itemIdentifier))}
+                    )
+                }
+
+                else if(controlPadItem.itemType == ItemType.DPAD){
+
+                    ControlPadDpad(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        showControls = false,
+                        properties = DpadProperties.fromJson(controlPadItem.properties),
+                        onPressed = { dpadButton ->
+                            onUiEvent(
+                                ControlPadPlayScreenEvent.OnDpadButtonPress(
+                                    id = controlPadItem.itemIdentifier,
+                                    dPadButton = dpadButton
+                                )
+                            )
+                        },
+                        onRelease = { dpadButton ->
+                            onUiEvent(
+                                ControlPadPlayScreenEvent.OnDpadButtonRelease(
+                                    id = controlPadItem.itemIdentifier,
+                                    dPadButton = dpadButton
+                                )
+                            )
+                        },
+                        onClick = { dpadButton ->
+                            onUiEvent(
+                                ControlPadPlayScreenEvent.OnDpadButtonClick(
+                                    id = controlPadItem.itemIdentifier,
+                                    dPadButton = dpadButton
+                                )
+                            )
+                        }
                     )
                 }
 

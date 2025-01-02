@@ -67,6 +67,18 @@ data class ButtonProperties(
     }
 }
 
+@Serializable
+data class DpadProperties(
+    val backgroundColor: ULong = Color(0xFFFDD835).value,
+    val buttonColor: ULong = Color(0xFF2A2929).value,
+    val useClickAction: Boolean = false
+){
+    fun toJson() = Json.encodeToString(this)
+    companion object {
+        fun fromJson(json: String) = Json.decodeFromString<DpadProperties>(json)
+    }
+}
+
 
 @Serializable
 data class SliderProperties(

@@ -19,6 +19,25 @@
 
 package com.github.umer0586.droidpad.ui.components.propertieseditor
 
+/*
+ *     This file is a part of DroidPad (https://www.github.com/umer0586/DroidPad)
+ *     Copyright (C) 2024 Umer Farooq (umerfarooq2383@gmail.com)
+ *
+ *     DroidPad is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     DroidPad is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with DroidPad. If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +50,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -70,32 +88,14 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.properties.ButtonProperties
+import com.github.umer0586.droidpad.data.properties.DpadProperties
 import com.github.umer0586.droidpad.data.properties.LabelProperties
-/*
- *     This file is a part of DroidPad (https://www.github.com/umer0586/DroidPad)
- *     Copyright (C) 2024 Umer Farooq (umerfarooq2383@gmail.com)
- *
- *     DroidPad is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     DroidPad is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with DroidPad. If not, see <https://www.gnu.org/licenses/>.
- *
- */
-
 import com.github.umer0586.droidpad.data.properties.SliderProperties
 import com.github.umer0586.droidpad.data.properties.SwitchProperties
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
+import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
-
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 // TODO: color picker doesn't show dark values, add these later
@@ -188,6 +188,15 @@ fun ItemPropertiesEditorSheet(
                     )
                 },
                 hasError = { hasError = it }
+            )
+        } else if(controlPadItem.itemType == ItemType.DPAD){
+            DPadPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onDpadPropertiesChange = { dpadProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = dpadProperties.toJson()
+                    )
+                }
             )
         }
 
@@ -621,6 +630,114 @@ private fun ButtonPropertiesEditor(
 
 
 @Composable
+private fun DPadPropertiesEditor(
+    modifier: Modifier = Modifier,
+    controlPadItem: ControlPadItem,
+    onDpadPropertiesChange: ((DpadProperties) -> Unit)? = null,
+) {
+
+    var dPadProperties by remember { mutableStateOf(DpadProperties.fromJson(controlPadItem.properties))}
+    var showColorPickerForButton by remember { mutableStateOf(false) }
+    var showColorPickerForBackground by remember { mutableStateOf(false) }
+
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        ControlPadDpad(
+            offset = Offset.Zero,
+            scale = 1f,
+            rotation = 0f,
+            showControls = false,
+            properties = dPadProperties,
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Click Action") },
+            trailingContent = {
+                Switch(
+                    checked = dPadProperties.useClickAction,
+                    onCheckedChange = {
+                        dPadProperties = dPadProperties.copy(useClickAction = it)
+                        onDpadPropertiesChange?.invoke(dPadProperties)
+                    }
+                )
+            }
+        )
+
+        AnimatedVisibility(visible = showColorPickerForButton) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(dPadProperties.buttonColor),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    dPadProperties =
+                        dPadProperties.copy(buttonColor = colorEnvelope.color.value)
+                    onDpadPropertiesChange?.invoke(dPadProperties)
+                    // do something
+                }
+            )
+        }
+
+        AnimatedVisibility(visible = showColorPickerForBackground) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(dPadProperties.backgroundColor),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    dPadProperties = dPadProperties.copy(backgroundColor = colorEnvelope.color.value)
+                    onDpadPropertiesChange?.invoke(dPadProperties)
+                }
+            )
+        }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Button Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(dPadProperties.buttonColor))
+                        .clickable {
+                            showColorPickerForButton = !showColorPickerForButton
+                            showColorPickerForBackground = false
+                        }
+                )
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Background Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(dPadProperties.backgroundColor))
+                        .clickable {
+                            showColorPickerForBackground = !showColorPickerForBackground
+                            showColorPickerForButton = false
+                        }
+                )
+            }
+        )
+
+    }
+}
+
+
+@Composable
 private fun SwitchPropertiesEditor(
     modifier: Modifier = Modifier,
     controlPadItem: ControlPadItem,
@@ -766,7 +883,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "label",
                 controlPadId = 1,
-                itemType = ItemType.SLIDER,
+                itemType = ItemType.DPAD,
             )
         )
     }

@@ -70,11 +70,12 @@ import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.data.properties.ButtonProperties
+import com.github.umer0586.droidpad.data.properties.DpadProperties
 import com.github.umer0586.droidpad.data.properties.LabelProperties
 import com.github.umer0586.droidpad.data.properties.SliderProperties
 import com.github.umer0586.droidpad.data.properties.SwitchProperties
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
-import com.github.umer0586.droidpad.ui.components.ControlPadClickButton
+import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
@@ -339,6 +340,35 @@ fun ControlPadBuilderScreenContent(
                     )
                 }
 
+                else if(controlPadItem.itemType == ItemType.DPAD && uiState.transformableStatesMap[controlPadItem.id] != null){
+
+                    ControlPadDpad(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        properties = DpadProperties.fromJson(controlPadItem.properties),
+                        enabled = false,
+                        onDeleteClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnEditItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        }
+                    )
+                }
+
+
 
             }
 
@@ -368,6 +398,10 @@ fun ControlPadBuilderScreenContent(
                                 ItemType.SLIDER -> SliderProperties(
                                     trackColor = primary.value,
                                     thumbColor = primary.value,
+                                ).toJson()
+                                ItemType.DPAD -> DpadProperties(
+                                    backgroundColor = primary.value,
+                                    buttonColor = onPrimary.value,
                                 ).toJson()
                                 else -> TODO("Not Yet Implemented")
                             }

@@ -36,6 +36,7 @@ import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
+import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -64,6 +65,9 @@ sealed interface ControlPadPlayScreenEvent {
     data class OnButtonPress(val id: String) : ControlPadPlayScreenEvent
     data class OnButtonRelease(val id: String) : ControlPadPlayScreenEvent
     data class OnButtonClick(val id: String) : ControlPadPlayScreenEvent
+    data class OnDpadButtonPress(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
+    data class OnDpadButtonRelease(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
+    data class OnDpadButtonClick(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
     data object OnBackPress : ControlPadPlayScreenEvent
 }
 
@@ -196,6 +200,22 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                     connection?.sendData(ButtonEvent(id = event.id, state = "RELEASE").toJson())
                 }
             }
+
+            is ControlPadPlayScreenEvent.OnDpadButtonClick -> {
+                viewModelScope.launch {
+                    connection?.sendData(DPadEvent(id = event.id, button = event.dPadButton, state = "CLICK").toJson())
+                }
+            }
+            is ControlPadPlayScreenEvent.OnDpadButtonPress -> {
+                viewModelScope.launch {
+                    connection?.sendData(DPadEvent(id = event.id, button = event.dPadButton, state = "PRESS").toJson())
+                }
+            }
+            is ControlPadPlayScreenEvent.OnDpadButtonRelease -> {
+                viewModelScope.launch {
+                    connection?.sendData(DPadEvent(id = event.id, button = event.dPadButton, state = "RELEASE").toJson())
+                }
+            }
         }
     }
 
@@ -239,6 +259,18 @@ data class SwitchEvent(
 data class ButtonEvent(
     val id: String,
     val type: ItemType = ItemType.BUTTON,
+    val state: String
+){
+    fun toJson(): String {
+        return JsonCon.encodeToString(this)
+    }
+}
+
+@Serializable
+data class DPadEvent(
+    val id: String,
+    val type: ItemType = ItemType.DPAD,
+    val button: DPAD_BUTTON,
     val state: String
 ){
     fun toJson(): String {
