@@ -200,7 +200,7 @@ fun ControlPlayScreenContent(
                                     )
                                 Icon(
                                     imageVector = Icons.Filled.PlayArrow,
-                                    contentDescription = "LockIcon",
+                                    contentDescription = "PlayIcon",
                                 )
                             }
                         }
@@ -213,6 +213,8 @@ fun ControlPlayScreenContent(
                                     ControlPadPlayScreenEvent.OnDisconnectClick
                                 )
                             },
+                            // disable button when connectionType is UDP
+                            enabled = uiState.connectionType != ConnectionType.UDP,
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -220,7 +222,7 @@ fun ControlPlayScreenContent(
 
                         ) { Icon(
                             painter = painterResource(id = R.drawable.ic_power),
-                            contentDescription = "LockIcon",
+                            contentDescription = "PowerIcon",
                         ) }
                     }
                 }
