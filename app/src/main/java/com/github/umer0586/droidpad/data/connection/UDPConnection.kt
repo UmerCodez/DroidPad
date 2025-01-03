@@ -34,13 +34,13 @@ class UDPConnection(
 ) : Connection(){
 
 
-    private var datagramSocket: DatagramSocket? = null
+    private var datagramSocket: DatagramSocket = DatagramSocket()
 
     override val connectionType: ConnectionType
         get() = ConnectionType.UDP
 
-    override suspend fun setup() = withContext(ioDispatcher){
-        datagramSocket = DatagramSocket()
+    override suspend fun setup() {
+
     }
 
     override suspend fun sendData(data: String) = withContext<Unit>(ioDispatcher) {
@@ -60,8 +60,13 @@ class UDPConnection(
     }
 
     override suspend fun tearDown() = withContext(ioDispatcher){
-        datagramSocket?.close()
-        datagramSocket = null
+        try {
+
+            datagramSocket.close()
+
+        } catch (e: Exception) {
+            notifyConnectionState(ConnectionState.UDP_ERROR)
+        }
 
     }
 
