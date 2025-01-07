@@ -1,0 +1,2 @@
+New Feature:
+ * The app now supports Bluetooth Low Energy (BLE) in the peripheral role
