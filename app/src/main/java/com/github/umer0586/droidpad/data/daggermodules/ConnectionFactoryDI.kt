@@ -19,12 +19,14 @@
 
 package com.github.umer0586.droidpad.data.daggermodules
 
+import android.content.Context
 import com.github.umer0586.droidpad.data.connection.ConnectionFactory
 import com.github.umer0586.droidpad.data.connection.ConnectionFactoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
@@ -33,7 +35,7 @@ object ConnectionFactoryDI {
 
     @Provides
     @ViewModelScoped
-    fun provideConnectionFactory() : ConnectionFactory {
-        return ConnectionFactoryImpl()
+    fun provideConnectionFactory(@ApplicationContext appContext: Context) : ConnectionFactory {
+        return ConnectionFactoryImpl(appContext)
     }
 }

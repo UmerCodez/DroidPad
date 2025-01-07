@@ -21,6 +21,7 @@ package com.github.umer0586.droidpad.ui.screens.connectionconfigscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.umer0586.droidpad.data.connectionconfig.BluetoothLEConfig
 import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.connectionconfig.TCPConfig
 import com.github.umer0586.droidpad.data.connectionconfig.UDPConfig
@@ -277,6 +278,12 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                         host = uiState.value.host,
                         port = uiState.value.port,
                         connectionTimeoutSecs = uiState.value.connectionTimeout
+                    ).toJson()
+                }
+                ConnectionType.BLUETOOTH_LE -> {
+                    BluetoothLEConfig(
+                        serviceUUID = "4fbfc1d7-f509-44ab-afe1-62ea40a4b111",
+                        characteristicUUID = "dc3f5274-33ba-48de-8246-43bf8985b323"
                     ).toJson()
                 }
             }

@@ -24,27 +24,37 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -124,6 +134,7 @@ fun ControlPadPlayScreen(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ControlPlayScreenContent(
     uiState: ControlPadPlayScreenState,
@@ -378,6 +389,44 @@ fun ControlPlayScreenContent(
     }
 
 
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    showBottomSheet = uiState.connectionState == ConnectionState.BLUETOOTH_ADVERTISEMENT_SUCCESS
+
+
+    if(showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                onUiEvent(ControlPadPlayScreenEvent.OnDisconnectClick)
+                showBottomSheet = false
+            },
+            sheetState = rememberModalBottomSheetState(
+                skipPartiallyExpanded = true
+            )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().height(350.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
+            ) {
+                Text("Service UUID")
+                Text("4fbfc1d7-f509-44ab-afe1-62ea40a4b111")
+                Spacer(Modifier.height(10.dp))
+                Text("Waiting for Connection")
+                LinearProgressIndicator()
+                Text("Connect and Subscribe to\n Following characteristic")
+                Text("dc3f5274-33ba-48de-8246-43bf8985b323")
+                Button(
+                    onClick = {
+                        onUiEvent(ControlPadPlayScreenEvent.OnDisconnectClick)
+                        showBottomSheet = false
+                    }
+                ) { Text("Cancel") }
+            }
+        }
+    }
+
+
 }
 
 @Preview(showBackground = true)
@@ -412,7 +461,7 @@ fun ControlPadPlayScreenContentPreview(modifier: Modifier = Modifier) {
     var uiState by remember { mutableStateOf(
         ControlPadPlayScreenState(
         controlPadItems = controlPadItems,
-        connectionState = ConnectionState.WEBSOCKET_CONNECTING,
+        connectionState = ConnectionState.BLUETOOTH_ADVERTISEMENT_SUCCESS,
         connectionType = ConnectionType.TCP,
         isConnecting = true,
         isConnected = true,

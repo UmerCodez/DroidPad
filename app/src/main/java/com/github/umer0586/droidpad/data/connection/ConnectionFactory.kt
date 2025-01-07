@@ -19,6 +19,8 @@
 
 package com.github.umer0586.droidpad.data.connection
 
+import android.content.Context
+import com.github.umer0586.droidpad.data.connectionconfig.BluetoothLEConfig
 import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.connectionconfig.TCPConfig
 import com.github.umer0586.droidpad.data.connectionconfig.UDPConfig
@@ -31,7 +33,7 @@ interface ConnectionFactory {
     fun getConnection(connectionConfig: ConnectionConfig) : Connection
 }
 
-class ConnectionFactoryImpl : ConnectionFactory {
+class ConnectionFactoryImpl(private val appContext: Context) : ConnectionFactory {
 
     override fun getConnection(connectionConfig: ConnectionConfig) =
         when(connectionConfig.connectionType) {
@@ -39,7 +41,7 @@ class ConnectionFactoryImpl : ConnectionFactory {
             ConnectionType.UDP -> UDPConnection(UDPConfig.fromJson(connectionConfig.configJson))
             ConnectionType.WEBSOCKET -> WebsocketConnection(WebsocketConfig.fromJson(connectionConfig.configJson))
             ConnectionType.MQTT -> MqttConnection(MqttConfig.fromJson(connectionConfig.configJson))
-            else -> TODO("Not yet implemented")
+            ConnectionType.BLUETOOTH_LE -> BluetoothLEConnection(context = appContext , config = BluetoothLEConfig.fromJson(connectionConfig.configJson))
         }
 
 }

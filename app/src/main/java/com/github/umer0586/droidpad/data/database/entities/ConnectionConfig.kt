@@ -24,7 +24,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 enum class ConnectionType{
-    TCP,UDP,MQTT,WEBSOCKET
+    TCP,UDP,MQTT,WEBSOCKET,BLUETOOTH_LE
 }
 
 @Entity(
