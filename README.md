@@ -1,7 +1,7 @@
 
 ![GitHub License](https://img.shields.io/github/license/umer0586/DroidPad?style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/umer0586/DroidPad?include_prereleases&style=for-the-badge)
 
-## Create custom control interfaces with a simple drag-and-drop and transform your Android device into a controller by transmitting commands over WebSocket, MQTT, TCP, and UDP protocols.
+## Create Customizable Control Interfaces for Bluetooth Low Energy, WebSocket, MQTT, TCP, and UDP Protocols with Simple Drag-and-Drop Functionality. 
 
 <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="250" heigth="250"> <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="250" heigth="250"> <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="250" heigth="250">
 
