@@ -59,7 +59,9 @@ Toggling a switch generates the following JSON:
   "type": "SWITCH",
   "state": true
 }
-```  
+```
+For Bluetooth LE connections, toggling a switch generates a `CSV` message in the format: `<id>,<state>`.
+
 - The `state` field indicates whether the switch is **on** (`true`) or **off** (`false`).  
 
 ---
@@ -72,7 +74,9 @@ Pressing or releasing a button generates this JSON:
   "type": "BUTTON",
   "state": "PRESS"
 }
-```  
+```
+For Bluetooth LE connections, pressing or releasing a button generates a `CSV` message in the format: `<id>,<state>`.
+
 - The `state` field can have following values:  
   - **"PRESS"**: When the button is being pressed (finger on the button).  
   - **"RELEASE"**: When the button is released (finger lifted off after pressing).
@@ -89,7 +93,9 @@ Pressing or releasing a button on DPAD generates this JSON:
   "button": "RIGHT",
   "state": "CLICK"
 }
-```  
+```
+For Bluetooth LE connections, pressing or releasing a button on DPAD generates a `CSV` message in the format: `<id>,<button>,<state>`.
+
 - The `state` field can have following values:  
   - **"PRESS"**: When the button is being pressed (finger on the button).  
   - **"RELEASE"**: When the button is released (finger lifted off after pressing).
@@ -106,7 +112,9 @@ Dragging the slider thumb generates the following JSON:
   "type": "SLIDER",
   "value": 1.4
 }
-```  
+```
+For Bluetooth LE connections, dragging the slider thumb generates a `CSV` message in the format: `<id>,<value>`.
+
 - The `value` field represents the current position of the slider.  
 - The value is always within the range of the minimum and maximum values specified during the slider's configuration.  
 
@@ -117,9 +125,8 @@ You can test the connections with Websocket,TCP and UDP servers provided in [htt
 
 ### TODO
 1. Bluetooth classic support
-2. Bluetooth Low Energy support
-3. Attaching sensors to control pads
-4. TouchPad
+2. Attaching sensors to control pads
+3. TouchPad
 
 ## Installlation
 Download APK from [Release Page](https://github.com/umer0586/DroidPad/releases)
