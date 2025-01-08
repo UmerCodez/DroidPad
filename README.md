@@ -10,7 +10,7 @@
    Design your control pads by dragging and dropping components like buttons, sliders, and switches.  
 
 2. **Multi-Protocol Support and Seamless Server Connections**  
-Easily configure your control pad to act as a client for network protocols such as **WebSocket, MQTT, TCP, and UDP**. Once configured, the control pad can connect to servers using any of these protocols. Interact with your control pad’s components—like buttons, switches, and sliders—to send real-time commands directly to the connected server and process those commands at server side 
+Easily configure your control pad to act as a client for network protocols such as **WebSocket, MQTT, TCP, and UDP**. Once configured, the control pad can connect to servers using any of these protocols. Interact with your control pad’s components—like buttons, switches, and sliders—to send real-time commands directly to the connected server (or BLE client) and process those commands at server (or BLE Client) side 
  
 
 ## How It Works (4 steps) 
