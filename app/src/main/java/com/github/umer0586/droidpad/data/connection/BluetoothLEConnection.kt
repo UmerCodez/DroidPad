@@ -81,9 +81,13 @@ class BluetoothLEConnection(
     private var connectedDevice: BluetoothDevice? = null
 
 
-    val localName: String
-        @SuppressLint("MissingPermission")
-        get() = bluetoothAdapter.name ?: "Unknown"
+    val bluetoothDisplayName: String
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            "Unknown"
+        } else {
+            bluetoothAdapter.name ?: "Unknown"
+        }
 
     override val connectionType: ConnectionType
         get() = ConnectionType.BLUETOOTH_LE

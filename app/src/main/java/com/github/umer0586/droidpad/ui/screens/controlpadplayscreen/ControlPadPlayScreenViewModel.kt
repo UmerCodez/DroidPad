@@ -111,7 +111,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionType.UDP -> (connection as UDPConnection).udpConfig.address
                                 ConnectionType.WEBSOCKET -> (connection as WebsocketConnection).webSocketConfig.address
                                 ConnectionType.MQTT -> (connection as MqttConnection).mqttConfig.brokerAddress
-                                ConnectionType.BLUETOOTH_LE -> (connection as BluetoothLEConnection).localName
+                                ConnectionType.BLUETOOTH_LE -> (connection as BluetoothLEConnection).bluetoothDisplayName
 
                             }
                         )
