@@ -121,7 +121,7 @@ For Bluetooth LE connections, dragging the slider thumb generates a `CSV` messag
 --- 
 
 ## Testing the connection
-You can test the connections with Websocket,TCP and UDP servers provided in [https://github.com/umer0586/droidpad-python-examples](https://github.com/umer0586/droidpad-python-examples)
+You can test the connections with Websocket,TCP, UDP servers and BLE client provided in [https://github.com/umer0586/droidpad-python-examples](https://github.com/umer0586/droidpad-python-examples)
 
 ### TODO
 1. Bluetooth classic support
