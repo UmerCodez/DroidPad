@@ -57,7 +57,6 @@ data class ControlPadPlayScreenState(
     val isConnected: Boolean = false,
     val controlPadBackgroundColor : Long = Color.Red.value.toLong(),
     val hostAddress: String = "",
-    val bleWaitingForClientConnection: Boolean = false
 )
 sealed interface ControlPadPlayScreenEvent {
     data object OnConnectClick : ControlPadPlayScreenEvent
