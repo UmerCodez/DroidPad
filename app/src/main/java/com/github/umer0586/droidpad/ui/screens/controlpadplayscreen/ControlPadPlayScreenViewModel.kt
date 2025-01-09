@@ -37,6 +37,7 @@ import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
+import com.github.umer0586.droidpad.data.util.BluetoothUtil
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,6 +58,7 @@ data class ControlPadPlayScreenState(
     val isConnected: Boolean = false,
     val controlPadBackgroundColor : Long = Color.Red.value.toLong(),
     val hostAddress: String = "",
+    val isBluetoothEnabled: Boolean = false
 )
 sealed interface ControlPadPlayScreenEvent {
     data object OnConnectClick : ControlPadPlayScreenEvent
@@ -78,7 +80,8 @@ sealed interface ControlPadPlayScreenEvent {
 class ControlPadPlayScreenViewModel @Inject constructor(
     private val controlPadRepository: ControlPadRepository,
     private val connectionConfigRepository: ConnectionConfigRepository,
-    private val connectionFactory: ConnectionFactory
+    private val connectionFactory: ConnectionFactory,
+    private val bluetoothUtil: BluetoothUtil
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(
@@ -88,6 +91,12 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var connection: Connection? = null
+
+    init {
+        _uiState.update {
+            it.copy(isBluetoothEnabled = bluetoothUtil.isBluetoothEnabled())
+        }
+    }
 
 
     fun loadControlPadItemsFor(controlPad: ControlPad) {
@@ -158,6 +167,16 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     fun onEvent(event: ControlPadPlayScreenEvent) {
         when (event) {
             is ControlPadPlayScreenEvent.OnConnectClick -> {
+
+                if(connection?.connectionType == ConnectionType.BLUETOOTH_LE){
+                    _uiState.update {
+                        it.copy(isBluetoothEnabled = bluetoothUtil.isBluetoothEnabled())
+                    }
+                    if(!bluetoothUtil.isBluetoothEnabled())
+                        return
+                }
+
+
                 viewModelScope.launch {
                     connection?.setup()
                 }

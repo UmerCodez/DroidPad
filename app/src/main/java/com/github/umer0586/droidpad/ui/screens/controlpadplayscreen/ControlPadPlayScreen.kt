@@ -60,6 +60,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,6 +93,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.github.umer0586.droidpad.ui.utils.LockScreenOrientation
+import kotlinx.coroutines.launch
 
 @Composable
 fun ControlPadPlayScreen(
@@ -140,6 +142,7 @@ fun ControlPlayScreenContent(
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
 
     LaunchedEffect(key1 = uiState.connectionState) {
@@ -187,9 +190,32 @@ fun ControlPlayScreenContent(
                     if (!uiState.isConnected && uiState.connectionType != ConnectionType.UDP ) {
                         IconButton(
                             onClick = {
+
                                 onUiEvent(
                                     ControlPadPlayScreenEvent.OnConnectClick
                                 )
+
+
+                                // The viewModel will never call connection?.setup()
+                                // if the connectionType is Bluetooth_LE and Bluetooth is not enabled.
+                                // Note: The latest value of isBluetoothEnabled is only updated when the
+                                // ControlPadPlayScreenEvent.OnConnectClick() event is triggered.
+
+                                // Do not use a LaunchedEffect to display the Bluetooth disabled message.
+                                // LaunchedEffect only triggers once for the same key, meaning the message
+                                // would only be shown the first time the user taps "Connect" while Bluetooth
+                                // is disabled. If the user taps "Connect" multiple times, the message will
+                                // not be displayed again.
+
+                                // Additionally, using isBluetoothEnabled as a key for LaunchedEffect will not
+                                // solve this issue since its value does not change between successive taps
+                                // unless Bluetooth is enabled.
+
+                                if(!uiState.isBluetoothEnabled){
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("Please Enable bluetooth")
+                                    }
+                                }
                             },
                             enabled = !uiState.isConnecting,
                             colors = IconButtonDefaults.iconButtonColors(
