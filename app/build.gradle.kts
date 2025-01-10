@@ -63,6 +63,12 @@ android {
         enableAggregatingTask = false
     }
 
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+
+    }
+
 }
 
 
