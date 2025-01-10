@@ -169,7 +169,13 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                         }
 
                     }
-                    else -> TODO("Not Yet Implemented")
+                    ConnectionType.BLUETOOTH_LE -> {
+                        _uiState.update {
+                            it.copy(
+                                connectionType = config.connectionType
+                            )
+                        }
+                    }
                 }
             }
 
