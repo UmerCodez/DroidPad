@@ -1,10 +1,12 @@
-Create custom control interfaces easily with a simple drag-and-drop tool and transform your Android device into a remote control by transmitting commands over WebSocket, MQTT, TCP, and UDP protocols.
+Create custom control interfaces easily with a simple drag-and-drop and transform your Android device into a remote control for Bluetooth Low Energy (BLE), WebSocket, MQTT, TCP, and UDP protocols.
 
-Key Features:
-1. Drag-and-Drop Control Pad Creation:
-Design your control pads by dragging and dropping components like buttons, sliders, and switches.
+<b>Key Features:</b>
 
-2. Multi-Protocol Support and Seamless Server Connections:
-Easily configure your control pad to act as a client for network protocols such as WebSocket, MQTT, TCP, and UDP. Once configured, the control pad can connect to servers using any of these protocols. Interact with your control pad’s components—like buttons, switches, and sliders—to send real-time commands directly to the connected server and process those commands at server side
+1. <b>Drag-and-Drop Control Pad Creation:</b><br>  
+   Design your control pads by dragging and dropping components like buttons, sliders, and switches.
+
+2. <b>Multi-Protocol Support and Flexible Connectivity:</b><br>  
+   - For <b>WebSocket, MQTT, TCP, and UDP</b>, the app acts as a client, connecting to servers and enabling real-time interaction through control pad components.  
+   - For <b>Bluetooth Low Energy (BLE)</b>, the app acts as a <b>peripheral (GATT server)</b>, notifying interactions such as button presses, slider changes, and switch toggles via BLE notifications.  
 
 For complete guidance please visit https://github.com/umer0586/DroidPad
