@@ -132,4 +132,6 @@ You can test the connections with Websocket,TCP, UDP servers and BLE client prov
 3. TouchPad
 
 ## Installlation
-Download APK from [Release Page](https://github.com/umer0586/DroidPad/releases)
+
+[<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="80">](https://github.com/umer0586/DroidPad/releases)
+[<img src="https://github.com/user-attachments/assets/f311c689-cfd1-4326-8e7d-323e2e117006" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.github.umer0586.droidpad)
