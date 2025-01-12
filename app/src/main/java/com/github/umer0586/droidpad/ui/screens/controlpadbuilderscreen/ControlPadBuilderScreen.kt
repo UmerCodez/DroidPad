@@ -71,11 +71,13 @@ import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.data.properties.ButtonProperties
 import com.github.umer0586.droidpad.data.properties.DpadProperties
+import com.github.umer0586.droidpad.data.properties.JoyStickProperties
 import com.github.umer0586.droidpad.data.properties.LabelProperties
 import com.github.umer0586.droidpad.data.properties.SliderProperties
 import com.github.umer0586.droidpad.data.properties.SwitchProperties
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
+import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
@@ -368,6 +370,35 @@ fun ControlPadBuilderScreenContent(
                     )
                 }
 
+                else if(controlPadItem.itemType == ItemType.JOYSTICK && uiState.transformableStatesMap[controlPadItem.id] != null){
+
+                    ControlPadJoyStick(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        properties = JoyStickProperties.fromJson(controlPadItem.properties),
+                        enabled = false,
+                        onDeleteClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnEditItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        }
+                    )
+                }
+
+
 
 
             }
@@ -403,7 +434,10 @@ fun ControlPadBuilderScreenContent(
                                     backgroundColor = primary.value,
                                     buttonColor = onPrimary.value,
                                 ).toJson()
-                                else -> TODO("Not Yet Implemented")
+                                ItemType.JOYSTICK -> JoyStickProperties(
+                                    backgroundColor = primary.value,
+                                    handleColor = onPrimary.value,
+                                ).toJson()
                             }
 
                             onUiEvent(

@@ -95,6 +95,18 @@ data class SliderProperties(
 }
 
 
+@Serializable
+data class JoyStickProperties(
+    val backgroundColor: ULong = Color(0xFFFDD835).value,
+    val handleColor: ULong = Color(0xFF2A2929).value,
+){
+    fun toJson() = Json.encodeToString(this)
+    companion object {
+        fun fromJson(json: String) = Json.decodeFromString<JoyStickProperties>(json)
+    }
+}
+
+
 private val idToIconMap = mapOf(
     0 to R.drawable.ic_power,
     1 to R.drawable.ic_up_arrow,

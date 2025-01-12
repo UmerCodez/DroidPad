@@ -71,6 +71,7 @@ sealed interface ControlPadPlayScreenEvent {
     data class OnDpadButtonPress(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
     data class OnDpadButtonRelease(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
     data class OnDpadButtonClick(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
+    data class OnJoyStickMove(val id: String, val x: Float, val y: Float) : ControlPadPlayScreenEvent
     data object OnBackPress : ControlPadPlayScreenEvent
 }
 
@@ -285,6 +286,17 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                     connection?.sendData(data)
                 }
             }
+
+            is ControlPadPlayScreenEvent.OnJoyStickMove -> {
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                    JoyStickEvent(id = event.id, x = event.x, y = event.y).toCSV()
+                else
+                    JoyStickEvent(id = event.id, x = event.x, y = event.y).toJson()
+
+                viewModelScope.launch {
+                    connection?.sendData(data)
+                }
+            }
         }
     }
 
@@ -349,5 +361,18 @@ data class DPadEvent(
         return JsonCon.encodeToString(this)
     }
     fun toCSV() = "$id,$button,$state"
+}
+
+@Serializable
+data class JoyStickEvent(
+    val id: String,
+    val type: ItemType = ItemType.JOYSTICK,
+    val x: Float,
+    val y: Float
+){
+    fun toJson(): String {
+        return JsonCon.encodeToString(this)
+    }
+    fun toCSV() = "$id,$x,$y"
 }
 

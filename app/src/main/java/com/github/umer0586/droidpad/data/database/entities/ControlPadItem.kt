@@ -28,6 +28,7 @@ enum class ItemType{
     SWITCH,
     SLIDER,
     LABEL,
+    JOYSTICK,
     BUTTON,
     DPAD
 }

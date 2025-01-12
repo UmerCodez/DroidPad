@@ -83,11 +83,13 @@ import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.data.properties.ButtonProperties
 import com.github.umer0586.droidpad.data.properties.DpadProperties
+import com.github.umer0586.droidpad.data.properties.JoyStickProperties
 import com.github.umer0586.droidpad.data.properties.LabelProperties
 import com.github.umer0586.droidpad.data.properties.SliderProperties
 import com.github.umer0586.droidpad.data.properties.SwitchProperties
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
+import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
@@ -373,6 +375,20 @@ fun ControlPlayScreenContent(
                                     dPadButton = dpadButton
                                 )
                             )
+                        }
+                    )
+                }
+
+                else if(controlPadItem.itemType == ItemType.JOYSTICK){
+
+                    ControlPadJoyStick(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        showControls = false,
+                        properties = JoyStickProperties.fromJson(controlPadItem.properties),
+                        onMove = {x,y ->
+                            onUiEvent(ControlPadPlayScreenEvent.OnJoyStickMove(id = controlPadItem.itemIdentifier, x = x, y = y))
                         }
                     )
                 }

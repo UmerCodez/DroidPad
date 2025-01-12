@@ -89,11 +89,13 @@ import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.properties.ButtonProperties
 import com.github.umer0586.droidpad.data.properties.DpadProperties
+import com.github.umer0586.droidpad.data.properties.JoyStickProperties
 import com.github.umer0586.droidpad.data.properties.LabelProperties
 import com.github.umer0586.droidpad.data.properties.SliderProperties
 import com.github.umer0586.droidpad.data.properties.SwitchProperties
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
+import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
@@ -195,6 +197,15 @@ fun ItemPropertiesEditorSheet(
                 onDpadPropertiesChange = { dpadProperties ->
                     modifiedControlPadItem = modifiedControlPadItem.copy(
                         properties = dpadProperties.toJson()
+                    )
+                }
+            )
+        } else if(controlPadItem.itemType == ItemType.JOYSTICK){
+            JoyStickPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onJoyStickPropertiesChange = { joyStickProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = joyStickProperties.toJson()
                     )
                 }
             )
@@ -736,6 +747,99 @@ private fun DPadPropertiesEditor(
     }
 }
 
+@Composable
+private fun JoyStickPropertiesEditor(
+    modifier: Modifier = Modifier,
+    controlPadItem: ControlPadItem,
+    onJoyStickPropertiesChange: ((JoyStickProperties) -> Unit)? = null,
+) {
+
+    var joyStickProperties by remember { mutableStateOf(JoyStickProperties.fromJson(controlPadItem.properties)) }
+    var showColorPickerForBackground by remember { mutableStateOf(false) }
+    var showColorPickerForHandle by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        ControlPadJoyStick(
+            offset = Offset.Zero,
+            scale = 1f,
+            rotation = 0f,
+            showControls = false,
+            enabled = false,
+            properties = joyStickProperties,
+        )
+
+
+        AnimatedVisibility(visible = showColorPickerForBackground) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(joyStickProperties.backgroundColor),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    joyStickProperties =
+                        joyStickProperties.copy(backgroundColor = colorEnvelope.color.value)
+                    onJoyStickPropertiesChange?.invoke(joyStickProperties)
+                    // do something
+                }
+            )
+        }
+
+        AnimatedVisibility(visible = showColorPickerForHandle) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(joyStickProperties.handleColor),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    joyStickProperties = joyStickProperties.copy(handleColor = colorEnvelope.color.value)
+                    onJoyStickPropertiesChange?.invoke(joyStickProperties)
+                }
+            )
+        }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Handle Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(joyStickProperties.handleColor))
+                        .clickable {
+                            showColorPickerForHandle = !showColorPickerForHandle
+                            showColorPickerForBackground = false
+
+                        })
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Background Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(joyStickProperties.backgroundColor))
+                        .clickable {
+                            showColorPickerForBackground = !showColorPickerForBackground
+                            showColorPickerForHandle = false
+                        })
+            }
+        )
+
+
+    }
+}
 
 @Composable
 private fun SwitchPropertiesEditor(
