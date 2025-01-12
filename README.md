@@ -103,6 +103,24 @@ For Bluetooth LE connections, pressing or releasing a button on DPAD generates a
 - The `button` field can be **"LEFT"**,**"RIGHT"**,**"UP"** or **"DOWN"**    
 
 ---
+### **JoyStick**  
+Moving joystick handle generates this JSON:  
+```json
+{
+  "id": "the id you specified",
+  "type": "JOYSTICK",
+  "x": 0.71150637,
+  "y": -0.13367589
+}
+```
+For Bluetooth LE `<id>,<x>,<y>`
+
+<img src="https://github.com/user-attachments/assets/fd3b1b14-d1c5-42d5-8813-f01745856191" width="150" height="150">
+
+The values of x and y range:
+ - From -1.0 to 1.0 for both axes.
+ - Positive x values indicate movement to the right, and negative values indicate movement to the left.
+ - Positive y values indicate upward movement, and negative values indicate downward movement.    
 
 ### **Slider**  
 Dragging the slider thumb generates the following JSON:  
