@@ -106,7 +106,8 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                 controlPadItem.copy(
                                     offsetX = newOffset.x,
                                     offsetY = newOffset.y,
-                                    rotation = newRotation,
+                                    // Joystick should not be rotatable
+                                    rotation = if(controlPadItem.itemType == ItemType.JOYSTICK) 0f else newRotation,
                                     scale = newScale.coerceIn(minScale,maxScale)
                                 )
 
@@ -197,7 +198,8 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                         controlPadItem.copy(
                                             offsetX = newOffset.x,
                                             offsetY = newOffset.y,
-                                            rotation = newRotation,
+                                            // Joystick should not be rotatable
+                                            rotation = if(controlPadItem.itemType == ItemType.JOYSTICK) 0f else newRotation,
                                             scale = newScale.coerceIn(minScale,maxScale)
                                         )
 
