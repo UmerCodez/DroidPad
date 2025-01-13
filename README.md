@@ -1,9 +1,19 @@
+<div align="center">
+   
+![GitHub License](https://img.shields.io/github/license/umer0586/DroidPad?style=for-the-badge)
+   ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/umer0586/DroidPad?include_prereleases&style=for-the-badge)
 
-![GitHub License](https://img.shields.io/github/license/umer0586/DroidPad?style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/umer0586/DroidPad?include_prereleases&style=for-the-badge)
+   
+[<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="100">](https://github.com/umer0586/DroidPad/releases)
+[<img src="https://github.com/user-attachments/assets/f311c689-cfd1-4326-8e7d-323e2e117006" height="100">](https://apt.izzysoft.de/fdroid/index/apk/com.github.umer0586.droidpad)
+
+
 
 ## Create Customizable Control Interfaces for Bluetooth Low Energy, WebSocket, MQTT, TCP, and UDP Protocols with Simple Drag-and-Drop Functionality. 
 
 <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="250" heigth="250"> <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="250" heigth="250"> <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="250" heigth="250">
+
+</div>
 
 ### Key Features:
 1. **Drag-and-Drop Control Pad Creation**  
@@ -151,7 +161,3 @@ You can test the connections with Websocket,TCP, UDP servers and BLE client prov
 2. Attaching sensors to control pads
 3. TouchPad
 
-## Installlation
-
-[<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="80">](https://github.com/umer0586/DroidPad/releases)
-[<img src="https://github.com/user-attachments/assets/f311c689-cfd1-4326-8e7d-323e2e117006" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.github.umer0586.droidpad)
