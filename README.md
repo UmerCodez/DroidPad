@@ -117,6 +117,8 @@ For Bluetooth LE `<id>,<x>,<y>`
 
 <img src="https://github.com/user-attachments/assets/fd3b1b14-d1c5-42d5-8813-f01745856191" width="150" height="150">
 
+_Note : Joystick is not rotatable in the Builder Screen_
+
 The values of x and y range:
  - From -1.0 to 1.0 for both axes.
  - Positive x values indicate movement to the right, and negative values indicate movement to the left.
