@@ -1,0 +1,1 @@
+* Fixed : Joystick rotation disabled in the Builder Screen
