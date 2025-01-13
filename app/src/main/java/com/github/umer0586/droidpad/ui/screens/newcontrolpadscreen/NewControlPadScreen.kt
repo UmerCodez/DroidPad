@@ -117,6 +117,7 @@ fun NewControlPadScreenContent(
             OutlinedTextField(
                 value = uiState.controlPadName,
                 isError = uiState.inputError,
+                singleLine = true,
                 onValueChange = {
                     onUiEvent(
                         NewControlPadScreenEvent.OnControlPadNameChanged(it)
