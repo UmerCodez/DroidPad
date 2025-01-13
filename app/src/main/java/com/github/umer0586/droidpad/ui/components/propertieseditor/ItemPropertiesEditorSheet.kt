@@ -126,6 +126,7 @@ fun ItemPropertiesEditorSheet(
 
         OutlinedTextField(
             modifier = Modifier.testTag("itemIdentifierTextField"),
+            singleLine = true,
             value = itemIdentifier,
             isError = itemIdentifier.isEmpty(),
             onValueChange = {
@@ -245,6 +246,7 @@ private fun LabelPropertiesEditor(
 
     OutlinedTextField(
         modifier = Modifier.testTag("labelTextField"),
+        singleLine = true,
         value = labelProperties.text,
         isError = labelProperties.text.isEmpty(),
         onValueChange = {
@@ -295,6 +297,7 @@ private fun SliderPropertiesEditor(
 
         OutlinedTextField(
             modifier = Modifier.testTag("sliderMinValueTextField"),
+            singleLine = true,
             prefix = { Text("Min") },
             value = minValue.toString(),
             isError = minValue >= maxValue,
@@ -317,6 +320,7 @@ private fun SliderPropertiesEditor(
 
         OutlinedTextField(
             modifier = Modifier.testTag("sliderMaxValueTextField"),
+            singleLine = true,
             prefix = { Text("Max") },
             value = maxValue.toString(),
             isError = maxValue <= minValue,
@@ -441,6 +445,7 @@ private fun ButtonPropertiesEditor(
 
         OutlinedTextField(
             modifier = Modifier.testTag("buttonTextTextField"),
+            singleLine = true,
             value = buttonProperties.text,
             enabled = !buttonProperties.useIcon,
             isError = buttonProperties.text.isEmpty(),

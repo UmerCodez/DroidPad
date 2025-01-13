@@ -468,6 +468,7 @@ private fun ControlPadNameEditor(
         OutlinedTextField(
             value = modifiedControlPad.name,
             isError = modifiedControlPad.name.isEmpty(),
+            singleLine = true,
             onValueChange = {
                 modifiedControlPad = modifiedControlPad.copy(name = it)
             },

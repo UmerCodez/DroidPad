@@ -150,6 +150,7 @@ fun ConnectionConfigScreenContent(
 
                 OutlinedTextField(
                     value = uiState.host,
+                    singleLine = true,
                     onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnHostChange(it))},
                     shape = RoundedCornerShape(50),
                     label = { Text("Host") },
@@ -159,6 +160,7 @@ fun ConnectionConfigScreenContent(
                 OutlinedTextField(
                     value = uiState.port.toString(),
                     isError = !uiState.isPortNoValid,
+                    singleLine = true,
                     onValueChange = {
                         onUiEvent(ConnectionConfigScreenEvent.OnPortChange(it))
                     },
@@ -197,6 +199,7 @@ fun ConnectionConfigScreenContent(
 
                 OutlinedTextField(
                     value = uiState.clientId,
+                    singleLine = true,
                     onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnClientIdChange(it))},
                     shape = RoundedCornerShape(50),
                     label = { Text("Client ID") },
@@ -205,6 +208,7 @@ fun ConnectionConfigScreenContent(
 
                 OutlinedTextField(
                     value = uiState.topic,
+                    singleLine = true,
                     onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnTopicChange(it))},
                     shape = RoundedCornerShape(50),
                     label = { Text("Topic") },
@@ -304,6 +308,7 @@ fun ConnectionConfigScreenContent(
 
                     OutlinedTextField(
                         value = uiState.username,
+                        singleLine = true,
                         onValueChange = {
                             onUiEvent(ConnectionConfigScreenEvent.OnUsernameChange(it))
                         },
@@ -323,6 +328,7 @@ fun ConnectionConfigScreenContent(
 
                     OutlinedTextField(
                         value = uiState.password,
+                        singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         onValueChange = {
                             onUiEvent(ConnectionConfigScreenEvent.OnPasswordChange(it))
