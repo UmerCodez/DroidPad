@@ -49,7 +49,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.umer0586.droidpad.R
-import com.github.umer0586.droidpad.data.properties.DpadProperties
+import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 enum class DPAD_BUTTON {

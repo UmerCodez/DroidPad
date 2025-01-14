@@ -17,7 +17,7 @@
  *
  */
 
-package com.github.umer0586.droidpad.data.properties
+package com.github.umer0586.droidpad.data
 
 
 import androidx.compose.ui.graphics.Color

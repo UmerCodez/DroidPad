@@ -23,6 +23,11 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.umer0586.droidpad.data.ButtonEvent
+import com.github.umer0586.droidpad.data.DPadEvent
+import com.github.umer0586.droidpad.data.JoyStickEvent
+import com.github.umer0586.droidpad.data.SliderEvent
+import com.github.umer0586.droidpad.data.SwitchEvent
 import com.github.umer0586.droidpad.data.connection.BluetoothLEConnection
 import com.github.umer0586.droidpad.data.connection.Connection
 import com.github.umer0586.droidpad.data.connection.ConnectionFactory
@@ -34,7 +39,6 @@ import com.github.umer0586.droidpad.data.connection.WebsocketConnection
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
-import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
 import com.github.umer0586.droidpad.data.util.BluetoothUtil
@@ -44,9 +48,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 
@@ -307,72 +308,5 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         }
     }
 
-}
-
-private val JsonCon = Json {
-    encodeDefaults = true
-}
-
-
-@Serializable
-data class SliderEvent(
-    val id: String,
-    val type: ItemType = ItemType.SLIDER,
-    val value: Float
-){
-    fun toJson(): String {
-        return JsonCon.encodeToString(this)
-    }
-    fun toCSV() = "$id,$value"
-}
-
-@Serializable
-data class SwitchEvent(
-    val id: String,
-    val type: ItemType = ItemType.SWITCH,
-    val state: Boolean
-){
-    fun toJson(): String {
-        return JsonCon.encodeToString(this)
-    }
-    fun toCSV() = "$id,$state"
-}
-
-@Serializable
-data class ButtonEvent(
-    val id: String,
-    val type: ItemType = ItemType.BUTTON,
-    val state: String
-){
-    fun toJson(): String {
-        return JsonCon.encodeToString(this)
-    }
-    fun toCSV() = "$id,$state"
-}
-
-@Serializable
-data class DPadEvent(
-    val id: String,
-    val type: ItemType = ItemType.DPAD,
-    val button: DPAD_BUTTON,
-    val state: String
-){
-    fun toJson(): String {
-        return JsonCon.encodeToString(this)
-    }
-    fun toCSV() = "$id,$button,$state"
-}
-
-@Serializable
-data class JoyStickEvent(
-    val id: String,
-    val type: ItemType = ItemType.JOYSTICK,
-    val x: Float,
-    val y: Float
-){
-    fun toJson(): String {
-        return JsonCon.encodeToString(this)
-    }
-    fun toCSV() = "$id,$x,$y"
 }
 

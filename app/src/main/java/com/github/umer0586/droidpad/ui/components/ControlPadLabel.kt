@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.umer0586.droidpad.data.properties.LabelProperties
+import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 

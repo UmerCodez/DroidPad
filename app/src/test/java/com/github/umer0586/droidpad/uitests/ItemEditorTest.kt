@@ -9,9 +9,9 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
-import com.github.umer0586.droidpad.data.properties.ButtonProperties
-import com.github.umer0586.droidpad.data.properties.LabelProperties
-import com.github.umer0586.droidpad.data.properties.SliderProperties
+import com.github.umer0586.droidpad.data.ButtonProperties
+import com.github.umer0586.droidpad.data.LabelProperties
+import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.ui.components.propertieseditor.ItemPropertiesEditorSheet
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail

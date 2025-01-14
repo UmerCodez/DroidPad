@@ -40,7 +40,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
-import com.github.umer0586.droidpad.data.properties.JoyStickProperties
+import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import kotlin.math.pow
 import kotlin.math.sqrt
