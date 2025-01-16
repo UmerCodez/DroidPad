@@ -17,10 +17,10 @@
 
 ### Key Features:
 1. **Drag-and-Drop Control Pad Creation**  
-   Design your control pads by dragging and dropping components like buttons, sliders, and switches.  
+   Design your control pads by dragging and dropping components like buttons, sliders, switches, Joystick and D-PAD.  
 
 2. **Multi-Protocol Support and Seamless Server Connections**  
-Easily configure your control pad to act as a client for network protocols such as **WebSocket, MQTT, TCP, and UDP**. Once configured, the control pad can connect to servers using any of these protocols. Interact with your control pad’s components—like buttons, switches, and sliders—to send real-time commands directly to the connected server (or BLE client) and process those commands at server (or BLE Client) side 
+Easily configure your control pad to support network protocols such as **Bluetooth LE, WebSocket, MQTT, TCP, and UDP**. Once connected, you can interact with the control pad’s components—including **buttons, sliders, switches, joysticks, and D-PADs**—to send real-time commands directly to the connected server or BLE client, where these commands can be processed.
  
 
 ## How It Works (4 steps) 
@@ -42,7 +42,7 @@ Assign a unique **ID** to each component. This ID will be sent to the server dur
    <img src="https://github.com/user-attachments/assets/7bec11c8-3b00-4386-9990-13cfcc9576ef" width="240" height="426"/>
    
 ### **Step 3: Configure Connection Settings**  
-Tap **'Settings**, choose a connection type (TCP, UDP, WebSocket, or MQTT), enter the server address and port. You can switch between connection types anytime
+Tap **'Settings**, choose a connection type (TCP, Bluetooth LE, UDP, WebSocket, or MQTT), enter the server address and port. You can switch between connection types anytime
    
    <img src="https://github.com/user-attachments/assets/2105f61a-b3e8-42f7-ab8d-c266728efe0c" width="240" height="426" />
    <img src="https://github.com/user-attachments/assets/cbadcd5b-b8ba-4708-9347-fc2bb95497c2" width="240" height="426" />
@@ -55,9 +55,9 @@ b. Tap the **Connect** button in the bottom-right corner to establish a connecti
    <img src="https://github.com/user-attachments/assets/62e69eb3-86ed-4cf0-83fa-0b1091f3da38" width="240" height="426"/>
    <img src="https://github.com/user-attachments/assets/061a8e4a-dc08-4ba4-87ff-9d609ec75ede" width="240" height="426"/>
 
-## **Reading Interactions at the Server Side**  
+## **Reading Interactions**  
 When users interact with the control pad, JSON-formatted messages are generated based on the type of component used. 
-These JSON messages enable servers to understand and process interactions sent from the control pad. Below are the formats and details for each interaction:  
+These JSON messages enable receivers to understand and process interactions sent from the control pad. Below are the formats and details for each interaction:  
 
 ---
 
