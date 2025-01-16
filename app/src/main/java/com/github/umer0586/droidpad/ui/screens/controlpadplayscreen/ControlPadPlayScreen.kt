@@ -118,12 +118,6 @@ fun ControlPadPlayScreen(
     }
 
 
-
-    BackHandler {
-        viewModel.onEvent(ControlPadPlayScreenEvent.OnBackPress)
-        onBackPress?.invoke()
-    }
-
     ControlPlayScreenContent(
         uiState = uiState,
         onUiEvent = {event->
@@ -150,6 +144,11 @@ fun ControlPlayScreenContent(
     LaunchedEffect(key1 = uiState.connectionState) {
         if(uiState.connectionState != ConnectionState.NONE)
             snackbarHostState.showSnackbar(uiState.connectionState.toString())
+    }
+
+    // When device back button is pressed
+    BackHandler {
+        onUiEvent(ControlPadPlayScreenEvent.OnBackPress)
     }
 
     Scaffold(
@@ -501,9 +500,9 @@ fun ControlPadPlayScreenContentPreview(modifier: Modifier = Modifier) {
     var uiState by remember { mutableStateOf(
         ControlPadPlayScreenState(
         controlPadItems = controlPadItems,
-        connectionState = ConnectionState.BLUETOOTH_ADVERTISEMENT_SUCCESS,
-        connectionType = ConnectionType.TCP,
-        isConnecting = true,
+        connectionState = ConnectionState.WEBSOCKET_CONNECTED,
+        connectionType = ConnectionType.WEBSOCKET,
+        isConnecting = false,
         isConnected = true,
         hostAddress = "org.mosquitto.org:80807",
         controlPadBackgroundColor = controlPad.backgroundColor
