@@ -151,7 +151,9 @@ For Bluetooth LE connections, dragging the slider thumb generates a `CSV` messag
 --- 
 
 ## Important Note for Bluetooth Low Energy  
-A long Bluetooth device name can cause advertisement failure. To avoid this issue, use a shorter name. In your device's Bluetooth settings, change the Bluetooth device name to five or fewer characters, such as `dev`.  
+A long Bluetooth device name can cause advertisement failure. To avoid this issue, use a shorter name. In your device's Bluetooth settings, change the Bluetooth device name to five or fewer characters, such as `dev`.
+
+For devices running **Android 12 or higher**, you also need to ensure that your app has the necessary Bluetooth permissions. To do this, go to the app's system settings and grant the required **Nearby Devices** permission. Without this permission, the app cannot advertise Bluetooth services.
 
 ## Testing the connection
 You can test the connections with Websocket,TCP, UDP servers and BLE client provided in [https://github.com/umer0586/droidpad-python-examples](https://github.com/umer0586/droidpad-python-examples)
