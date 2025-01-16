@@ -22,6 +22,7 @@ package com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -165,6 +167,42 @@ fun ControlPadBuilderScreenContent(
                         .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center
                 ) {
+
+                    var showModificationAlert by remember { mutableStateOf(false) }
+
+                    // When back button on device is pressed
+                    BackHandler {
+                        if(uiState.isModified){
+                            showModificationAlert = true
+                            return@BackHandler
+                        }
+                        onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
+                    }
+
+                    if(showModificationAlert){
+                        AlertDialog(
+                            onDismissRequest = { showModificationAlert = false },
+                            title = { Text(text = "Unsaved Changes") },
+                            text = { Text(text = "Interface has been modified") },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showModificationAlert = false
+                                        onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
+                                    }
+                                ) { Text("Discard Changes")}
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        showModificationAlert = false
+                                        onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
+                                    }
+                                ) { Text("Save Changes")}
+                            }
+                        )
+                    }
+
                     IconButton(
                         modifier = Modifier.align(Alignment.CenterStart),
                         onClick = {
@@ -173,6 +211,12 @@ fun ControlPadBuilderScreenContent(
                         content = {
                             Icon(
                                 modifier = Modifier.clickable {
+
+                                    if(uiState.isModified){
+                                        showModificationAlert = true
+                                        return@clickable
+                                    }
+
                                     onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
                                 },
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -484,7 +528,8 @@ fun ControlPadBuilderScreenContentInteractiveXPreview() {
         mutableStateOf(
             ControlPadBuilderScreenState(
                 controlPadItems = mutableStateListOf(),
-                transformableStatesMap = SnapshotStateMap()
+                transformableStatesMap = SnapshotStateMap(),
+                isModified = true
             )
         )
     }

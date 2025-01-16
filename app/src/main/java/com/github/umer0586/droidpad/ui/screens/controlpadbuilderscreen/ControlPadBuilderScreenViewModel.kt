@@ -46,6 +46,7 @@ data class ControlPadBuilderScreenState(
     val showItemEditor: Boolean = false,
     val itemToBeEdited: ControlPadItem? = null,
     val transformableStatesMap: SnapshotStateMap<Long, TransformableState> = SnapshotStateMap(),
+    val isModified: Boolean = false
 )
 
 sealed interface ControlPadBuilderScreenEvent {
@@ -84,6 +85,9 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
     }
 
     fun loadControlPadItemsFor(controlPad: ControlPad){
+        _uiState.update {
+            it.copy(isModified = false)
+        }
         viewModelScope.launch {
             Log.d(tag, "loadControlPadItemsFor: ")
             controlPadRepository.getControlPadItemsOf(controlPad).also{ items ->
@@ -110,6 +114,14 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                     rotation = if(controlPadItem.itemType == ItemType.JOYSTICK) 0f else newRotation,
                                     scale = newScale.coerceIn(minScale,maxScale)
                                 )
+
+                            // The if statement prevents the state from being updated if it is already modified.
+                            // This can help avoid triggering unnecessary recompositions.
+                            if (_uiState.value.isModified != true) {
+                                _uiState.update {
+                                    it.copy(isModified = true)
+                                }
+                            }
 
                         }
                 }
@@ -202,6 +214,14 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                             rotation = if(controlPadItem.itemType == ItemType.JOYSTICK) 0f else newRotation,
                                             scale = newScale.coerceIn(minScale,maxScale)
                                         )
+
+                                    // The if statement prevents the state from being updated if it is already modified.
+                                    // This can help avoid triggering unnecessary recompositions.
+                                    if (_uiState.value.isModified != true) {
+                                        _uiState.update {
+                                            it.copy(isModified = true)
+                                        }
+                                    }
 
                                 }
                         }
