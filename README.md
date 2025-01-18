@@ -5,6 +5,7 @@
 
    
 [<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="100">](https://github.com/umer0586/DroidPad/releases)
+[<img src="https://github.com/user-attachments/assets/6d0d2095-876c-4248-89d5-43b53ad21c35" height="100">](https://f-droid.org/packages/com.github.umer0586.droidpad/)
 [<img src="https://github.com/user-attachments/assets/f311c689-cfd1-4326-8e7d-323e2e117006" height="100">](https://apt.izzysoft.de/fdroid/index/apk/com.github.umer0586.droidpad)
 
 
