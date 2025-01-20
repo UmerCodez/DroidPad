@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -49,6 +50,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
@@ -81,11 +83,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
@@ -320,6 +324,9 @@ fun ControlPadsScreenContent(
                         },
                         onBuildClick = {
                             onUiEvent(ControlPadsScreenEvent.OnBuildClick(it))
+                        },
+                        onDuplicateClick = {
+                            onUiEvent(ControlPadsScreenEvent.OnDuplicateClick(it))
                         }
 
                     )
@@ -340,7 +347,8 @@ private fun ItemCard(
     onDeleteClick: ((ControlPad) -> Unit)? = null,
     onPlayClick: ((ControlPad) -> Unit)? = null,
     onSettingClick: ((ControlPad) -> Unit)? = null,
-    onBuildClick: ((ControlPad) -> Unit)? = null
+    onBuildClick: ((ControlPad) -> Unit)? = null,
+    onDuplicateClick: ((ControlPad) -> Unit)? = null,
 
 ){
     Card(
@@ -439,6 +447,19 @@ private fun ItemCard(
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = "DeleteIcon"
+                        )
+                    }
+                )
+
+                IconButton(
+                    onClick = {
+                        onDuplicateClick?.invoke(controlPad)
+                    },
+                    content = {
+                        Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(R.drawable.ic_copy),
+                            contentDescription = "DuplicateIcon"
                         )
                     }
                 )

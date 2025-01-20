@@ -25,7 +25,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
+import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
+import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,6 +52,7 @@ sealed interface ControlPadsScreenEvent {
     data class OnEditClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnBuildClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnSettingClick(val controlPad: ControlPad) : ControlPadsScreenEvent
+    data class OnDuplicateClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     // Indicates that user clicked the "+" floating action button
     data object OnCreateClick : ControlPadsScreenEvent
     data object OnExitClick : ControlPadsScreenEvent
@@ -62,7 +65,8 @@ sealed interface ControlPadsScreenEvent {
 @HiltViewModel
 class ControlPadsScreenViewModel @Inject constructor(
     private val controlPadsRepository: ControlPadRepository,
-    private val connectionConfigRepository: ConnectionConfigRepository
+    private val connectionConfigRepository: ConnectionConfigRepository,
+    private val controlPadItemRepository: ControlPadItemRepository
 ) : ViewModel(){
 
     private val _uiState = MutableStateFlow(ControlPadsScreenState())
@@ -116,9 +120,48 @@ class ControlPadsScreenViewModel @Inject constructor(
                     it.copy(itemToBeEdited = event.controlPad)
                 }
             }
+            is ControlPadsScreenEvent.OnDuplicateClick -> {
+                viewModelScope.launch {
+                    createAndSaveDuplicate(event.controlPad)
+                }
+            }
             else -> {
 
             }
         }
+    }
+
+    private suspend fun createAndSaveDuplicate(controlPad: ControlPad){
+
+        val duplicateControlPad = ControlPad(
+            name = controlPad.name,
+            orientation = controlPad.orientation,
+        )
+
+        controlPadsRepository.saveControlPad(duplicateControlPad)
+            .also { duplicateControlPadId ->
+
+                controlPadsRepository.getControlPadItemsOf(controlPad)
+                    .forEach { controlPadItem ->
+                        val duplicateControlPadItem = controlPadItem.copy(
+                            id = 0, // // its not zero, it will be auto-generated (unique) when save in DB
+                            controlPadId = duplicateControlPadId
+                        )
+                        controlPadItemRepository.save(duplicateControlPadItem)
+                    }
+
+                connectionConfigRepository.getConfigForControlPad(controlPad.id)
+                    ?.also { connectionConfig ->
+                        connectionConfigRepository.save(
+                            connectionConfig.copy(
+                                id = 0, // its not zero, it will be auto-generated (unique) when save in DB
+                                controlPadId = duplicateControlPadId
+                            )
+                        )
+                        _uiState.value.controlPadConnectionTypeMap[duplicateControlPadId] = connectionConfig.connectionType
+                    }
+
+
+            }
     }
 }
