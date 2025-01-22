@@ -50,7 +50,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
@@ -93,6 +93,7 @@ import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
+import com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen.ControlPadBuilderScreenEvent
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -305,6 +306,33 @@ fun ControlPadsScreenContent(
             ) {
 
                 items(uiState.controlPads.toList()) { controlPad ->
+
+                    var showDeletionAlert by remember { mutableStateOf(false) }
+
+                    if (showDeletionAlert) {
+                        AlertDialog(
+                            onDismissRequest = { showDeletionAlert = false },
+                            title = { Text(text = "Delete Control Pad") },
+                            text = { Text(text = "Delete Item") },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeletionAlert = false
+                                        onUiEvent(ControlPadsScreenEvent.OnDeleteClick(controlPad))
+                                    }
+                                ) { Text("Yes") }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeletionAlert = false
+                                    }
+                                ) { Text("No") }
+                            }
+                        )
+                    }
+
+
                     ItemCard(
                         modifier = Modifier.padding(10.dp),
                         controlPad = controlPad,
@@ -314,7 +342,7 @@ fun ControlPadsScreenContent(
                             showNameEditorSheet = true
                         },
                         onDeleteClick = {
-                            onUiEvent(ControlPadsScreenEvent.OnDeleteClick(it))
+                            showDeletionAlert = true
                         },
                         onPlayClick = {
                             onUiEvent(ControlPadsScreenEvent.OnPlayClick(it))
