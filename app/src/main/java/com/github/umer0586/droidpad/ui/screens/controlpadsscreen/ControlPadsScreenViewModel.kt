@@ -25,7 +25,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
-import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
@@ -41,8 +40,7 @@ import javax.inject.Inject
 data class ControlPadsScreenState(
     val controlPads: SnapshotStateList<ControlPad> = SnapshotStateList(),
     val controlPadConnectionTypeMap: SnapshotStateMap<Long, ConnectionType> = SnapshotStateMap(),
-    val itemToBeEdited: ControlPad? = null,
-    val loading: Boolean = false
+    val itemToBeEdited: ControlPad? = null
 )
 
 sealed interface ControlPadsScreenEvent {
@@ -76,10 +74,8 @@ class ControlPadsScreenViewModel @Inject constructor(
         viewModelScope.launch {
 
             controlPadsRepository.getControlPads().collect { controlPadList ->
-                _uiState.update { it.copy(loading = true) }
                 _uiState.value.controlPads.clear()
                 _uiState.value.controlPads.addAll(controlPadList)
-                _uiState.update { it.copy(loading = false) }
             }
 
         }

@@ -59,7 +59,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
@@ -93,9 +92,7 @@ import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
-import com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen.ControlPadBuilderScreenEvent
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -257,18 +254,6 @@ fun ControlPadsScreenContent(
             }
         ) { innerPadding ->
 
-            if (uiState.loading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(0.5f)
-                    )
-                }
-            }
 
             if (uiState.controlPads.size == 0) {
 
@@ -586,32 +571,8 @@ private fun ControlPadsScreenContentPreview() {
                     orientation = Orientation.LANDSCAPE
                 )
 
-            ),
-            loading = false
-        )
-    }
-    
-    LaunchedEffect(Unit) {
-
-        uiState = uiState.copy(loading = true)
-        delay(2000)
-        uiState = uiState.copy(loading = false)
-        listOf(
-            ControlPad(
-            name = "MyControlPad",
-            orientation = Orientation.LANDSCAPE
-        ),
-            ControlPad(
-                name = "MySecondControlPad",
-                orientation = Orientation.PORTRAIT
-            ),
-            ControlPad(
-                name = "MyThirdControlPad",
-                orientation = Orientation.LANDSCAPE
             )
-        ).forEach {
-                uiState.controlPads.add(it)
-        }
+        )
     }
 
     DroidPadTheme {
