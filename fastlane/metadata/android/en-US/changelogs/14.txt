@@ -1,0 +1,1 @@
+Added control pad deletion alert
