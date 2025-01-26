@@ -91,7 +91,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                     it.copy(hasInputError = !uiState.isPortNoValid || uiState.host.isEmpty())
                 }
 
-                if (uiState.connectionType == ConnectionType.MQTT) {
+                if (uiState.connectionType == ConnectionType.MQTT_V5 || uiState.connectionType == ConnectionType.MQTT_V3) {
                     _uiState.update {
                         it.copy(
                             hasInputError = uiState.clientId.isEmpty()
@@ -149,7 +149,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                             )
                         }
                     }
-                    ConnectionType.MQTT -> {
+                    ConnectionType.MQTT_V5 -> {
                         val mqttConfig = MqttConfig.fromJson(config.configJson)
                         _uiState.update {
                             it.copy(
@@ -169,6 +169,28 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                         }
 
                     }
+
+                    ConnectionType.MQTT_V3 -> {
+                        val mqttConfig = MqttConfig.fromJson(config.configJson)
+                        _uiState.update {
+                            it.copy(
+                                connectionType = config.connectionType,
+                                host = mqttConfig.brokerIp,
+                                port = mqttConfig.brokerPort,
+                                clientId = mqttConfig.clientId,
+                                topic = mqttConfig.topic,
+                                useCredentials = mqttConfig.useCredentials,
+                                useSSL = mqttConfig.useSSL,
+                                username = mqttConfig.userName,
+                                password = mqttConfig.password,
+                                connectionTimeout = mqttConfig.connectionTimeoutSecs,
+                                qos = mqttConfig.qos,
+                                useWebsocket = mqttConfig.useWebsocket
+                            )
+                        }
+
+                    }
+
                     ConnectionType.BLUETOOTH_LE -> {
                         _uiState.update {
                             it.copy(
@@ -264,7 +286,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                         port = uiState.value.port
                     ).toJson()
                 }
-                ConnectionType.MQTT -> {
+                ConnectionType.MQTT_V5 -> {
                     MqttConfig(
                         brokerIp = uiState.value.host,
                         brokerPort = uiState.value.port,
@@ -279,6 +301,22 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                         useWebsocket = uiState.value.useWebsocket
                     ).toJson()
                 }
+                ConnectionType.MQTT_V3 -> {
+                    MqttConfig(
+                        brokerIp = uiState.value.host,
+                        brokerPort = uiState.value.port,
+                        clientId = uiState.value.clientId,
+                        topic = uiState.value.topic,
+                        useCredentials = uiState.value.useCredentials,
+                        userName = uiState.value.username,
+                        password = uiState.value.password,
+                        connectionTimeoutSecs = uiState.value.connectionTimeout,
+                        qos = uiState.value.qos,
+                        useSSL = uiState.value.useSSL,
+                        useWebsocket = uiState.value.useWebsocket
+                    ).toJson()
+                }
+
                 ConnectionType.WEBSOCKET -> {
                     WebsocketConfig(
                         host = uiState.value.host,

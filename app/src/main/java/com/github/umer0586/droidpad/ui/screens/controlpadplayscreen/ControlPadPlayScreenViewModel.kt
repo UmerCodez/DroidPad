@@ -32,7 +32,8 @@ import com.github.umer0586.droidpad.data.connection.BluetoothLEConnection
 import com.github.umer0586.droidpad.data.connection.Connection
 import com.github.umer0586.droidpad.data.connection.ConnectionFactory
 import com.github.umer0586.droidpad.data.connection.ConnectionState
-import com.github.umer0586.droidpad.data.connection.MqttConnection
+import com.github.umer0586.droidpad.data.connection.Mqttv3Connection
+import com.github.umer0586.droidpad.data.connection.Mqttv5Connection
 import com.github.umer0586.droidpad.data.connection.TCPConnection
 import com.github.umer0586.droidpad.data.connection.UDPConnection
 import com.github.umer0586.droidpad.data.connection.WebsocketConnection
@@ -120,7 +121,8 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionType.TCP -> (connection as TCPConnection).tcpConfig.address
                                 ConnectionType.UDP -> (connection as UDPConnection).udpConfig.address
                                 ConnectionType.WEBSOCKET -> (connection as WebsocketConnection).webSocketConfig.address
-                                ConnectionType.MQTT -> (connection as MqttConnection).mqttConfig.brokerAddress
+                                ConnectionType.MQTT_V5 -> (connection as Mqttv5Connection).mqttConfig.brokerAddress
+                                ConnectionType.MQTT_V3 -> (connection as Mqttv3Connection).mqttConfig.brokerAddress
                                 ConnectionType.BLUETOOTH_LE -> (connection as BluetoothLEConnection).bluetoothDisplayName
 
                             }

@@ -21,6 +21,7 @@ navigationCompose = "2.8.5"
 leakcanaryAndroid = "3.0-alpha-8"
 numberpicker = "1.0.3"
 orgEclipsePahoMqttv5Client = "1.2.5"
+orgEclipsePahoMqttv3Client = "1.2.5"
 robolectric = "4.14.1"
 mockitoKotlin = "5.4.0"
 roomRuntime = "2.6.1"
@@ -59,6 +60,7 @@ leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", ve
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 numberpicker = { module = "com.chargemap.compose:numberpicker", version.ref = "numberpicker" }
 org-eclipse-paho-mqttv5-client = { module = "org.eclipse.paho:org.eclipse.paho.mqttv5.client", version.ref = "orgEclipsePahoMqttv5Client" }
+org-eclipse-paho-mqttv3-client = { module = "org.eclipse.paho:org.eclipse.paho.client.mqttv3", version.ref = "orgEclipsePahoMqttv3Client" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }

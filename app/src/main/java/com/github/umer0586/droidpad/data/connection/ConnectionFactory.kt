@@ -40,7 +40,8 @@ class ConnectionFactoryImpl(private val appContext: Context) : ConnectionFactory
             ConnectionType.TCP -> TCPConnection(TCPConfig.fromJson(connectionConfig.configJson))
             ConnectionType.UDP -> UDPConnection(UDPConfig.fromJson(connectionConfig.configJson))
             ConnectionType.WEBSOCKET -> WebsocketConnection(WebsocketConfig.fromJson(connectionConfig.configJson))
-            ConnectionType.MQTT -> MqttConnection(MqttConfig.fromJson(connectionConfig.configJson))
+            ConnectionType.MQTT_V5 -> Mqttv5Connection(MqttConfig.fromJson(connectionConfig.configJson))
+            ConnectionType.MQTT_V3 -> Mqttv3Connection(MqttConfig.fromJson(connectionConfig.configJson))
             ConnectionType.BLUETOOTH_LE -> BluetoothLEConnection(context = appContext , config = BluetoothLEConfig.fromJson(connectionConfig.configJson))
         }
 

@@ -36,7 +36,7 @@ import org.eclipse.paho.mqttv5.common.MqttMessage
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties
 import java.net.SocketTimeoutException
 
-class MqttConnection(
+class Mqttv5Connection(
     val mqttConfig: MqttConfig,
     val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : Connection(), MqttCallback {
@@ -46,7 +46,7 @@ class MqttConnection(
     private var connectionOptions: MqttConnectionOptions? = null
 
     override val connectionType: ConnectionType
-        get() = ConnectionType.MQTT
+        get() = ConnectionType.MQTT_V5
 
     override suspend fun setup() = withContext<Unit>(ioDispatcher) {
 
@@ -84,7 +84,7 @@ class MqttConnection(
 
             }
 
-            mqttAsyncClient?.setCallback(this@MqttConnection)
+            mqttAsyncClient?.setCallback(this@Mqttv5Connection)
             mqttAsyncClient?.connect(connectionOptions,null,object: MqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     println(asyncActionToken)

@@ -69,6 +69,12 @@ android {
 
     }
 
+    packaging {
+        resources {
+            excludes += "bundle.properties"
+        }
+    }
+
 }
 
 
@@ -86,6 +92,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.room.runtime)
     implementation(libs.org.eclipse.paho.mqttv5.client)
+    implementation(libs.org.eclipse.paho.mqttv3.client)
 
     // Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)

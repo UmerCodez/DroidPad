@@ -145,7 +145,8 @@ fun ConnectionConfigScreenContent(
             if(uiState.connectionType == ConnectionType.TCP ||
                 uiState.connectionType == ConnectionType.UDP ||
                 uiState.connectionType == ConnectionType.WEBSOCKET ||
-                uiState.connectionType == ConnectionType.MQTT
+                uiState.connectionType == ConnectionType.MQTT_V5 ||
+                uiState.connectionType == ConnectionType.MQTT_V3
             ){
 
                 OutlinedTextField(
@@ -195,7 +196,7 @@ fun ConnectionConfigScreenContent(
 
             }
 
-            if(uiState.connectionType == ConnectionType.MQTT){
+            if(uiState.connectionType == ConnectionType.MQTT_V5 || uiState.connectionType == ConnectionType.MQTT_V3){
 
                 OutlinedTextField(
                     value = uiState.clientId,
@@ -373,7 +374,7 @@ private fun ConnectionConfigScreenContentPreview()  {
 
     var uiState by remember { mutableStateOf(
         ConnectionConfigScreenState(
-        connectionType = ConnectionType.MQTT,
+        connectionType = ConnectionType.MQTT_V5,
         username = "umer",
         password = "123"
     )
