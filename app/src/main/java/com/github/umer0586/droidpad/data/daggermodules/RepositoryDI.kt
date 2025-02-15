@@ -19,17 +19,21 @@
  */
 package com.github.umer0586.droidpad.data.daggermodules
 
+import android.content.Context
 import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
+import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
 import com.github.umer0586.droidpad.data.repositoriesimp.ConnectionConfigRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadItemRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadRepositoryImp
+import com.github.umer0586.droidpad.data.repositoriesimp.PreferenceRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
@@ -53,6 +57,14 @@ object RepositoryDI {
     fun provideConnectionConfigurationRepository(appDatabase: AppDatabase): ConnectionConfigRepository {
         return ConnectionConfigRepositoryImp(appDatabase)
     }
+
+    @Provides
+    @ViewModelScoped
+    fun provideSettingsRepository(@ApplicationContext context: Context): PreferenceRepository {
+        return PreferenceRepositoryImp(context)
+    }
+
+
 
 
 }

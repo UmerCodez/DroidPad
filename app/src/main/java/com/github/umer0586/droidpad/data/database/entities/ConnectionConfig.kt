@@ -22,11 +22,13 @@ package com.github.umer0586.droidpad.data.database.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 enum class ConnectionType{
     TCP,UDP,MQTT_V5,MQTT_V3,WEBSOCKET,BLUETOOTH_LE
 }
 
+@Serializable
 @Entity(
     foreignKeys = [
         ForeignKey(

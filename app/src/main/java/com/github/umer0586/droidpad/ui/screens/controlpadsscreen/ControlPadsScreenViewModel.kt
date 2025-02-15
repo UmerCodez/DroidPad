@@ -51,11 +51,13 @@ sealed interface ControlPadsScreenEvent {
     data class OnBuildClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnSettingClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnDuplicateClick(val controlPad: ControlPad) : ControlPadsScreenEvent
+    data class OnQrCodeClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     // Indicates that user clicked the "+" floating action button
     data object OnCreateClick : ControlPadsScreenEvent
     data object OnExitClick : ControlPadsScreenEvent
     data object OnShareClick : ControlPadsScreenEvent
     data object OnAboutClick : ControlPadsScreenEvent
+    data object OnQRScannerClick : ControlPadsScreenEvent
 }
 
 
@@ -79,6 +81,7 @@ class ControlPadsScreenViewModel @Inject constructor(
             }
 
         }
+
     }
 
     // This method should be invoked from the UI (e.g., via LaunchedEffect)

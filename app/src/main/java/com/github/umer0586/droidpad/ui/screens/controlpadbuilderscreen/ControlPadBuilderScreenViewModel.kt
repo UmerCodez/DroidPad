@@ -25,12 +25,16 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.umer0586.droidpad.data.Resolution
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
+import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
+import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
+import com.github.umer0586.droidpad.data.repositories.updatePreference
 import com.github.umer0586.droidpad.ui.components.rotateBy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,13 +63,16 @@ sealed interface ControlPadBuilderScreenEvent {
     data object OnItemEditorDismissRequest : ControlPadBuilderScreenEvent
     data object OnSaveClick: ControlPadBuilderScreenEvent
     data object OnBackPress: ControlPadBuilderScreenEvent
+    data class OnResolutionReported(val controlPad: ControlPad, val builderScreenResolution: Resolution, val tempOpen : Boolean = false) : ControlPadBuilderScreenEvent
+    data object OnTempOpenCompleted : ControlPadBuilderScreenEvent
 
 }
 
 @HiltViewModel
 class ControlPadBuilderScreenViewModel @Inject constructor(
     private val controlPadRepository: ControlPadRepository,
-    private val controlPadItemRepository: ControlPadItemRepository
+    private val controlPadItemRepository: ControlPadItemRepository,
+    private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
     private val tag = ControlPadBuilderScreenViewModel::class.simpleName
@@ -241,7 +248,51 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
             }
 
+            is ControlPadBuilderScreenEvent.OnResolutionReported -> {
+
+                saveResolution(
+                    controlPad = event.controlPad,
+                    builderScreenResolution = event.builderScreenResolution,
+                    tempOpen = event.tempOpen
+                )
+
+            }
+
             ControlPadBuilderScreenEvent.OnBackPress -> {}
+            ControlPadBuilderScreenEvent.OnTempOpenCompleted -> {}
+        }
+    }
+
+    private fun saveResolution(controlPad: ControlPad, builderScreenResolution: Resolution, tempOpen: Boolean){
+
+        if(!tempOpen) {
+            viewModelScope.launch {
+                controlPadRepository.updateControlPad(
+                    controlPad.copy(
+                        width = builderScreenResolution.width,
+                        height = builderScreenResolution.height
+                    )
+                )
+            }
+        }
+
+        viewModelScope.launch {
+
+            if (controlPad.orientation == Orientation.PORTRAIT) {
+                preferenceRepository.updatePreference { pref ->
+                    pref.copy(
+                        builderScreenPortraitResolution = builderScreenResolution,
+                    )
+                }
+            }
+
+            if(controlPad.orientation == Orientation.LANDSCAPE) {
+                preferenceRepository.updatePreference { pref ->
+                    pref.copy(
+                        builderScreenLandscapeResolution = builderScreenResolution,
+                    )
+                }
+            }
         }
     }
 

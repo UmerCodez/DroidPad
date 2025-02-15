@@ -107,6 +107,8 @@ fun ControlPadsScreen(
     onExitClick: (() -> Unit)? = null,
     onAboutClick: (() -> Unit)? = null,
     onShareClick: (() -> Unit)? = null,
+    onQRGenerateClick: ((ControlPad) -> Unit)? = null,
+    onQrScannerClick: (() -> Unit)? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -128,6 +130,8 @@ fun ControlPadsScreen(
                 is ControlPadsScreenEvent.OnExitClick -> onExitClick?.invoke()
                 is ControlPadsScreenEvent.OnAboutClick -> onAboutClick?.invoke()
                 is ControlPadsScreenEvent.OnShareClick -> onShareClick?.invoke()
+                is ControlPadsScreenEvent.OnQrCodeClick -> onQRGenerateClick?.invoke(event.controlPad)
+                is ControlPadsScreenEvent.OnQRScannerClick -> onQrScannerClick?.invoke()
                 else -> {}
             }
         }
@@ -236,6 +240,17 @@ fun ControlPadsScreenContent(
                             imageVector = Icons.Filled.Menu,
                             contentDescription = "MenuIcon"
                         )
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {onUiEvent(ControlPadsScreenEvent.OnQRScannerClick)}
+                        ){
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                painter = painterResource(R.drawable.ic_qr_scanner),
+                                contentDescription = "ScanIcon"
+                            )
+                        }
                     }
                 )
             },
@@ -340,6 +355,9 @@ fun ControlPadsScreenContent(
                         },
                         onDuplicateClick = {
                             onUiEvent(ControlPadsScreenEvent.OnDuplicateClick(it))
+                        },
+                        onQRCodeClick = {
+                            onUiEvent(ControlPadsScreenEvent.OnQrCodeClick(it))
                         }
 
                     )
@@ -347,7 +365,6 @@ fun ControlPadsScreenContent(
             }
         }
     }
-
 
 }
 
@@ -362,8 +379,9 @@ private fun ItemCard(
     onSettingClick: ((ControlPad) -> Unit)? = null,
     onBuildClick: ((ControlPad) -> Unit)? = null,
     onDuplicateClick: ((ControlPad) -> Unit)? = null,
+    onQRCodeClick: ((ControlPad) -> Unit)? = null,
 
-){
+    ){
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -473,6 +491,19 @@ private fun ItemCard(
                             modifier = Modifier.size(25.dp),
                             painter = painterResource(R.drawable.ic_copy),
                             contentDescription = "DuplicateIcon"
+                        )
+                    }
+                )
+
+                IconButton(
+                    onClick = {
+                        onQRCodeClick?.invoke(controlPad)
+                    },
+                    content = {
+                        Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(R.drawable.ic_qrcode),
+                            contentDescription = "QRIcon"
                         )
                     }
                 )

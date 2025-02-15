@@ -33,18 +33,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.ui.screens.aboutscreen.AboutScreen
 import com.github.umer0586.droidpad.ui.screens.connectionconfigscreen.ConnectionConfigScreen
 import com.github.umer0586.droidpad.ui.screens.connectionconfigscreen.ConnectionConfigScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen.ControlPadBuilderScreen
 import com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen.ControlPadBuilderScreenViewModel
+import com.github.umer0586.droidpad.ui.screens.controlpadimporterscreen.ControlPadImporterScreen
+import com.github.umer0586.droidpad.ui.screens.controlpadimporterscreen.ControlPadImporterScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadplayscreen.ControlPadPlayScreen
 import com.github.umer0586.droidpad.ui.screens.controlpadplayscreen.ControlPadPlayScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadsscreen.ControlPadsScreen
 import com.github.umer0586.droidpad.ui.screens.controlpadsscreen.ControlPadsScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreen
 import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreenViewModel
+import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeGeneratorScreen
+import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeScreenViewModel
+import com.github.umer0586.droidpad.ui.screens.qrscannerscreen.QRCodeScannerScreen
+import com.github.umer0586.droidpad.ui.screens.qrscannerscreen.QRScannerScreenViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -68,7 +75,16 @@ object Route{
     data class ConnectionConfigScreen(val controlPadId: Long)
 
     @Serializable
-    data class ControlPadBuilderScreen(val controlPad: ControlPad)
+    data class ControlPadBuilderScreen(val controlPad: ControlPad, val tempOpen:Boolean = false, val externalData: ExternalData? = null)
+
+    @Serializable
+    data class QRCodeScreen(val controlPad: ControlPad)
+
+    @Serializable
+    object QRScannerScreen
+
+    @Serializable
+    data class ImporterScreen(val externalData: ExternalData)
 
 }
 
@@ -89,6 +105,9 @@ fun NavScreen(
     val controlPadPlayScreenViewModel = hiltViewModel<ControlPadPlayScreenViewModel>()
     val connectionConfigScreenViewModel = hiltViewModel<ConnectionConfigScreenViewModel>()
     val newControlPadScreenViewModel = hiltViewModel<NewControlPadScreenViewModel>()
+    val qrCodeScreenViewModel = hiltViewModel<QrCodeScreenViewModel>()
+    val qrScannerScreenViewModel = hiltViewModel<QRScannerScreenViewModel>()
+    val controlPadImporterScreenViewModel = hiltViewModel<ControlPadImporterScreenViewModel>()
 
     val context = LocalContext.current
     val versionName = try {
@@ -142,6 +161,12 @@ fun NavScreen(
                 onPlayClick = { controlPad ->
                     navController.navigateTo(Route.ControlPadPlayScreen(controlPad))
                 },
+                onQRGenerateClick = { controlPad ->
+                    navController.navigateTo(Route.QRCodeScreen(controlPad))
+                },
+                onQrScannerClick = {
+                    navController.navigateTo(Route.QRScannerScreen)
+                },
                 onExitClick = {
                     onExitClick?.invoke()
                 },
@@ -179,12 +204,16 @@ fun NavScreen(
 
         composable<Route.ControlPadBuilderScreen>(
             typeMap = mapOf(
-                typeOf<ControlPad>() to CustomNavType.ControlPadType
+                typeOf<ControlPad>() to CustomNavType.ControlPadType,
+                typeOf<ExternalData?>() to CustomNavType.ExternalDataType
             )
         ) { navBackStackEntry ->
 
             val controlPadBuilderScreen = navBackStackEntry.toRoute<Route.ControlPadBuilderScreen>()
             val controlPad = controlPadBuilderScreen.controlPad
+            val tempOpen = controlPadBuilderScreen.tempOpen
+            val externalData = controlPadBuilderScreen.externalData
+
 
             ControlPadBuilderScreen(
                 viewModel = controlPadBuilderScreenViewModel,
@@ -194,7 +223,15 @@ fun NavScreen(
                 },
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
+                },
+                tempOpen = tempOpen,
+                externalData = externalData,
+                onTempOpenCompleted = { externalData ->
+                    //navController.navigateTo(Route.QRScannerScreen)
+                    if(externalData != null)
+                        navController.navigateTo(Route.ImporterScreen(externalData))
                 }
+
             )
         }
 
@@ -232,6 +269,69 @@ fun NavScreen(
                 }
             )
         }
+
+        composable<Route.QRCodeScreen>(
+            typeMap = mapOf(
+                typeOf<ControlPad>() to CustomNavType.ControlPadType
+            )
+        ) { navBackStackEntry ->
+            val qRCodeScreenRoute = navBackStackEntry.toRoute<Route.QRCodeScreen>()
+            val controlPad = qRCodeScreenRoute.controlPad
+
+            QrCodeGeneratorScreen(
+                viewModel = qrCodeScreenViewModel,
+                controlPad = controlPad,
+                onBackPress = {
+                    navController.navigateTo(Route.ControlPadListScreen)
+                }
+            )
+        }
+
+        composable<Route.QRScannerScreen> {
+
+            QRCodeScannerScreen(
+                viewModel = qrScannerScreenViewModel,
+                onBackPress = {
+                    navController.navigateTo(Route.ControlPadListScreen)
+                },
+                onExternalDataAvailable = { externalData ->
+                    navController.navigateTo(Route.ImporterScreen(externalData))
+                }
+
+            )
+        }
+
+        composable<Route.ImporterScreen>(
+            typeMap = mapOf(
+                typeOf<ExternalData>() to CustomNavType.ExternalDataType
+            )
+        ) { navBackStackEntry ->
+
+            val importerScreenRoute = navBackStackEntry.toRoute<Route.ImporterScreen>()
+            val externalData = importerScreenRoute.externalData
+
+            ControlPadImporterScreen(
+                viewModel = controlPadImporterScreenViewModel,
+                externalData = externalData,
+                onBackPress = {
+                    navController.navigateTo(Route.ControlPadListScreen)
+                },
+                onControlPadReady = { controlPad ->
+                    navController.navigateTo(Route.ControlPadPlayScreen(controlPad))
+                },
+                onBuilderScreenResRequired = { externalData ->
+                    navController.navigateTo(
+                        Route.ControlPadBuilderScreen(
+                            controlPad = externalData.controlPad,
+                            tempOpen = true,
+                            externalData = externalData
+                        )
+                    )
+                }
+
+            )
+        }
+
 
     }
 

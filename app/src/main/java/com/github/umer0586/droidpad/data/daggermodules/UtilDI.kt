@@ -14,9 +14,11 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 object UtilDI {
+
     @Provides
     @ViewModelScoped
     fun provideBluetoothUtil(@ApplicationContext appContext: Context): BluetoothUtil {
         return BluetoothUtilImp(appContext)
     }
+
 }

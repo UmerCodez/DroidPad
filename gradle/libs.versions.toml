@@ -27,6 +27,10 @@ mockitoKotlin = "5.4.0"
 roomRuntime = "2.6.1"
 coreKtxVersion = "1.6.1"
 turbine = "1.2.0"
+zxingCore = "3.5.2"
+zxingAndroidEmbedded = "4.3.0"
+datastorePreferences = "1.1.1"
+accompanistPermissions = "0.36.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +40,7 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomRuntime" }
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpickerCompose" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 java-websocket = { module = "org.java-websocket:Java-WebSocket", version.ref = "javaWebsocket" }
@@ -64,6 +69,10 @@ org-eclipse-paho-mqttv3-client = { module = "org.eclipse.paho:org.eclipse.paho.c
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

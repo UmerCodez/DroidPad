@@ -1,6 +1,6 @@
 /*
  *     This file is a part of DroidPad (https://www.github.com/umer0586/DroidPad)
- *     Copyright (C) 2024 Umer Farooq (umerfarooq2383@gmail.com)
+ *     Copyright (C) 2025 Umer Farooq (umerfarooq2383@gmail.com)
  *
  *     DroidPad is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -17,30 +17,24 @@
  *
  */
 
-package com.github.umer0586.droidpad.data.database.entities
 
-import androidx.compose.ui.graphics.Color
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+package com.github.umer0586.droidpad.data
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-enum class Orientation{
-    LANDSCAPE,
-    PORTRAIT
+@Serializable
+data class Resolution(
+    val width: Int,
+    val height: Int
+){
+    override fun toString() = "${width}x$height}"
+    fun isZero() = width == 0 && height == 0
+    fun toJson() = Json.encodeToString(this)
+    companion object{
+        fun fromJson(json: String) = Json.decodeFromString<Resolution>(json)
+    }
 }
 
-@Serializable // To make it serializable for JSON in custom Nav types
-@Entity
-data class ControlPad(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String,
-    val orientation : Orientation,
-    val backgroundColor : Long = Color(0xFF3C3C3E).value.toLong(),
-    val width: Int = 0,
-    val height: Int = 0
-)
 
-fun ControlPad.toJson() = Json.encodeToString(this)
-fun ControlPad.fromJson(json: String) = Json.decodeFromString<ControlPad>(json)

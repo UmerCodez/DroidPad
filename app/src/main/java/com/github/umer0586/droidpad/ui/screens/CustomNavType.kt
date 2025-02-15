@@ -3,6 +3,7 @@ package com.github.umer0586.droidpad.ui.screens
 import android.net.Uri
 import android.os.Bundle
 import androidx.navigation.NavType
+import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -28,5 +29,23 @@ object CustomNavType {
             bundle.putString(key, Json.encodeToString(value))
         }
 
+    }
+
+    val ExternalDataType = object : NavType<ExternalData?>(isNullableAllowed = true) {
+        override fun get(bundle: Bundle, key: String): ExternalData? {
+            return Json.decodeFromString(bundle.getString(key) ?: return null)
+        }
+
+        override fun parseValue(value: String): ExternalData? {
+            return Json.decodeFromString(Uri.decode(value))
+        }
+
+        override fun serializeAsValue(value: ExternalData?): String {
+            return Uri.encode(Json.encodeToString(value))
+        }
+
+        override fun put(bundle: Bundle, key: String, value: ExternalData?) {
+            bundle.putString(key, Json.encodeToString(value))
+        }
     }
 }

@@ -27,9 +27,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -42,6 +46,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -62,21 +67,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.umer0586.droidpad.data.ButtonProperties
+import com.github.umer0586.droidpad.data.DpadProperties
+import com.github.umer0586.droidpad.data.ExternalData
+import com.github.umer0586.droidpad.data.JoyStickProperties
+import com.github.umer0586.droidpad.data.LabelProperties
+import com.github.umer0586.droidpad.data.Resolution
+import com.github.umer0586.droidpad.data.SliderProperties
+import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.database.entities.offset
-import com.github.umer0586.droidpad.data.ButtonProperties
-import com.github.umer0586.droidpad.data.DpadProperties
-import com.github.umer0586.droidpad.data.JoyStickProperties
-import com.github.umer0586.droidpad.data.LabelProperties
-import com.github.umer0586.droidpad.data.SliderProperties
-import com.github.umer0586.droidpad.data.SwitchProperties
+import com.github.umer0586.droidpad.ui.bottomBarHeight
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
@@ -87,21 +96,26 @@ import com.github.umer0586.droidpad.ui.components.propertieseditor.ItemPropertie
 import com.github.umer0586.droidpad.ui.components.rotateBy
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.github.umer0586.droidpad.ui.utils.LockScreenOrientation
+import kotlinx.coroutines.delay
 
 
 // TODO: Add color picker for choosing background color of ControlPad
 @Composable
 fun ControlPadBuilderScreen(
+    externalData: ExternalData? = null,
     controlPad: ControlPad,
+    tempOpen: Boolean = false,
     viewModel: ControlPadBuilderScreenViewModel = hiltViewModel(),
     onSaveClick: (() -> Unit)? = null,
     onBackPress: (() -> Unit)? = null,
+    onTempOpenCompleted: ((ExternalData?) -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit){
         Log.d("ControlPadBuilderScreen","LaunchedEffect(Unit) : ${controlPad.id}")
-        viewModel.loadControlPadItemsFor(controlPad)
+        if (!tempOpen)
+            viewModel.loadControlPadItemsFor(controlPad)
     }
 
     LockScreenOrientation(
@@ -112,6 +126,7 @@ fun ControlPadBuilderScreen(
     )
 
     ControlPadBuilderScreenContent(
+        tempOpen = tempOpen,
         controlPad = controlPad,
         uiState = uiState,
         onUiEvent = { event ->
@@ -121,6 +136,8 @@ fun ControlPadBuilderScreen(
                 onSaveClick?.invoke()
             else if(event is ControlPadBuilderScreenEvent.OnBackPress)
                 onBackPress?.invoke()
+            else if(event is ControlPadBuilderScreenEvent.OnTempOpenCompleted)
+                onTempOpenCompleted?.invoke(externalData)
 
         }
     )
@@ -153,17 +170,20 @@ private fun ItemSelectionBottomSheetContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ControlPadBuilderScreenContent(
+    tempOpen: Boolean = false,
     controlPad: ControlPad,
     uiState: ControlPadBuilderScreenState,
     onUiEvent: (ControlPadBuilderScreenEvent) -> Unit
 
 ) {
+
     Scaffold(
         bottomBar = {
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(bottomBarHeight)
                         .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center
                 ) {
@@ -228,7 +248,6 @@ fun ControlPadBuilderScreenContent(
 
                     Row(
                         Modifier
-                            .padding(10.dp)
                             .clip(shape = RoundedCornerShape(50.dp))
                             .background(MaterialTheme.colorScheme.onPrimary),
                     ) {
@@ -261,13 +280,48 @@ fun ControlPadBuilderScreenContent(
 
         }
     ) { innerPadding->
-        Box(
+        BoxWithConstraints(
             Modifier
                 .fillMaxSize()
                 .background(Color(controlPad.backgroundColor.toULong()))
                 .padding(innerPadding)
                 .clipToBounds()
         ) {
+
+            val density = LocalDensity.current
+            val widthPx = with(density) { maxWidth.toPx() }
+            val heightPx = with(density) { maxHeight.toPx() }
+
+            LaunchedEffect(Unit) {
+                onUiEvent(
+                    ControlPadBuilderScreenEvent.OnResolutionReported(
+                        controlPad = controlPad,
+                        builderScreenResolution = Resolution(
+                            widthPx.toInt(),
+                            heightPx.toInt()
+                        ),
+                        tempOpen = tempOpen
+                    )
+                )
+
+                if(tempOpen) {
+                    delay(5000)
+                    onUiEvent(ControlPadBuilderScreenEvent.OnTempOpenCompleted)
+                }
+            }
+
+            if(tempOpen){
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Please Wait...")
+                    Spacer(modifier = Modifier.height(20.dp))
+                    LinearProgressIndicator()
+                }
+
+                return@BoxWithConstraints
+            }
 
 
             uiState.controlPadItems.forEach{controlPadItem ->
@@ -564,6 +618,7 @@ fun ControlPadBuilderScreenContentInteractiveXPreview() {
 
     DroidPadTheme {
         ControlPadBuilderScreenContent(
+            tempOpen = true,
             controlPad = controlPad,
             uiState = uiState.value,
             onUiEvent = { event ->

@@ -105,6 +105,10 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.numberpicker)
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.android.embedded)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.accompanist.permissions)
 
 
     ksp(libs.hilt.compiler)
