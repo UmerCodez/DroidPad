@@ -26,6 +26,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+
+
 // TODO : Add color property for label
 @Serializable
 data class LabelProperties(
@@ -42,6 +44,7 @@ data class LabelProperties(
 data class SwitchProperties(
     val trackColor: ULong = Color(0xFFDECA86).value,
     val thumbColor: ULong = Color(0xFFB99D22).value,
+    val persistState: Boolean = false
 ){
     fun toJson() = Json.encodeToString(this)
     companion object {

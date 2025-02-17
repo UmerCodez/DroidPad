@@ -26,14 +26,17 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.Resolution
+import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.database.entities.Orientation
+import com.github.umer0586.droidpad.data.database.entities.SwitchState
 import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
+import com.github.umer0586.droidpad.data.repositories.SwitchStateRepository
 import com.github.umer0586.droidpad.data.repositories.updatePreference
 import com.github.umer0586.droidpad.ui.components.rotateBy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -72,7 +75,8 @@ sealed interface ControlPadBuilderScreenEvent {
 class ControlPadBuilderScreenViewModel @Inject constructor(
     private val controlPadRepository: ControlPadRepository,
     private val controlPadItemRepository: ControlPadItemRepository,
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
+    private val switchStateRepository: SwitchStateRepository
 ) : ViewModel() {
 
     private val tag = ControlPadBuilderScreenViewModel::class.simpleName
@@ -180,6 +184,26 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                         properties = event.controlPadItem.properties
                     )
 
+                    viewModelScope.launch {
+                        if(event.controlPadItem.itemType == ItemType.SWITCH){
+                            val switchProperties = SwitchProperties.fromJson(event.controlPadItem.properties)
+
+                            // When the user disables the "Persist state" option, ensure the switch state is set to false in the repository.
+                            // This prevents the switch from staying on if the user re-enables "Persist state" later.
+                            if(!switchProperties.persistState){
+                                switchStateRepository.getSwitchState(
+                                    controlPadId = event.controlPad.id,
+                                    controlPadItemId = event.controlPadItem.id
+                                )?.also { switchState ->
+                                    switchStateRepository.updateSwitchState(
+                                        switchState.copy(checked = false)
+                                    )
+                                }
+
+                            }
+                        }
+                    }
+
                 }
             }
             ControlPadBuilderScreenEvent.OnItemEditorDismissRequest -> {
@@ -201,6 +225,20 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                         controlPadItemRepository.getById(newId).also { newItem ->
 
                             uiState.value.controlPadItems.add(newItem!!)
+
+                            viewModelScope.launch {
+                                if (event.itemType == ItemType.SWITCH) {
+                                    // Every switch should have a default persistent state
+                                    switchStateRepository.saveSwitchState(
+                                        SwitchState(
+                                            controlPadId = event.controlPad.id,
+                                            controlPadItemId = newId,
+                                            checked = false
+                                        )
+                                    )
+                                }
+                            }
+
 
                             uiState.value.transformableStatesMap[newItem.id] =
                                 TransformableState { zoomChange, offsetChange, rotationChange ->

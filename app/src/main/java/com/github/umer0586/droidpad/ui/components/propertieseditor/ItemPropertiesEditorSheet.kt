@@ -97,7 +97,9 @@ fun ItemPropertiesEditorSheet(
     var hasError by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -917,6 +919,20 @@ private fun SwitchPropertiesEditor(
             }
         )
 
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Persist State") },
+            trailingContent = {
+                Switch(
+                    checked = switchProperties.persistState,
+                    onCheckedChange = {
+                        switchProperties = switchProperties.copy(persistState = it)
+                        onSwitchPropertiesChange?.invoke(switchProperties)
+                    }
+                )
+            }
+        )
+
 
     }
 }
@@ -973,7 +989,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "label",
                 controlPadId = 1,
-                itemType = ItemType.DPAD,
+                itemType = ItemType.SWITCH,
             )
         )
     }

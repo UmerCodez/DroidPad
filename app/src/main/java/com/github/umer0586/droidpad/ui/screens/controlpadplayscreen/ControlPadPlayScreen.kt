@@ -20,6 +20,7 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -87,6 +88,7 @@ import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.database.entities.offset
+import com.github.umer0586.droidpad.ui.bottomBarHeight
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
@@ -157,6 +159,7 @@ fun ControlPlayScreenContent(
             Box(
                 Modifier
                     .fillMaxWidth()
+                    .height(bottomBarHeight)
                     .background(MaterialTheme.colorScheme.primary)
             ){
                 Row(
@@ -274,23 +277,43 @@ fun ControlPlayScreenContent(
             uiState.controlPadItems.forEach {controlPadItem ->
                 if (controlPadItem.itemType == ItemType.SWITCH) {
 
+                    val switchProperties = SwitchProperties.fromJson(controlPadItem.properties)
                     var checked by remember { mutableStateOf(false) }
+
+                    LaunchedEffect(key1 = switchProperties.persistState) {
+                        if (switchProperties.persistState) {
+                            checked = uiState.controlPadSavedSwitchStates.first { switchState ->
+                                switchState.controlPadItemId == controlPadItem.id
+                            }.checked
+                        } else
+                            checked = false
+                    }
 
                     ControlPadSwitch(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        properties = SwitchProperties.fromJson(controlPadItem.properties),
+                        properties = switchProperties,
                         checked = checked,
                         showControls = false,
                         onCheckedChange = {
                             checked = it
                             onUiEvent(
-                                ControlPadPlayScreenEvent.OnSwitchValueChange(
+                                ControlPadPlayScreenEvent.OnSwitchCheckedChange(
                                     id = controlPadItem.itemIdentifier,
-                                    value = it
+                                    checked = it
                                 )
                             )
+                            if(switchProperties.persistState) {
+                                Log.d("ControlPadPlayScreen", "OnSwitchPersistState")
+                                onUiEvent(
+                                    ControlPadPlayScreenEvent.OnSaveSwitchState(
+                                        checked = it,
+                                        controlPadId = controlPadItem.controlPadId,
+                                        controlPadItemId = controlPadItem.id
+                                    )
+                                )
+                            }
                         }
 
                     )
@@ -444,7 +467,9 @@ fun ControlPlayScreenContent(
             )
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth().height(350.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(350.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
             ) {
