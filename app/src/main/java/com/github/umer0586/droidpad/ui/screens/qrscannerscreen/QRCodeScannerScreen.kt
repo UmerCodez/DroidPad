@@ -123,19 +123,20 @@ fun QRCodeScannerScreenContent(
 
     // Skip if being previewed in Preview mode
     if (!LocalInspectionMode.current) {
+        LaunchedEffect(key1 = cameraPermissionState?.status) {
+            if (cameraPermissionState?.status == PermissionStatus.Granted) {
 
-        if(cameraPermissionState?.status == PermissionStatus.Granted){
-            LaunchedEffect(Unit) {
                 scanLauncher.launch(
                     ScanOptions().apply {
                         setDesiredBarcodeFormats(ScanOptions.QR_CODE)
                         setCameraId(0)
                         setBeepEnabled(false)
                     })
-            }
 
-        } else if(cameraPermissionState?.status?.shouldShowRationale == true){
-            cameraPermissionState.launchPermissionRequest()
+
+            } else if (cameraPermissionState?.status?.shouldShowRationale == true) {
+                cameraPermissionState.launchPermissionRequest()
+            }
         }
     }
 
