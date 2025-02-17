@@ -50,6 +50,7 @@ fun ControlPadSlider(
     onDeleteClick: (() -> Unit)? = null,
     value: Float = 2.5f,
     onValueChange: ((Float) -> Unit)? = null,
+    onValueChangeFinished: (() -> Unit)? = null,
     enabled: Boolean = true,
 
     ){
@@ -66,11 +67,14 @@ fun ControlPadSlider(
 
         ) {
         Slider(
-            modifier = Modifier.padding(10.dp).fillMaxWidth(0.5f),
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(0.5f),
             enabled = enabled,
             value = value,
             valueRange = properties.minValue..properties.maxValue,
             onValueChange = { onValueChange?.invoke(it) },
+            onValueChangeFinished = { onValueChangeFinished?.invoke() },
             colors = SliderDefaults.colors(
                 thumbColor = Color(properties.thumbColor),
                 activeTrackColor = Color(properties.trackColor),
@@ -86,7 +90,10 @@ fun ControlPadSlider(
 @Composable
 private fun ControlPadSliderItemPreview(){
     DroidPadTheme {
-        Box(Modifier.size(200.dp).padding(10.dp)){
+        Box(
+            Modifier
+                .size(200.dp)
+                .padding(10.dp)){
             ControlPadSlider(
                 modifier = Modifier.align(Alignment.Center),
                 offset = Offset.Zero,

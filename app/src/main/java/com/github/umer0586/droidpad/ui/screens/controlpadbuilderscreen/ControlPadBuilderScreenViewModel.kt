@@ -26,16 +26,19 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.Resolution
+import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.database.entities.Orientation
+import com.github.umer0586.droidpad.data.database.entities.SliderValue
 import com.github.umer0586.droidpad.data.database.entities.SwitchState
 import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
+import com.github.umer0586.droidpad.data.repositories.SliderValueRepository
 import com.github.umer0586.droidpad.data.repositories.SwitchStateRepository
 import com.github.umer0586.droidpad.data.repositories.updatePreference
 import com.github.umer0586.droidpad.ui.components.rotateBy
@@ -76,7 +79,8 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
     private val controlPadRepository: ControlPadRepository,
     private val controlPadItemRepository: ControlPadItemRepository,
     private val preferenceRepository: PreferenceRepository,
-    private val switchStateRepository: SwitchStateRepository
+    private val switchStateRepository: SwitchStateRepository,
+    private val sliderValueRepository: SliderValueRepository
 ) : ViewModel() {
 
     private val tag = ControlPadBuilderScreenViewModel::class.simpleName
@@ -202,6 +206,20 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
                             }
                         }
+
+                        if(event.controlPadItem.itemType == ItemType.SLIDER){
+                            val sliderProperties = SliderProperties.fromJson(event.controlPadItem.properties)
+                            if(!sliderProperties.persistState){
+                                sliderValueRepository.getSliderValue(
+                                    controlPadId = event.controlPad.id,
+                                    controlPadItemId = event.controlPadItem.id
+                                )?.also { sliderValue ->
+                                    sliderValueRepository.updateSliderValue(
+                                        sliderValue.copy(value = sliderProperties.minValue)
+                                    )
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -237,6 +255,16 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                         )
                                     )
                                 }
+                                if(event.itemType == ItemType.SLIDER){
+                                    sliderValueRepository.saveSliderValue(
+                                        SliderValue(
+                                            controlPadId = event.controlPad.id,
+                                            controlPadItemId = newId,
+                                            value = SliderProperties.fromJson(event.properties).minValue
+                                        )
+                                    )
+                                }
+
                             }
 
 

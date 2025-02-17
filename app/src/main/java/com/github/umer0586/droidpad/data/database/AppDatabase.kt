@@ -24,19 +24,22 @@ import androidx.room.RoomDatabase
 import com.github.umer0586.droidpad.data.database.dao.ConnectionConfigurationDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadItemDao
+import com.github.umer0586.droidpad.data.database.dao.SliderValueDao
 import com.github.umer0586.droidpad.data.database.dao.SwitchStateDao
 import com.github.umer0586.droidpad.data.database.entities.ConnectionConfig
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
+import com.github.umer0586.droidpad.data.database.entities.SliderValue
 import com.github.umer0586.droidpad.data.database.entities.SwitchState
 
 @Database(
-    entities = [ControlPadItem::class, ControlPad::class, ConnectionConfig::class, SwitchState::class],
-    version = 2)
+    entities = [ControlPadItem::class, ControlPad::class, ConnectionConfig::class, SwitchState::class, SliderValue::class],
+    version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun controlPadItemDao(): ControlPadItemDao
     abstract fun controlPadDao(): ControlPadDao
     abstract fun connectionConfigurationDao(): ConnectionConfigurationDao
     abstract fun switchStateDao(): SwitchStateDao
+    abstract fun sliderValueDao(): SliderValueDao
 }
 

@@ -323,6 +323,16 @@ fun ControlPlayScreenContent(
 
                     val sliderProperties = SliderProperties.fromJson(controlPadItem.properties)
                     var value by remember { mutableFloatStateOf(sliderProperties.minValue) }
+
+                    LaunchedEffect(key1 = sliderProperties.persistState) {
+                        if (sliderProperties.persistState) {
+                            value = uiState.controlPadSavedSliderValues.first { switchState ->
+                                switchState.controlPadItemId == controlPadItem.id
+                            }.value
+                        } else
+                            value = sliderProperties.minValue
+                    }
+
                     ControlPadSlider(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
@@ -338,6 +348,18 @@ fun ControlPlayScreenContent(
                                     it
                                 )
                             )
+                        },
+                        onValueChangeFinished = {
+                            Log.d("ControlPadPlayScreen", "value $value")
+                            if(sliderProperties.persistState){
+                                onUiEvent(
+                                    ControlPadPlayScreenEvent.OnSaveSlideValue(
+                                        value = value,
+                                        controlPadId = controlPadItem.controlPadId,
+                                        controlPadItemId = controlPadItem.id
+                                    )
+                                )
+                            }
                         }
                     )
                 }

@@ -391,6 +391,20 @@ private fun SliderPropertiesEditor(
                         })
             }
         )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Persist State") },
+            trailingContent = {
+                Switch(
+                    checked = sliderProperties.persistState,
+                    onCheckedChange = {
+                        sliderProperties = sliderProperties.copy(persistState = it)
+                        onSliderPropertiesChange?.invoke(sliderProperties)
+                    }
+                )
+            }
+        )
     }
 }
 

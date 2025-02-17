@@ -25,11 +25,13 @@ import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
+import com.github.umer0586.droidpad.data.repositories.SliderValueRepository
 import com.github.umer0586.droidpad.data.repositories.SwitchStateRepository
 import com.github.umer0586.droidpad.data.repositoriesimp.ConnectionConfigRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadItemRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.PreferenceRepositoryImp
+import com.github.umer0586.droidpad.data.repositoriesimp.SliderValueRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.SwitchStateRepositoryImp
 import dagger.Module
 import dagger.Provides
@@ -70,6 +72,12 @@ object RepositoryDI {
     @ViewModelScoped
     fun provideSwitchStateRepository(appDatabase: AppDatabase): SwitchStateRepository {
         return SwitchStateRepositoryImp(appDatabase)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideSliderValueRepository(appDatabase: AppDatabase): SliderValueRepository {
+        return SliderValueRepositoryImp(appDatabase)
     }
 
 
