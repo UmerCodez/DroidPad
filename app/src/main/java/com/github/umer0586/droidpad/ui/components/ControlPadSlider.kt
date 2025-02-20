@@ -50,7 +50,6 @@ fun ControlPadSlider(
     onDeleteClick: (() -> Unit)? = null,
     value: Float = 2.5f,
     onValueChange: ((Float) -> Unit)? = null,
-    onValueChangeFinished: (() -> Unit)? = null,
     enabled: Boolean = true,
 
     ){
@@ -74,7 +73,6 @@ fun ControlPadSlider(
             value = value,
             valueRange = properties.minValue..properties.maxValue,
             onValueChange = { onValueChange?.invoke(it) },
-            onValueChangeFinished = { onValueChangeFinished?.invoke() },
             colors = SliderDefaults.colors(
                 thumbColor = Color(properties.thumbColor),
                 activeTrackColor = Color(properties.trackColor),

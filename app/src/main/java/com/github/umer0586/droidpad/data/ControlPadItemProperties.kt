@@ -43,8 +43,7 @@ data class LabelProperties(
 @Serializable
 data class SwitchProperties(
     val trackColor: ULong = Color(0xFFDECA86).value,
-    val thumbColor: ULong = Color(0xFFB99D22).value,
-    val persistState: Boolean = false
+    val thumbColor: ULong = Color(0xFFB99D22).value
 ){
     fun toJson() = Json.encodeToString(this)
     companion object {
@@ -88,8 +87,7 @@ data class SliderProperties(
     val minValue: Float = 0f,
     val maxValue: Float = 10f,
     val thumbColor: ULong = Color(0xFF7D5260).value,
-    val trackColor: ULong = Color(0xFF39456B).value,
-    val persistState: Boolean = false
+    val trackColor: ULong = Color(0xFF39456B).value
 ){
     fun toJson() = Json.encodeToString(this)
 

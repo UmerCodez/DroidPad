@@ -40,12 +40,8 @@ import com.github.umer0586.droidpad.data.connection.WebsocketConnection
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
-import com.github.umer0586.droidpad.data.database.entities.SliderValue
-import com.github.umer0586.droidpad.data.database.entities.SwitchState
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
-import com.github.umer0586.droidpad.data.repositories.SliderValueRepository
-import com.github.umer0586.droidpad.data.repositories.SwitchStateRepository
 import com.github.umer0586.droidpad.data.util.BluetoothUtil
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,8 +54,6 @@ import javax.inject.Inject
 
 data class ControlPadPlayScreenState(
     val controlPadItems: List<ControlPadItem> = emptyList(),
-    val controlPadSavedSwitchStates: List<SwitchState> = emptyList(),
-    val controlPadSavedSliderValues: List<SliderValue> = emptyList(),
     val connectionState: ConnectionState = ConnectionState.NONE,
     val connectionType: ConnectionType = ConnectionType.TCP,
     val isConnecting: Boolean = false,
@@ -72,8 +66,6 @@ sealed interface ControlPadPlayScreenEvent {
     data object OnConnectClick : ControlPadPlayScreenEvent
     data object OnDisconnectClick : ControlPadPlayScreenEvent
     data class OnSwitchCheckedChange(val id: String, val checked: Boolean) : ControlPadPlayScreenEvent
-    data class OnSaveSwitchState(val checked: Boolean, val controlPadId: Long, val controlPadItemId: Long) : ControlPadPlayScreenEvent
-    data class OnSaveSlideValue(val value: Float, val controlPadId: Long, val controlPadItemId: Long): ControlPadPlayScreenEvent
     data class OnSliderValueChange(val id: String, val value: Float) : ControlPadPlayScreenEvent
     data class OnButtonPress(val id: String) : ControlPadPlayScreenEvent
     data class OnButtonRelease(val id: String) : ControlPadPlayScreenEvent
@@ -92,8 +84,6 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     private val controlPadRepository: ControlPadRepository,
     private val connectionConfigRepository: ConnectionConfigRepository,
     private val connectionFactory: ConnectionFactory,
-    private val switchStateRepository: SwitchStateRepository,
-    private val sliderValueRepository: SliderValueRepository,
     private val bluetoothUtil: BluetoothUtil
 ) : ViewModel() {
 
@@ -117,29 +107,8 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 controlPadItems = controlPadRepository.getControlPadItemsOf(controlPad),
-                controlPadSavedSwitchStates = switchStateRepository.getAllSwitchStatesForControlPad(controlPad.id),
                 controlPadBackgroundColor = controlPad.backgroundColor,
             )
-
-            viewModelScope.launch {
-                switchStateRepository.getAllSwitchStatesForControlPadAsFlow(controlPad.id).collect{ controlPadSwitchStates ->
-                    _uiState.update {
-                        it.copy(
-                            controlPadSavedSwitchStates = controlPadSwitchStates
-                        )
-                    }
-                }
-            }
-
-            viewModelScope.launch {
-                sliderValueRepository.getAllSliderValuesForControlPadAsFlow(controlPad.id).collect { controlPadSliderValues ->
-                    _uiState.update {
-                        it.copy(
-                            controlPadSavedSliderValues = controlPadSliderValues
-                        )
-                    }
-                }
-            }
 
             connectionConfigRepository.getConfigForControlPad(controlPad.id)
                 ?.also { connectionConfig ->
@@ -235,15 +204,6 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             }
 
-            is ControlPadPlayScreenEvent.OnSaveSwitchState -> {
-                viewModelScope.launch {
-                    switchStateRepository.getSwitchState(controlPadId = event.controlPadId, controlPadItemId = event.controlPadItemId)?.also { switchState ->
-                        switchStateRepository.updateSwitchState(switchState.copy(checked = event.checked))
-                    }
-                }
-
-
-            }
 
             is ControlPadPlayScreenEvent.OnSliderValueChange -> {
 
@@ -254,14 +214,6 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
                 viewModelScope.launch {
                     connection?.sendData(data)
-                }
-            }
-
-            is ControlPadPlayScreenEvent.OnSaveSlideValue -> {
-                viewModelScope.launch {
-                    sliderValueRepository.getSliderValue(controlPadId = event.controlPadId, controlPadItemId = event.controlPadItemId)?.also { sliderValue ->
-                        sliderValueRepository.updateSliderValue(sliderValue.copy(value = event.value))
-                    }
                 }
             }
 

@@ -20,7 +20,6 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -280,15 +279,6 @@ fun ControlPlayScreenContent(
                     val switchProperties = SwitchProperties.fromJson(controlPadItem.properties)
                     var checked by remember { mutableStateOf(false) }
 
-                    LaunchedEffect(key1 = switchProperties.persistState) {
-                        if (switchProperties.persistState) {
-                            checked = uiState.controlPadSavedSwitchStates.first { switchState ->
-                                switchState.controlPadItemId == controlPadItem.id
-                            }.checked
-                        } else
-                            checked = false
-                    }
-
                     ControlPadSwitch(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
@@ -304,16 +294,6 @@ fun ControlPlayScreenContent(
                                     checked = it
                                 )
                             )
-                            if(switchProperties.persistState) {
-                                Log.d("ControlPadPlayScreen", "OnSwitchPersistState")
-                                onUiEvent(
-                                    ControlPadPlayScreenEvent.OnSaveSwitchState(
-                                        checked = it,
-                                        controlPadId = controlPadItem.controlPadId,
-                                        controlPadItemId = controlPadItem.id
-                                    )
-                                )
-                            }
                         }
 
                     )
@@ -323,15 +303,6 @@ fun ControlPlayScreenContent(
 
                     val sliderProperties = SliderProperties.fromJson(controlPadItem.properties)
                     var value by remember { mutableFloatStateOf(sliderProperties.minValue) }
-
-                    LaunchedEffect(key1 = sliderProperties.persistState) {
-                        if (sliderProperties.persistState) {
-                            value = uiState.controlPadSavedSliderValues.first { switchState ->
-                                switchState.controlPadItemId == controlPadItem.id
-                            }.value
-                        } else
-                            value = sliderProperties.minValue
-                    }
 
                     ControlPadSlider(
                         offset = controlPadItem.offset,
@@ -348,18 +319,6 @@ fun ControlPlayScreenContent(
                                     it
                                 )
                             )
-                        },
-                        onValueChangeFinished = {
-                            Log.d("ControlPadPlayScreen", "value $value")
-                            if(sliderProperties.persistState){
-                                onUiEvent(
-                                    ControlPadPlayScreenEvent.OnSaveSlideValue(
-                                        value = value,
-                                        controlPadId = controlPadItem.controlPadId,
-                                        controlPadItemId = controlPadItem.id
-                                    )
-                                )
-                            }
                         }
                     )
                 }
