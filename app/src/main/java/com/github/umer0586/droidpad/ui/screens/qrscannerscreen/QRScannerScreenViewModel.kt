@@ -35,12 +35,19 @@ import kotlinx.coroutines.withContext
 data class QRScannerScreenState(
     val decoding: Boolean = false,
     val decodingSuccess: Boolean = false,
-    val decodingFailed: Boolean = false
+    val decodingFailed: Boolean = false,
+    val cameraPermissionGranted: Boolean = false,
+    val shouldShowRationale: Boolean = false,
+    val cameraPermissionPermanentlyDenied: Boolean = false,
 )
 
 sealed interface QRScannerScreenEvent {
     data class OnQrCodeScanned(val data: String) : QRScannerScreenEvent
     data object OnBackPress : QRScannerScreenEvent
+    data object OnCameraPermissionGranted : QRScannerScreenEvent
+    data object OnShouldShowRationale : QRScannerScreenEvent
+    data object OnPermissionPermanentlyDenied : QRScannerScreenEvent
+    data object OnGrantPermissionClick: QRScannerScreenEvent
 }
 
 
@@ -94,6 +101,24 @@ class QRScannerScreenViewModel : ViewModel() {
                     }
 
 
+                }
+            }
+
+            is QRScannerScreenEvent.OnCameraPermissionGranted -> {
+                _uiState.update {
+                    it.copy(cameraPermissionGranted = true)
+                }
+            }
+
+            is QRScannerScreenEvent.OnShouldShowRationale -> {
+                _uiState.update {
+                    it.copy(shouldShowRationale = true)
+                }
+            }
+
+            is QRScannerScreenEvent.OnPermissionPermanentlyDenied -> {
+                _uiState.update {
+                    it.copy(cameraPermissionPermanentlyDenied = true)
                 }
             }
 
