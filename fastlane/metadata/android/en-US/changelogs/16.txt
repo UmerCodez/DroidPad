@@ -1,0 +1,3 @@
+New Feature:-
+ * User can now share control pad via QR code
+ * User can now import control pad by scanning QR Code
