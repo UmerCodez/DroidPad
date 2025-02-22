@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <external-cache-path name="shared_images" path="shared_images/" />
+    <cache-path name="shared_json_files" path="shared_json_files/" />
 </paths>

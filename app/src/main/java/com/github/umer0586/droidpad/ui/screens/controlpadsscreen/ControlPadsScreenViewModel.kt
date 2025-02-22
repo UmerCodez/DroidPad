@@ -23,6 +23,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
@@ -52,6 +53,7 @@ sealed interface ControlPadsScreenEvent {
     data class OnSettingClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnDuplicateClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnQrCodeClick(val controlPad: ControlPad) : ControlPadsScreenEvent
+    data class OnExportJsonClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     // Indicates that user clicked the "+" floating action button
     data object OnCreateClick : ControlPadsScreenEvent
     data object OnExitClick : ControlPadsScreenEvent
@@ -71,6 +73,12 @@ class ControlPadsScreenViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ControlPadsScreenState())
     val uiState = _uiState.asStateFlow()
+
+    private var _onExportableJsonReady: ((ExternalData) -> Unit)? = null
+    fun onExportableJsonReady(callback: (ExternalData) -> Unit){
+        _onExportableJsonReady = callback
+    }
+
 
     init {
         viewModelScope.launch {
@@ -124,6 +132,21 @@ class ControlPadsScreenViewModel @Inject constructor(
                     createAndSaveDuplicate(event.controlPad)
                 }
             }
+
+            is ControlPadsScreenEvent.OnExportJsonClick -> {
+                viewModelScope.launch {
+                    connectionConfigRepository.getConfigForControlPad(event.controlPad.id)?.also { connectionConfig ->
+                        val dataToBeExported = ExternalData(
+                            controlPad = event.controlPad.copy(id = 0),
+                            controlPadItems = controlPadsRepository.getControlPadItemsOf(event.controlPad)
+                                .map { it.copy(id = 0) },
+                            connectionConfig = connectionConfig.copy(id = 0)
+                        )
+                        _onExportableJsonReady?.invoke(dataToBeExported)
+                    }
+                }
+            }
+
             else -> {
 
             }
