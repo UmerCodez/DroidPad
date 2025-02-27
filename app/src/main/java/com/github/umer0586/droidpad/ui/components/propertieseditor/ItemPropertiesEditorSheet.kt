@@ -88,7 +88,7 @@ fun ItemPropertiesEditorSheet(
     controlPadItem: ControlPadItem,
     onSaveSubmit: ((ControlPadItem) -> Unit)? = null,
     itemIdentifierMaxLength: Int = 10,
-    labelTextMaxLength: Int = 8,
+    labelTextMaxLength: Int = 10,
     buttonTextMaxLength: Int = 8
 ) {
 
