@@ -101,6 +101,8 @@ dependencies {
     implementation(libs.colorpicker.compose)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.network)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.io)
     implementation(libs.java.websocket)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

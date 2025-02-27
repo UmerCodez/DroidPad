@@ -46,6 +46,8 @@ import com.github.umer0586.droidpad.ui.screens.controlpadplayscreen.ControlPadPl
 import com.github.umer0586.droidpad.ui.screens.controlpadplayscreen.ControlPadPlayScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadsscreen.ControlPadsScreen
 import com.github.umer0586.droidpad.ui.screens.controlpadsscreen.ControlPadsScreenViewModel
+import com.github.umer0586.droidpad.ui.screens.jsonimporterscreen.JsonImporterScreen
+import com.github.umer0586.droidpad.ui.screens.jsonimporterscreen.JsonImporterScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreen
 import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeGeneratorScreen
@@ -86,6 +88,9 @@ object Route{
     @Serializable
     data class ImporterScreen(val externalData: ExternalData)
 
+    @Serializable
+    object JsonImporterScreen
+
 }
 
 
@@ -108,6 +113,7 @@ fun NavScreen(
     val qrCodeScreenViewModel = hiltViewModel<QrCodeScreenViewModel>()
     val qrScannerScreenViewModel = hiltViewModel<QRScannerScreenViewModel>()
     val controlPadImporterScreenViewModel = hiltViewModel<ControlPadImporterScreenViewModel>()
+    val jsonImporterScreenViewModel = hiltViewModel<JsonImporterScreenViewModel>()
 
     val context = LocalContext.current
     val versionName = try {
@@ -181,8 +187,10 @@ fun NavScreen(
                     } else {
                         Toast.makeText(context,"No browser found", Toast.LENGTH_SHORT).show()
                     }
+                },
+                onImportJsonClick = {
+                    navController.navigateTo(Route.JsonImporterScreen)
                 }
-
 
             )
         }
@@ -329,6 +337,18 @@ fun NavScreen(
                     )
                 }
 
+            )
+        }
+
+        composable<Route.JsonImporterScreen> {
+            JsonImporterScreen(
+                viewModel = jsonImporterScreenViewModel,
+                onBackPress = {
+                    navController.navigateTo(Route.ControlPadListScreen)
+                },
+                onExternalDataAvailable = { externalData ->
+                    navController.navigateTo(Route.ImporterScreen(externalData))
+                }
             )
         }
 

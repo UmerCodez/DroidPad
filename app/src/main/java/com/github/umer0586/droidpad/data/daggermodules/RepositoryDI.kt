@@ -24,10 +24,12 @@ import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
+import com.github.umer0586.droidpad.data.repositories.JsonRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
 import com.github.umer0586.droidpad.data.repositoriesimp.ConnectionConfigRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadItemRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadRepositoryImp
+import com.github.umer0586.droidpad.data.repositoriesimp.JsonRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.PreferenceRepositoryImp
 import dagger.Module
 import dagger.Provides
@@ -62,6 +64,12 @@ object RepositoryDI {
     @ViewModelScoped
     fun provideSettingsRepository(@ApplicationContext context: Context): PreferenceRepository {
         return PreferenceRepositoryImp(context)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideJsonRepository() : JsonRepository {
+        return JsonRepositoryImp()
     }
 
 

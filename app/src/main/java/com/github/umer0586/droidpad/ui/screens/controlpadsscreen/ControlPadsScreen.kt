@@ -45,6 +45,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -120,6 +121,7 @@ fun ControlPadsScreen(
     onShareClick: (() -> Unit)? = null,
     onQRGenerateClick: ((ControlPad) -> Unit)? = null,
     onQrScannerClick: (() -> Unit)? = null,
+    onImportJsonClick: (() -> Unit)? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -152,6 +154,7 @@ fun ControlPadsScreen(
                 is ControlPadsScreenEvent.OnShareClick -> onShareClick?.invoke()
                 is ControlPadsScreenEvent.OnQrCodeClick -> onQRGenerateClick?.invoke(event.controlPad)
                 is ControlPadsScreenEvent.OnQRScannerClick -> onQrScannerClick?.invoke()
+                is ControlPadsScreenEvent.OnImportJsonClick -> onImportJsonClick?.invoke()
                 else -> {}
             }
         }
@@ -216,6 +219,19 @@ fun ControlPadsScreenContent(
                     Spacer(Modifier.height(20.dp))
 
                     HorizontalDivider()
+
+                    NavigationDrawerItem(
+                        label = { Text("Import Json") },
+                        icon = {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                painter = painterResource(R.drawable.ic_json),
+                                contentDescription = "JsonIcon"
+                            )
+                        },
+                        selected = false,
+                        onClick = { onUiEvent(ControlPadsScreenEvent.OnImportJsonClick) }
+                    )
 
                     NavigationDrawerItem(
                         label = { Text("About") },
