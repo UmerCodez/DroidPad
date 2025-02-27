@@ -210,7 +210,8 @@ private fun JsonImporterScreenContent(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                var link by remember { mutableStateOf("https://goto.now/mk1YT") }
+                val exampleLink = "https://raw.githubusercontent.com/umer0586/droidpad-python-examples/refs/heads/main/json/link-example.json"
+                var link by remember { mutableStateOf(exampleLink) }
                 OutlinedTextField(
                     value = link,
                     singleLine = true,
