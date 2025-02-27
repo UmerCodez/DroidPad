@@ -1,0 +1,3 @@
+New Features
+    * User can now export Control Pad as Json file
+    * User can now import a control pad from a JSON file stored locally or from a provided link
