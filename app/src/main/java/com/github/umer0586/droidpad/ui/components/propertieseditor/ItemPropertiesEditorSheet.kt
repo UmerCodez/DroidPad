@@ -221,7 +221,7 @@ fun ItemPropertiesEditorSheet(
 @Composable
 private fun LabelPropertiesEditor(
     controlPadItem: ControlPadItem,
-    labelTextMaxLength: Int = 8,
+    labelTextMaxLength: Int,
     onLabelPropertiesChange: ((LabelProperties) -> Unit)? = null,
     hasError: ((Boolean) -> Unit)? = null,
 ) {
@@ -399,7 +399,7 @@ private fun SliderPropertiesEditor(
 @Composable
 private fun ButtonPropertiesEditor(
     modifier: Modifier = Modifier,
-    buttonTextMaxLength: Int = 5,
+    buttonTextMaxLength: Int,
     controlPadItem: ControlPadItem,
     onButtonPropertiesChange: ((ButtonProperties) -> Unit)? = null,
     hasError: ((Boolean) -> Unit)? = null,
