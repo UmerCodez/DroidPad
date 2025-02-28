@@ -24,6 +24,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ExternalData
+import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
@@ -141,7 +142,17 @@ class ControlPadsScreenViewModel @Inject constructor(
                             controlPad = event.controlPad.copy(id = 0),
                             controlPadItems = controlPadsRepository.getControlPadItemsOf(event.controlPad)
                                 .map { it.copy(id = 0) },
-                            connectionConfig = connectionConfig.copy(id = 0)
+                            connectionConfig = connectionConfig.copy(id = 0).let {
+
+                                // Don't export password
+                                if (it.connectionType == ConnectionType.MQTT_V5 || it.connectionType == ConnectionType.MQTT_V3) {
+                                    val mqttConfig = MqttConfig.fromJson(it.configJson)
+                                    val updatedConfigJson = mqttConfig.copy(password = "****").toJson()
+                                    return@let it.copy(configJson = updatedConfigJson)
+
+                                }
+                                return@let it
+                            }
                         )
                         _onExportableJsonReady?.invoke(dataToBeExported)
                     }
