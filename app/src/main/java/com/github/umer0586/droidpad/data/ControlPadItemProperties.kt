@@ -26,6 +26,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+private val JsonCon = Json {
+    ignoreUnknownKeys = true
+}
 
 
 // TODO : Add color property for label
@@ -34,9 +37,9 @@ data class LabelProperties(
     val text: String = "label"
 ){
 
-    fun toJson() = Json.encodeToString(this)
+    fun toJson() = JsonCon.encodeToString(this)
     companion object {
-        fun fromJson(json: String) = Json.decodeFromString<LabelProperties>(json)
+        fun fromJson(json: String) = JsonCon.decodeFromString<LabelProperties>(json)
     }
 }
 
@@ -45,9 +48,9 @@ data class SwitchProperties(
     val trackColor: ULong = Color(0xFFDBC66E).value,
     val thumbColor: ULong = Color(0xFF393000).value
 ){
-    fun toJson() = Json.encodeToString(this)
+    fun toJson() = JsonCon.encodeToString(this)
     companion object {
-        fun fromJson(json: String) = Json.decodeFromString<SwitchProperties>(json)
+        fun fromJson(json: String) = JsonCon.decodeFromString<SwitchProperties>(json)
     }
 }
 
@@ -61,9 +64,9 @@ data class ButtonProperties(
     val iconId: Int = 0,
     val iconColor: ULong = Color(0xFF393000).value
 ){
-    fun toJson() = Json.encodeToString(this)
+    fun toJson() = JsonCon.encodeToString(this)
     companion object{
-        fun fromJson(json: String) = Json.decodeFromString<ButtonProperties>(json)
+        fun fromJson(json: String) = JsonCon.decodeFromString<ButtonProperties>(json)
         fun getIconById(id: Int) = idToIconMap[id] ?: R.drawable.ic_power
         val iconIds = idToIconMap.keys.toList()
     }
@@ -75,9 +78,9 @@ data class DpadProperties(
     val buttonColor: ULong = Color(0xFF393000).value,
     val useClickAction: Boolean = false
 ){
-    fun toJson() = Json.encodeToString(this)
+    fun toJson() = JsonCon.encodeToString(this)
     companion object {
-        fun fromJson(json: String) = Json.decodeFromString<DpadProperties>(json)
+        fun fromJson(json: String) = JsonCon.decodeFromString<DpadProperties>(json)
     }
 }
 
@@ -89,10 +92,10 @@ data class SliderProperties(
     val thumbColor: ULong = Color(0xFFDBC66E).value,
     val trackColor: ULong = Color(0xFF393000).value
 ){
-    fun toJson() = Json.encodeToString(this)
+    fun toJson() = JsonCon.encodeToString(this)
 
     companion object {
-        fun fromJson(json: String) = Json.decodeFromString<SliderProperties>(json)
+        fun fromJson(json: String) = JsonCon.decodeFromString<SliderProperties>(json)
     }
 }
 
@@ -102,9 +105,9 @@ data class JoyStickProperties(
     val backgroundColor: ULong = Color(0xFFDBC66E).value,
     val handleColor: ULong = Color(0xFF393000).value,
 ){
-    fun toJson() = Json.encodeToString(this)
+    fun toJson() = JsonCon.encodeToString(this)
     companion object {
-        fun fromJson(json: String) = Json.decodeFromString<JoyStickProperties>(json)
+        fun fromJson(json: String) = JsonCon.decodeFromString<JoyStickProperties>(json)
     }
 }
 
