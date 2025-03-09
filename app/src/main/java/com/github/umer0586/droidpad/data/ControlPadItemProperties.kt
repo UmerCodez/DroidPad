@@ -42,8 +42,8 @@ data class LabelProperties(
 
 @Serializable
 data class SwitchProperties(
-    val trackColor: ULong = Color(0xFFDECA86).value,
-    val thumbColor: ULong = Color(0xFFB99D22).value
+    val trackColor: ULong = Color(0xFFDBC66E).value,
+    val thumbColor: ULong = Color(0xFF393000).value
 ){
     fun toJson() = Json.encodeToString(this)
     companion object {
@@ -54,12 +54,12 @@ data class SwitchProperties(
 @Serializable
 data class ButtonProperties(
     val text: String = "Btn",
-    val textColor: ULong = Color(0xFFFFFCFC).value,
-    val buttonColor: ULong = Color(0xFF7D5260).value,
+    val textColor: ULong = Color(0xFF393000).value,
+    val buttonColor: ULong = Color(0xFFDBC66E).value,
     val useIcon: Boolean = false,
     val useClickAction: Boolean = false,
     val iconId: Int = 0,
-    val iconColor: ULong = Color(0xFFFFFCFC).value
+    val iconColor: ULong = Color(0xFF393000).value
 ){
     fun toJson() = Json.encodeToString(this)
     companion object{
@@ -71,8 +71,8 @@ data class ButtonProperties(
 
 @Serializable
 data class DpadProperties(
-    val backgroundColor: ULong = Color(0xFFFDD835).value,
-    val buttonColor: ULong = Color(0xFF2A2929).value,
+    val backgroundColor: ULong = Color(0xFFDBC66E).value,
+    val buttonColor: ULong = Color(0xFF393000).value,
     val useClickAction: Boolean = false
 ){
     fun toJson() = Json.encodeToString(this)
@@ -86,8 +86,8 @@ data class DpadProperties(
 data class SliderProperties(
     val minValue: Float = 0f,
     val maxValue: Float = 10f,
-    val thumbColor: ULong = Color(0xFF7D5260).value,
-    val trackColor: ULong = Color(0xFF39456B).value
+    val thumbColor: ULong = Color(0xFFDBC66E).value,
+    val trackColor: ULong = Color(0xFF393000).value
 ){
     fun toJson() = Json.encodeToString(this)
 
@@ -99,8 +99,8 @@ data class SliderProperties(
 
 @Serializable
 data class JoyStickProperties(
-    val backgroundColor: ULong = Color(0xFFFDD835).value,
-    val handleColor: ULong = Color(0xFF2A2929).value,
+    val backgroundColor: ULong = Color(0xFFDBC66E).value,
+    val handleColor: ULong = Color(0xFF393000).value,
 ){
     fun toJson() = Json.encodeToString(this)
     companion object {
