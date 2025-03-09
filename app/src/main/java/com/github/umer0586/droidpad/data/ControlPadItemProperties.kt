@@ -90,7 +90,7 @@ data class SliderProperties(
     val minValue: Float = 0f,
     val maxValue: Float = 10f,
     val thumbColor: ULong = Color(0xFFDBC66E).value,
-    val trackColor: ULong = Color(0xFF393000).value
+    val trackColor: ULong = Color(0xFFDBC66E).value
 ){
     fun toJson() = JsonCon.encodeToString(this)
 
