@@ -57,9 +57,10 @@ sealed interface ImporterScreenEvent {
 
 enum class ImportOptions{
     IMPORT_UN_CHANGED,
+    IMPORT_ADJUST_POSITION_CENTER,
     IMPORT_ADJUST_POSITION,
-    IMPORT_FIT_SCALE,
-    IMPORT_FIT_SCALE_CENTER
+    IMPORT_SCALE,
+    IMPORT_SCALE_CENTER
 }
 
 @HiltViewModel
@@ -165,8 +166,14 @@ class ControlPadImporterScreenViewModel @Inject constructor(
                     when(importOptions){
                         ImportOptions.IMPORT_UN_CHANGED -> it
                         ImportOptions.IMPORT_ADJUST_POSITION -> it.copy( offsetX = it.offsetX*newScale, offsetY = it.offsetY*newScale)
-                        ImportOptions.IMPORT_FIT_SCALE -> it.copy(scale = it.scale*newScale, offsetX = it.offsetX*newScale, offsetY = it.offsetY*newScale)
-                        ImportOptions.IMPORT_FIT_SCALE_CENTER -> {
+                        ImportOptions.IMPORT_SCALE -> it.copy(scale = it.scale*newScale, offsetX = it.offsetX*newScale, offsetY = it.offsetY*newScale)
+                        ImportOptions.IMPORT_ADJUST_POSITION_CENTER-> {
+                            val offsetX = calculateCenteredOffset(thisDeviceBuilderScreenRes, otherDeviceBuilderScreenRes).x
+                            val offsetY = calculateCenteredOffset(thisDeviceBuilderScreenRes, otherDeviceBuilderScreenRes).y
+
+                            it.copy(offsetX = (it.offsetX+offsetX)*newScale, offsetY = (it.offsetY+offsetY)*newScale)
+                        }
+                        ImportOptions.IMPORT_SCALE_CENTER -> {
 
                             val offsetX = calculateCenteredOffset(thisDeviceBuilderScreenRes, otherDeviceBuilderScreenRes).x
                             val offsetY = calculateCenteredOffset(thisDeviceBuilderScreenRes, otherDeviceBuilderScreenRes).y

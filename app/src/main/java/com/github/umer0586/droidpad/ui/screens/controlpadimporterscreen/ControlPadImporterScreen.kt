@@ -135,7 +135,7 @@ private fun ImporterScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    var selectedOptionImportOption by remember { mutableStateOf(ImportOptions.IMPORT_FIT_SCALE_CENTER) }
+                    var selectedOptionImportOption by remember { mutableStateOf(ImportOptions.IMPORT_ADJUST_POSITION_CENTER) }
 
                     Text(
                         text = getDescriptionForImportOption(selectedOptionImportOption),
@@ -180,8 +180,9 @@ private fun getDescriptionForImportOption(importOptions: ImportOptions): String 
     return when (importOptions) {
         ImportOptions.IMPORT_UN_CHANGED -> "No modifications will be applied. Some content may be truncated on smaller screens."
         ImportOptions.IMPORT_ADJUST_POSITION -> "All items will be repositioned without scaling. Some content may be truncated on smaller screens."
-        ImportOptions.IMPORT_FIT_SCALE -> "All items will be resized and repositioned to fit."
-        ImportOptions.IMPORT_FIT_SCALE_CENTER -> "All items will be resized and repositioned, ensuring they are centered."
+        ImportOptions.IMPORT_SCALE -> "All items will be scaled in the new resolution."
+        ImportOptions.IMPORT_SCALE_CENTER -> "All items will be scaled and repositioned in the new resolution, ensuring they are centered."
+        ImportOptions.IMPORT_ADJUST_POSITION_CENTER -> "All items will be repositioned without scaling, ensuring they are centered."
     }
 }
 
