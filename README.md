@@ -163,7 +163,7 @@ For devices running **Android 12 or higher**, you also need to ensure that your 
 You can test the connections with Websocket,TCP, UDP servers and BLE client provided in [https://github.com/umer0586/droidpad-python-examples](https://github.com/umer0586/droidpad-python-examples)
 
 ## Projects
-1. Transform **Arduino Uno R4 WiFi** into a **WiFi-controlled motor system** using the DroidPad [https://github.com/Klixxy/ArduTank](https://github.com/Klixxy/ArduTank) by [Klixxy](https://github.com/Klixxy)
+1. A Tank controlled by an Arduino Uno R4 WiFi using the DroidPad App [https://github.com/Klixxy/ArduTank](https://github.com/Klixxy/ArduTank) by [Klixxy](https://github.com/Klixxy)
 
 ### TODO
 1. Bluetooth classic support
