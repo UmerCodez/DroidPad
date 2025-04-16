@@ -325,6 +325,20 @@ private fun SliderPropertiesEditor(
             shape = textFieldShape
         )
 
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Show Value") },
+            trailingContent = {
+                Switch(
+                    checked = sliderProperties.showValue,
+                    onCheckedChange = {
+                        sliderProperties = sliderProperties.copy(showValue = it)
+                        onSliderPropertiesChange?.invoke(sliderProperties)
+                    }
+                )
+            }
+        )
+
         var showColorPickerForThumb by remember { mutableStateOf(false) }
         var showColorPickerForTrack by remember { mutableStateOf(false) }
 

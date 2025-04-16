@@ -89,6 +89,7 @@ data class DpadProperties(
 data class SliderProperties(
     val minValue: Float = 0f,
     val maxValue: Float = 10f,
+    val showValue: Boolean = false,
     val thumbColor: ULong = Color(0xFFDBC66E).value,
     val trackColor: ULong = Color(0xFFDBC66E).value
 ){
