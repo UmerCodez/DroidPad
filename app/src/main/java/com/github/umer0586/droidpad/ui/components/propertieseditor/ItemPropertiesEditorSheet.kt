@@ -50,8 +50,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -66,7 +64,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -280,8 +277,23 @@ private fun SliderPropertiesEditor(
 ) {
 
     var sliderProperties by remember { mutableStateOf(SliderProperties.fromJson(controlPadItem.properties)) }
-    var minValue by remember { mutableFloatStateOf(sliderProperties.minValue) }
-    var maxValue by remember { mutableFloatStateOf(sliderProperties.maxValue) }
+    var minValue by remember { mutableStateOf(sliderProperties.minValue.toString()) }
+    var maxValue by remember { mutableStateOf(sliderProperties.maxValue.toString()) }
+    var minGreaterThanMaxError by remember { mutableStateOf(false) }
+
+    LaunchedEffect(minValue, maxValue) {
+        Log.d("Values", "min: $minValue, max: $maxValue")
+        minValue.toFloatOrNull()?.also { minValueFloat ->
+            maxValue.toFloatOrNull()?.also { maxValueFloat ->
+                hasError?.invoke(minValueFloat >= maxValueFloat)
+                minGreaterThanMaxError = minValueFloat >= maxValueFloat
+                if(minValueFloat < maxValueFloat){
+                    sliderProperties = sliderProperties.copy(minValue = minValueFloat, maxValue = maxValueFloat)
+                    onSliderPropertiesChange?.invoke(sliderProperties)
+                }
+            }?: hasError?.invoke(true)
+        }?: hasError?.invoke(true)
+    }
 
     val textFieldShape = RoundedCornerShape(50.dp)
 
@@ -300,25 +312,17 @@ private fun SliderPropertiesEditor(
             properties = sliderProperties.copy(minValue = 0f, maxValue = 10f),
         )
 
+        if(minGreaterThanMaxError){
+            Text(text = "Min should be less than Max")
+        }
+
         OutlinedTextField(
             modifier = Modifier.testTag("sliderMinValueTextField"),
             singleLine = true,
             prefix = { Text("Min") },
-            value = minValue.toString(),
-            isError = minValue >= maxValue,
-            onValueChange = onValueChange@{
-                minValue = it.toFloatOrNull()?.also { value ->
-                    if( value >= maxValue )
-                        hasError?.invoke(true)
-                    else
-                        hasError?.invoke(false)
-                } ?: return@onValueChange
-
-                sliderProperties = sliderProperties.copy(minValue = minValue)
-                onSliderPropertiesChange?.invoke(sliderProperties)
-
-
-            },
+            value = minValue,
+            isError = minValue.toFloatOrNull() == null,
+            onValueChange = { minValue = it },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             shape = textFieldShape
         )
@@ -327,25 +331,13 @@ private fun SliderPropertiesEditor(
             modifier = Modifier.testTag("sliderMaxValueTextField"),
             singleLine = true,
             prefix = { Text("Max") },
-            value = maxValue.toString(),
-            isError = maxValue <= minValue,
-            onValueChange = onValueChange@{
-
-                maxValue = it.toFloatOrNull()?.also { value ->
-                    if(value < minValue)
-                        hasError?.invoke(true)
-                    else
-                        hasError?.invoke(false)
-                } ?: return@onValueChange
-
-                sliderProperties = sliderProperties.copy(maxValue = maxValue)
-                onSliderPropertiesChange?.invoke(sliderProperties)
-
-
-            },
+            value = maxValue,
+            isError = maxValue.toFloatOrNull() == null,
+            onValueChange = { maxValue = it },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             shape = textFieldShape
         )
+
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
