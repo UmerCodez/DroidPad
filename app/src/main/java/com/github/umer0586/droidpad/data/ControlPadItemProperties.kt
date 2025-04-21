@@ -23,7 +23,6 @@ package com.github.umer0586.droidpad.data
 import androidx.compose.ui.graphics.Color
 import com.github.umer0586.droidpad.R
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 private val JsonCon = Json {
@@ -97,6 +96,23 @@ data class SliderProperties(
 
     companion object {
         fun fromJson(json: String) = JsonCon.decodeFromString<SliderProperties>(json)
+    }
+}
+
+// Kotlin does not support direct inheritance from a data class
+@Serializable
+data class StepSliderProperties(
+    val minValue: Float = 0f,
+    val maxValue: Float = 10f,
+    val showValue: Boolean = false,
+    val steps: Int = 1,
+    val thumbColor: ULong = Color(0xFFDBC66E).value,
+    val trackColor: ULong = Color(0xFFDBC66E).value
+){
+    fun toJson() = JsonCon.encodeToString(this)
+
+    companion object {
+        fun fromJson(json: String) = JsonCon.decodeFromString<StepSliderProperties>(json)
     }
 }
 

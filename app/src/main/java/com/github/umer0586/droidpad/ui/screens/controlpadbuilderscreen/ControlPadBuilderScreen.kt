@@ -79,6 +79,7 @@ import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.Resolution
 import com.github.umer0586.droidpad.data.SliderProperties
+import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
@@ -91,6 +92,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.components.propertieseditor.ItemPropertiesEditorSheet
 import com.github.umer0586.droidpad.ui.components.rotateBy
@@ -386,6 +388,35 @@ fun ControlPadBuilderScreenContent(
                     )
                 }
 
+                else if (controlPadItem.itemType == ItemType.STEP_SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
+                    val properties = StepSliderProperties.fromJson(controlPadItem.properties)
+                    ControlPadStepSlider(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        properties = properties,
+                        enabled = false,
+                        value = (properties.minValue + properties.maxValue)/2,
+                        onDeleteClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnEditItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        }
+                    )
+                }
+
                 else if(controlPadItem.itemType == ItemType.LABEL && uiState.transformableStatesMap[controlPadItem.id] != null){
                     ControlPadLabel(
                         offset = controlPadItem.offset,
@@ -525,6 +556,10 @@ fun ControlPadBuilderScreenContent(
                                     thumbColor = onPrimary.value,
                                 ).toJson()
                                 ItemType.SLIDER -> SliderProperties(
+                                    trackColor = primary.value,
+                                    thumbColor = primary.value,
+                                ).toJson()
+                                ItemType.STEP_SLIDER -> StepSliderProperties(
                                     trackColor = primary.value,
                                     thumbColor = primary.value,
                                 ).toJson()

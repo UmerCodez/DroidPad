@@ -28,6 +28,7 @@ import kotlinx.serialization.Serializable
 enum class ItemType{
     SWITCH,
     SLIDER,
+    STEP_SLIDER,
     LABEL,
     JOYSTICK,
     BUTTON,

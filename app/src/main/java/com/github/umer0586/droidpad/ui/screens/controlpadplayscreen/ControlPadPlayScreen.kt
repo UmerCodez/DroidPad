@@ -79,6 +79,7 @@ import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.SliderProperties
+import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.connection.ConnectionState
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
@@ -93,6 +94,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.github.umer0586.droidpad.ui.utils.LockScreenOrientation
@@ -310,6 +312,30 @@ fun ControlPlayScreenContent(
                         scale = controlPadItem.scale,
                         showControls = false,
                         properties = sliderProperties,
+                        value = value,
+                        onValueChange = {
+                            value = it
+                            onUiEvent(
+                                ControlPadPlayScreenEvent.OnSliderValueChange(
+                                    controlPadItem.itemIdentifier,
+                                    it
+                                )
+                            )
+                        }
+                    )
+                }
+
+                else if (controlPadItem.itemType == ItemType.STEP_SLIDER) {
+
+                    val stepSliderProperties = StepSliderProperties.fromJson(controlPadItem.properties)
+                    var value by remember { mutableFloatStateOf(stepSliderProperties.minValue) }
+
+                    ControlPadStepSlider(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        showControls = false,
+                        properties = stepSliderProperties,
                         value = value,
                         onValueChange = {
                             value = it

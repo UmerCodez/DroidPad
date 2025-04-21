@@ -19,6 +19,7 @@
 
 package com.github.umer0586.droidpad.ui.components.propertieseditor
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,8 +48,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,6 +66,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -71,6 +75,7 @@ import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.SliderProperties
+import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
@@ -78,6 +83,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
@@ -162,8 +168,24 @@ fun ItemPropertiesEditorSheet(
                 hasError = { hasError = it }
             )
 
+        }
 
-        } else if (controlPadItem.itemType == ItemType.BUTTON) {
+        else if (controlPadItem.itemType == ItemType.STEP_SLIDER){
+            StepSliderPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onStepSliderPropertiesChange = { stepSliderProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = stepSliderProperties.toJson()
+                    )
+                },
+                hasError = {
+                    hasError = it
+                    Log.d("hasError:", it.toString())
+                }
+            )
+        }
+
+        else if (controlPadItem.itemType == ItemType.BUTTON) {
 
             ButtonPropertiesEditor(
                 controlPadItem = controlPadItem,
@@ -399,6 +421,191 @@ private fun SliderPropertiesEditor(
                         .size(20.dp)
                         .clip(CircleShape)
                         .background(Color(sliderProperties.trackColor))
+                        .clickable {
+                            showColorPickerForTrack = !showColorPickerForTrack
+                            showColorPickerForThumb = false
+                        })
+            }
+        )
+
+    }
+}
+
+@Composable
+private fun StepSliderPropertiesEditor(
+    modifier: Modifier = Modifier,
+    controlPadItem: ControlPadItem,
+    onStepSliderPropertiesChange: ((StepSliderProperties) -> Unit)? = null,
+    hasError: ((Boolean) -> Unit)? = null,
+) {
+
+    var stepSliderProperties by remember { mutableStateOf(StepSliderProperties.fromJson(controlPadItem.properties)) }
+    var minValue by remember { mutableStateOf(stepSliderProperties.minValue.toString()) }
+    var maxValue by remember { mutableStateOf(stepSliderProperties.maxValue.toString()) }
+    var steps by remember { mutableStateOf(stepSliderProperties.steps.toString()) }
+    var minGreaterThanMaxError by remember { mutableStateOf(false) }
+
+    LaunchedEffect(minValue, maxValue) {
+        Log.d("Values", "min: $minValue, max: $maxValue")
+        minValue.toFloatOrNull()?.also { minValueFloat ->
+            maxValue.toFloatOrNull()?.also { maxValueFloat ->
+                hasError?.invoke(minValueFloat >= maxValueFloat)
+                minGreaterThanMaxError = minValueFloat >= maxValueFloat
+                if(minValueFloat < maxValueFloat){
+                    stepSliderProperties = stepSliderProperties.copy(minValue = minValueFloat, maxValue = maxValueFloat)
+                    onStepSliderPropertiesChange?.invoke(stepSliderProperties)
+                }
+            }?: hasError?.invoke(true)
+        }?: hasError?.invoke(true)
+    }
+
+
+    val textFieldShape = RoundedCornerShape(50.dp)
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        ControlPadStepSlider(
+            offset = Offset.Zero,
+            scale = 1f,
+            rotation = 0f,
+            showControls = false,
+            value = 5f,
+            properties = stepSliderProperties.copy(minValue = 0f, maxValue = 10f),
+        )
+
+        if(minGreaterThanMaxError){
+            Text(text = "Min should be less than Max")
+        }
+
+        OutlinedTextField(
+            modifier = Modifier.testTag("sliderMinValueTextField"),
+            singleLine = true,
+            prefix = { Text("Min") },
+            value = minValue,
+            isError = minValue.toFloatOrNull() == null,
+            onValueChange = { minValue = it },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            shape = textFieldShape
+        )
+
+        OutlinedTextField(
+            modifier = Modifier.testTag("sliderMaxValueTextField"),
+            singleLine = true,
+            prefix = { Text("Max") },
+            value = maxValue,
+            isError = maxValue.toFloatOrNull() == null,
+            onValueChange = { maxValue = it },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            shape = textFieldShape
+        )
+
+        OutlinedTextField(
+            singleLine = true,
+            prefix = { Text("Steps") },
+            value = steps,
+            isError = steps.let {
+                it.toIntOrNull()?.also { stepsInt ->
+                    hasError?.invoke(stepsInt <= 0 || stepsInt > 50)
+                    return@let stepsInt <= 0
+                }?: hasError?.invoke(true); return@let true
+            },
+            supportingText = {
+                steps.toIntOrNull()?.also { stepsInt ->
+                    if(stepsInt <= 0 || stepsInt > 50)
+                        Text("Steps should be between 1 and 50")
+                }
+            },
+            onValueChange = {
+                steps = it
+                steps.toIntOrNull()?.also { stepsInt ->
+                    if(stepsInt > 0){
+                        stepSliderProperties = stepSliderProperties.copy(steps = stepsInt)
+                        onStepSliderPropertiesChange?.invoke(stepSliderProperties)
+                    }
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            shape = textFieldShape
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Show Value") },
+            trailingContent = {
+                Switch(
+                    checked = stepSliderProperties.showValue,
+                    onCheckedChange = {
+                        stepSliderProperties = stepSliderProperties.copy(showValue = it)
+                        onStepSliderPropertiesChange?.invoke(stepSliderProperties)
+                    }
+                )
+            }
+        )
+
+        var showColorPickerForThumb by remember { mutableStateOf(false) }
+        var showColorPickerForTrack by remember { mutableStateOf(false) }
+
+        AnimatedVisibility(visible = showColorPickerForThumb) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                initialColor = Color(stepSliderProperties.thumbColor),
+                controller = rememberColorPickerController(),
+                onColorChanged = {
+                    stepSliderProperties = stepSliderProperties.copy(
+                        thumbColor = it.color.value
+                    )
+                    onStepSliderPropertiesChange?.invoke(stepSliderProperties)
+                }
+            )
+        }
+
+        AnimatedVisibility(visible = showColorPickerForTrack) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                initialColor = Color(stepSliderProperties.trackColor),
+                controller = rememberColorPickerController(),
+                onColorChanged = {
+                    stepSliderProperties = stepSliderProperties.copy(
+                        trackColor = it.color.value
+                    )
+                    onStepSliderPropertiesChange?.invoke(stepSliderProperties)
+                }
+            )
+        }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Thumb Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(stepSliderProperties.thumbColor))
+                        .clickable {
+                            showColorPickerForThumb = !showColorPickerForThumb
+                            showColorPickerForTrack = false
+                        })
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Track Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(stepSliderProperties.trackColor))
                         .clickable {
                             showColorPickerForTrack = !showColorPickerForTrack
                             showColorPickerForThumb = false
@@ -989,7 +1196,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "label",
                 controlPadId = 1,
-                itemType = ItemType.SWITCH,
+                itemType = ItemType.STEP_SLIDER,
             )
         )
     }
