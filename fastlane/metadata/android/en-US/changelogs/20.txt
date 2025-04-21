@@ -1,0 +1,3 @@
+New Feature
+1. Added show value option for slider
+2. Added Step Slider
