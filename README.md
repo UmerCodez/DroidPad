@@ -60,8 +60,8 @@ b. Tap the **Connect** button in the bottom-right corner to establish a connecti
    <img src="https://github.com/user-attachments/assets/061a8e4a-dc08-4ba4-87ff-9d609ec75ede" width="240" height="426"/>
 
 ## **Reading Interactions**  
-When users interact with the control pad, JSON-formatted messages are generated based on the type of component used. 
-These JSON messages enable receivers to understand and process interactions sent from the control pad. Below are the formats and details for each interaction:  
+When users interact with the control pad, JSON-formatted or CSV messages are generated based on the type of component used. 
+These string messages enable receivers to understand and process interactions sent from the control pad. Below are the formats and details for each interaction:  
 
 ---
 
@@ -74,7 +74,7 @@ Toggling a switch generates the following JSON:
   "state": true
 }
 ```
-For Bluetooth LE connections, toggling a switch generates a `CSV` message in the format: `<id>,<state>`.
+For **Bluetooth** and **Bluetooth LE** connections, toggling a switch generates a `CSV` message in the format: `<id>,<state>`.
 
 - The `state` field indicates whether the switch is **on** (`true`) or **off** (`false`).  
 
@@ -89,7 +89,7 @@ Pressing or releasing a button generates this JSON:
   "state": "PRESS"
 }
 ```
-For Bluetooth LE connections, pressing or releasing a button generates a `CSV` message in the format: `<id>,<state>`.
+For **Bluetooth** and **Bluetooth LE** connections, pressing or releasing a button generates a `CSV` message in the format: `<id>,<state>`.
 
 - The `state` field can have following values:  
   - **"PRESS"**: When the button is being pressed (finger on the button).  
@@ -108,7 +108,7 @@ Pressing or releasing a button on DPAD generates this JSON:
   "state": "CLICK"
 }
 ```
-For Bluetooth LE connections, pressing or releasing a button on DPAD generates a `CSV` message in the format: `<id>,<button>,<state>`.
+For **Bluetooth** and **Bluetooth LE** connections, pressing or releasing a button on DPAD generates a `CSV` message in the format: `<id>,<button>,<state>`.
 
 - The `state` field can have following values:  
   - **"PRESS"**: When the button is being pressed (finger on the button).  
@@ -127,7 +127,7 @@ Moving joystick handle generates this JSON:
   "y": -0.13367589
 }
 ```
-For Bluetooth LE `<id>,<x>,<y>`
+For **Bluetooth** and **Bluetooth LE** : `<id>,<x>,<y>`
 
 <img src="https://github.com/user-attachments/assets/fd3b1b14-d1c5-42d5-8813-f01745856191" width="150" height="150">
 
@@ -147,17 +147,17 @@ Dragging the slider thumb generates the following JSON:
   "value": 1.4
 }
 ```
-For Bluetooth LE connections, dragging the slider thumb generates a `CSV` message in the format: `<id>,<value>`.
+For **Bluetooth** and **Bluetooth LE** connections, dragging the slider thumb generates a `CSV` message in the format: `<id>,<value>`.
 
 - The `value` field represents the current position of the slider.  
 - The value is always within the range of the minimum and maximum values specified during the slider's configuration.  
 
 --- 
 
-## Important Note for Bluetooth Low Energy  
-A long Bluetooth device name can cause advertisement failure. To avoid this issue, use a shorter name. In your device's Bluetooth settings, change the Bluetooth device name to five or fewer characters, such as `dev`.
+## Important Note for Bluetooth and Bluetooth Low Energy  
+A long Bluetooth device name can cause advertisement failure (In case of BLE). To avoid this issue, use a shorter name. In your device's Bluetooth settings, change the Bluetooth device name to five or fewer characters, such as `dev`.
 
-For devices running **Android 12 or higher**, you also need to ensure that your app has the necessary Bluetooth permissions. To do this, go to the app's system settings and grant the required **Nearby Devices** permission. Without this permission, the app cannot advertise Bluetooth services.
+For devices running **Android 12 or higher**, you also need to ensure that your app has the necessary Bluetooth permissions. To do this, go to the app's system settings and grant the required **Nearby Devices** permission. Without this permission, the app won't be able to advertise Bluetooth LE services or access paired devices when using Bluetooth Classic.
 
 ## Testing the connection
 You can test the connections with Websocket,TCP, UDP servers and BLE client provided in [https://github.com/umer0586/droidpad-python-examples](https://github.com/umer0586/droidpad-python-examples)
@@ -166,7 +166,7 @@ You can test the connections with Websocket,TCP, UDP servers and BLE client prov
 1. A Tank controlled by an Arduino Uno R4 WiFi using the DroidPad App [https://github.com/Klixxy/ArduTank](https://github.com/Klixxy/ArduTank) by [Klixxy](https://github.com/Klixxy)
 
 ### TODO
-1. Bluetooth classic support
-2. Attaching sensors to control pads
+1. Attaching sensors (Like accelerometer and gyroscope) to control pads
+2. Steering Wheel
 3. TouchPad
 
