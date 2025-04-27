@@ -28,6 +28,7 @@ import com.github.umer0586.droidpad.data.DPadEvent
 import com.github.umer0586.droidpad.data.JoyStickEvent
 import com.github.umer0586.droidpad.data.SliderEvent
 import com.github.umer0586.droidpad.data.SwitchEvent
+import com.github.umer0586.droidpad.data.connection.BluetoothConnection
 import com.github.umer0586.droidpad.data.connection.BluetoothLEConnection
 import com.github.umer0586.droidpad.data.connection.Connection
 import com.github.umer0586.droidpad.data.connection.ConnectionFactory
@@ -124,6 +125,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionType.MQTT_V5 -> (connection as Mqttv5Connection).mqttConfig.brokerAddress
                                 ConnectionType.MQTT_V3 -> (connection as Mqttv3Connection).mqttConfig.brokerAddress
                                 ConnectionType.BLUETOOTH_LE -> (connection as BluetoothLEConnection).bluetoothDisplayName
+                                ConnectionType.BLUETOOTH -> (connection as BluetoothConnection).bluetoothConfig.remoteDevice?.address ?: "No Device"
 
                             }
                         )
@@ -138,6 +140,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionState.TCP_CONNECTING -> true
                                 ConnectionState.WEBSOCKET_CONNECTING ->true
                                 ConnectionState.MQTT_CONNECTING -> true
+                                ConnectionState.BLUETOOTH_CONNECTING -> true
                                 else -> false
                             }
 
@@ -147,6 +150,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionState.WEBSOCKET_CONNECTED -> true
                                 ConnectionState.MQTT_CONNECTED -> true
                                 ConnectionState.BLUETOOTH_CLIENT_CONNECTED -> true
+                                ConnectionState.BLUETOOTH_CONNECTED -> true
                                 else -> false
                             }
 
@@ -172,7 +176,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         when (event) {
             is ControlPadPlayScreenEvent.OnConnectClick -> {
 
-                if(connection?.connectionType == ConnectionType.BLUETOOTH_LE){
+                if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH){
                     _uiState.update {
                         it.copy(isBluetoothEnabled = bluetoothUtil.isBluetoothEnabled())
                     }
@@ -193,7 +197,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             }
 
             is ControlPadPlayScreenEvent.OnSwitchCheckedChange -> {
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     SwitchEvent(id = event.id, state = event.checked).toCSV()
                 else
                     SwitchEvent(id = event.id, state = event.checked).toJson()
@@ -207,7 +211,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             is ControlPadPlayScreenEvent.OnSliderValueChange -> {
 
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     SliderEvent(id = event.id, value = event.value).toCSV()
                 else
                     SliderEvent(id = event.id, value = event.value).toJson()
@@ -219,7 +223,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             is ControlPadPlayScreenEvent.OnButtonClick -> {
 
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     ButtonEvent(id = event.id, state = "CLICK").toCSV()
                 else
                     ButtonEvent(id = event.id, state = "CLICK").toJson()
@@ -237,7 +241,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             is ControlPadPlayScreenEvent.OnButtonPress -> {
 
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     ButtonEvent(id = event.id, state = "PRESS").toCSV()
                 else
                     ButtonEvent(id = event.id, state = "PRESS").toJson()
@@ -247,7 +251,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 }
             }
             is ControlPadPlayScreenEvent.OnButtonRelease -> {
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     ButtonEvent(id = event.id, state = "RELEASE").toCSV()
                 else
                     ButtonEvent(id = event.id, state = "RELEASE").toJson()
@@ -259,7 +263,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             is ControlPadPlayScreenEvent.OnDpadButtonClick -> {
 
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     DPadEvent(id = event.id, button = event.dPadButton, state = "CLICK").toCSV()
                 else
                     DPadEvent(id = event.id, button = event.dPadButton, state = "CLICK").toJson()
@@ -270,7 +274,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             }
             is ControlPadPlayScreenEvent.OnDpadButtonPress -> {
 
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     DPadEvent(id = event.id, button = event.dPadButton, state = "PRESS").toCSV()
                 else
                     DPadEvent(id = event.id, button = event.dPadButton, state = "PRESS").toJson()
@@ -282,7 +286,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             }
             is ControlPadPlayScreenEvent.OnDpadButtonRelease -> {
 
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     DPadEvent(id = event.id, button = event.dPadButton, state = "RELEASE").toCSV()
                 else
                     DPadEvent(id = event.id, button = event.dPadButton, state = "RELEASE").toJson()
@@ -293,7 +297,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             }
 
             is ControlPadPlayScreenEvent.OnJoyStickMove -> {
-                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE)
+                val data = if(connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH)
                     JoyStickEvent(id = event.id, x = event.x, y = event.y).toCSV()
                 else
                     JoyStickEvent(id = event.id, x = event.x, y = event.y).toJson()

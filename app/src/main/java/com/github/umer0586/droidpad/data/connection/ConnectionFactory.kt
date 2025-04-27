@@ -20,6 +20,7 @@
 package com.github.umer0586.droidpad.data.connection
 
 import android.content.Context
+import com.github.umer0586.droidpad.data.connectionconfig.BluetoothConfig
 import com.github.umer0586.droidpad.data.connectionconfig.BluetoothLEConfig
 import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.connectionconfig.TCPConfig
@@ -43,6 +44,7 @@ class ConnectionFactoryImpl(private val appContext: Context) : ConnectionFactory
             ConnectionType.MQTT_V5 -> Mqttv5Connection(MqttConfig.fromJson(connectionConfig.configJson))
             ConnectionType.MQTT_V3 -> Mqttv3Connection(MqttConfig.fromJson(connectionConfig.configJson))
             ConnectionType.BLUETOOTH_LE -> BluetoothLEConnection(context = appContext , config = BluetoothLEConfig.fromJson(connectionConfig.configJson))
+            ConnectionType.BLUETOOTH -> BluetoothConnection(context = appContext , bluetoothConfig = BluetoothConfig.fromJson(connectionConfig.configJson))
         }
 
 }

@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,17 +37,23 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -56,6 +64,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,9 +76,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chargemap.compose.numberpicker.NumberPicker
+import com.github.umer0586.droidpad.data.connectionconfig.RemoteBluetoothDevice
+import com.github.umer0586.droidpad.data.connectionconfig.UUID_SSP
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.ui.components.EnumDropdown
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -95,11 +107,10 @@ fun ConnectionConfigScreen(
         uiState = uiState,
         onUiEvent = { event ->
             viewModel.onEvent(event)
-            if(event is ConnectionConfigScreenEvent.OnBackPress)
+            if (event is ConnectionConfigScreenEvent.OnBackPress)
                 onBackPress?.invoke()
         }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,7 +121,11 @@ fun ConnectionConfigScreenContent(
     onUiEvent: (ConnectionConfigScreenEvent) -> Unit
 ) {
 
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Connection Config") },
@@ -135,6 +150,9 @@ fun ConnectionConfigScreenContent(
             verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            val itemWidth = 300.dp
+            val itemPadding = 10.dp
 
             EnumDropdown<ConnectionType>(
                 selectedValue = uiState.connectionType,
@@ -349,6 +367,93 @@ fun ConnectionConfigScreenContent(
 
             }
 
+            if(uiState.connectionType == ConnectionType.BLUETOOTH){
+
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .padding(horizontal = itemPadding),
+                    value = uiState.bluetoothServiceUUID,
+                    singleLine = true,
+                    supportingText = {
+                        if(uiState.bluetoothServiceUUID.equals(UUID_SSP, ignoreCase = true))
+                            Text("Serial Port Profile")
+                    },
+                    onValueChange = {
+                        onUiEvent(
+                            ConnectionConfigScreenEvent.OnBluetoothUUIDChange(
+                                it
+                            )
+                        )
+                    },
+                    shape = RoundedCornerShape(50),
+                    label = { Text("Service UUID") },
+                    isError = uiState.bluetoothServiceUUID.isEmpty()
+                )
+
+                var showPairedDevices by remember { mutableStateOf(false) }
+
+                ListItem(
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .padding(horizontal = itemPadding),
+                    headlineContent = { Text(uiState.selectedBluetoothDevice?.name ?: "No Device Selected") },
+                    supportingContent = { uiState.selectedBluetoothDevice?.address?.also { Text(it) } },
+                    trailingContent = {
+                        IconButton(
+                            onClick = {
+
+
+                                if(!uiState.isBluetoothEnable){
+                                    scope.launch {
+                                        snackBarHostState.showSnackbar("Please Enable Bluetooth")
+                                    }
+                                }else if(uiState.pairedBluetoothDevices.isNotEmpty()){
+                                    showPairedDevices = true
+                                } else { // when bluetooth is enabled but there are no paired devices
+                                    scope.launch {
+                                        snackBarHostState.showSnackbar("No paired devices found")
+                                    }
+                                }
+
+                                onUiEvent(ConnectionConfigScreenEvent.OnSelectDeviceClick)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = "Select Device"
+                            )
+                        }
+                    }
+                )
+
+                if(showPairedDevices){
+                    ModalBottomSheet(
+                        onDismissRequest = { showPairedDevices = false },
+                    ) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                        ) {
+
+                            items(uiState.pairedBluetoothDevices.size) { index ->
+                                val bluetoothDevice = uiState.pairedBluetoothDevices[index]
+                                ListItem(
+                                    modifier = Modifier.clickable {
+                                        onUiEvent(ConnectionConfigScreenEvent.OnBluetoothDeviceSelected(bluetoothDevice))
+                                        showPairedDevices = false
+                                    },
+                                    headlineContent = { Text(bluetoothDevice.name) },
+                                    supportingContent = { Text(bluetoothDevice.address) },
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
 
             TextButton(
                 modifier = Modifier.fillMaxWidth(0.4f),
@@ -368,17 +473,26 @@ fun ConnectionConfigScreenContent(
 
 }
 
+
 @Preview(showBackground = true)
 @Composable
 private fun ConnectionConfigScreenContentPreview()  {
 
-    var uiState by remember { mutableStateOf(
-        ConnectionConfigScreenState(
-        connectionType = ConnectionType.MQTT_V5,
-        username = "umer",
-        password = "123"
+    val pairedDevices = listOf(
+        RemoteBluetoothDevice("Device 1", "1234"),
+        RemoteBluetoothDevice("Device 2", "5678"),
+        RemoteBluetoothDevice("Device 2", "5678")
     )
-    ) }
+
+    var uiState by remember {
+        mutableStateOf(
+            ConnectionConfigScreenState(
+                connectionType = ConnectionType.BLUETOOTH,
+                bluetoothServiceUUID = "00001101-0000-1000-8000-00805F9B34FB",
+                selectedBluetoothDevice = null,
+            )
+        )
+    }
 
     DroidPadTheme {
         ConnectionConfigScreenContent(
@@ -399,6 +513,12 @@ private fun ConnectionConfigScreenContentPreview()  {
 
                     is ConnectionConfigScreenEvent.OnUseSSLChange -> {
                         uiState = uiState.copy(useSSL = event.sslEnabled)
+                    }
+                    is ConnectionConfigScreenEvent.OnSelectDeviceClick -> {
+                        uiState = uiState.copy(pairedBluetoothDevices = listOf())
+                    }
+                    is ConnectionConfigScreenEvent.OnBluetoothDeviceSelected -> {
+                        uiState = uiState.copy(selectedBluetoothDevice = event.remoteBluetoothDevice)
                     }
 
                     else -> {}

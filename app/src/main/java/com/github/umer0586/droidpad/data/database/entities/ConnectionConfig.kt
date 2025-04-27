@@ -25,7 +25,7 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
 enum class ConnectionType{
-    TCP,UDP,MQTT_V5,MQTT_V3,WEBSOCKET,BLUETOOTH_LE
+    TCP,UDP,MQTT_V5,MQTT_V3,WEBSOCKET,BLUETOOTH_LE,BLUETOOTH
 }
 
 @Serializable

@@ -216,7 +216,7 @@ fun ControlPlayScreenContent(
                                 // solve this issue since its value does not change between successive taps
                                 // unless Bluetooth is enabled.
 
-                                if(uiState.connectionType == ConnectionType.BLUETOOTH_LE && !uiState.isBluetoothEnabled){
+                                if((uiState.connectionType == ConnectionType.BLUETOOTH_LE || uiState.connectionType == ConnectionType.BLUETOOTH) && !uiState.isBluetoothEnabled){
                                     scope.launch {
                                         snackbarHostState.showSnackbar("Please Enable bluetooth")
                                     }
