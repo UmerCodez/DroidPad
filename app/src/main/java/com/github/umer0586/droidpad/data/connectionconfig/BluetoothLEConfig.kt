@@ -1,7 +1,6 @@
 package com.github.umer0586.droidpad.data.connectionconfig
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 

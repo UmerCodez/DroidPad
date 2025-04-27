@@ -3,7 +3,6 @@ package com.github.umer0586.droidpad.data
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 

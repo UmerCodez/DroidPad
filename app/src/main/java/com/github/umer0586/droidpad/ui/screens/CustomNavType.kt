@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.navigation.NavType
 import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 //https://www.youtube.com/watch?v=qBxaZ071N0c
