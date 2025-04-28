@@ -100,6 +100,7 @@ fun ControlPadDpad(
                     .background(Color(properties.backgroundColor))
 
             ) {
+                val iconOffsetAmount = 10
                 ButtonExtended(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
@@ -107,9 +108,9 @@ fun ControlPadDpad(
                     enabled = enabled,
                     colors = ButtonDefaults.buttonColors(
                         contentColor = MaterialTheme.colorScheme.onPrimary,
-                        containerColor = Color(properties.backgroundColor),
+                        containerColor = Color.Transparent,
                         disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = Color(properties.backgroundColor)
+                        disabledContainerColor = Color.Transparent
                     ),
                     useClickAction = properties.useClickAction,
                     onClick = { onClick?.invoke(DPAD_BUTTON.UP) },
@@ -117,6 +118,7 @@ fun ControlPadDpad(
                     onRelease = { onRelease?.invoke(DPAD_BUTTON.UP) }
                 ) {
                     Icon(
+                        modifier = Modifier.offset(y = (-iconOffsetAmount).dp),
                         painter = painterResource(R.drawable.ic_up_arrow),
                         tint = Color(properties.buttonColor),
                         contentDescription = "up"
@@ -131,9 +133,9 @@ fun ControlPadDpad(
                     enabled = enabled,
                     colors = ButtonDefaults.buttonColors(
                         contentColor = MaterialTheme.colorScheme.onPrimary,
-                        containerColor = Color(properties.backgroundColor),
+                        containerColor = Color.Transparent,
                         disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = Color(properties.backgroundColor)
+                        disabledContainerColor = Color.Transparent
                     ),
                     useClickAction = properties.useClickAction,
                     onClick = { onClick?.invoke(DPAD_BUTTON.LEFT) },
@@ -141,6 +143,7 @@ fun ControlPadDpad(
                     onRelease = { onRelease?.invoke(DPAD_BUTTON.LEFT) }
                 ) {
                     Icon(
+                        modifier = Modifier.offset(x = (-iconOffsetAmount).dp),
                         painter = painterResource(R.drawable.ic_left_arrow),
                         tint = Color(properties.buttonColor),
                         contentDescription = "left"
@@ -155,9 +158,9 @@ fun ControlPadDpad(
                     enabled = enabled,
                     colors = ButtonDefaults.buttonColors(
                         contentColor = MaterialTheme.colorScheme.onPrimary,
-                        containerColor = Color(properties.backgroundColor),
+                        containerColor = Color.Transparent,
                         disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = Color(properties.backgroundColor)
+                        disabledContainerColor = Color.Transparent
                     ),
                     useClickAction = properties.useClickAction,
                     onClick = { onClick?.invoke(DPAD_BUTTON.RIGHT) },
@@ -165,6 +168,7 @@ fun ControlPadDpad(
                     onRelease = { onRelease?.invoke(DPAD_BUTTON.RIGHT) }
                 ) {
                     Icon(
+                        modifier = Modifier.offset(x = (iconOffsetAmount).dp),
                         painter = painterResource(R.drawable.ic_right_arrow),
                         tint = Color(properties.buttonColor),
                         contentDescription = "right"
@@ -180,9 +184,9 @@ fun ControlPadDpad(
                     enabled = enabled,
                     colors = ButtonDefaults.buttonColors(
                         contentColor = MaterialTheme.colorScheme.onPrimary,
-                        containerColor = Color(properties.backgroundColor),
+                        containerColor = Color.Transparent,
                         disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = Color(properties.backgroundColor)
+                        disabledContainerColor = Color.Transparent
                     ),
                     useClickAction = properties.useClickAction,
                     onClick = { onClick?.invoke(DPAD_BUTTON.DOWN) },
@@ -190,6 +194,7 @@ fun ControlPadDpad(
                     onRelease = { onRelease?.invoke(DPAD_BUTTON.DOWN) }
                 ) {
                     Icon(
+                        modifier = Modifier.offset(y = (iconOffsetAmount).dp),
                         painter = painterResource(R.drawable.ic_down_arrow),
                         tint = Color(properties.buttonColor),
                         contentDescription = "down"
