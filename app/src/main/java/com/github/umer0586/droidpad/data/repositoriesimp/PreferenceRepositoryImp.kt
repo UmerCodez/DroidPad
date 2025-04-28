@@ -24,6 +24,7 @@ package com.github.umer0586.droidpad.data.repositoriesimp
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -49,11 +50,13 @@ class PreferenceRepositoryImp(
     private object Key {
         val builderScreenPortraitResolution = stringPreferencesKey("BUILDER_SCREEN_PORTRAIT_RESOLUTION")
         val builderScreenLandscapeResolution = stringPreferencesKey("BUILDER_SCREEN_LANDSCAPE_RESOLUTION")
+        val jsonTypeForBluetooth = booleanPreferencesKey("JSON_TYPE_FOR_BLUETOOTH")
     }
 
     private object Defaults {
         val builderScreenPortraitResolution = Resolution(width = 0, height = 0).toJson()
         val builderScreenLandscapeResolution = Resolution(width = 0, height = 0).toJson()
+        val jsonTypeForBluetooth = false
     }
 
 
@@ -61,6 +64,7 @@ class PreferenceRepositoryImp(
         context.userPreferencesDataStore.edit { pref ->
             pref[Key.builderScreenPortraitResolution] = preference.builderScreenPortraitResolution.toJson()
             pref[Key.builderScreenLandscapeResolution] = preference.builderScreenLandscapeResolution.toJson()
+            pref[Key.jsonTypeForBluetooth] = preference.sendJsonOverBluetooth
         }
     }
 
@@ -68,7 +72,8 @@ class PreferenceRepositoryImp(
         get() = context.userPreferencesDataStore.data.map { pref ->
             Preference(
                 builderScreenPortraitResolution = Resolution.fromJson(pref[Key.builderScreenPortraitResolution] ?: Defaults.builderScreenPortraitResolution),
-                builderScreenLandscapeResolution = Resolution.fromJson(pref[Key.builderScreenLandscapeResolution] ?: Defaults.builderScreenLandscapeResolution)
+                builderScreenLandscapeResolution = Resolution.fromJson(pref[Key.builderScreenLandscapeResolution] ?: Defaults.builderScreenLandscapeResolution),
+                sendJsonOverBluetooth = pref[Key.jsonTypeForBluetooth] ?: Defaults.jsonTypeForBluetooth
             )
         }.flowOn(ioDispatcher)
 

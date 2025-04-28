@@ -24,4 +24,5 @@ package com.github.umer0586.droidpad.data
 data class Preference(
     val builderScreenPortraitResolution : Resolution,
     val builderScreenLandscapeResolution : Resolution,
+    val sendJsonOverBluetooth: Boolean
 )
