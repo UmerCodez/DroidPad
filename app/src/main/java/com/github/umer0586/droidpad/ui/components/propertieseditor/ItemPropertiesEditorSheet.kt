@@ -68,6 +68,7 @@ import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.github.umer0586.droidpad.data.ButtonProperties
+import com.github.umer0586.droidpad.data.DPAD_STYLE
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LabelProperties
@@ -82,6 +83,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
+import com.github.umer0586.droidpad.ui.components.EnumDropdown
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 // TODO: color picker doesn't show dark values, add these later
@@ -868,6 +870,17 @@ private fun DPadPropertiesEditor(
             properties = dPadProperties,
         )
 
+        EnumDropdown<DPAD_STYLE>(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            label = "Style",
+            selectedValue = dPadProperties.style,
+            onValueSelected = {
+                dPadProperties = dPadProperties.copy(style = it)
+                onDpadPropertiesChange?.invoke(dPadProperties)
+            }
+
+        )
+
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
             headlineContent = { Text(text = "Click Action") },
@@ -1186,9 +1199,9 @@ private fun ItemEditorPreview() {
         ItemPropertiesEditorSheet(
             controlPadItem = ControlPadItem(
                 id = 1,
-                itemIdentifier = "label",
+                itemIdentifier = "dpad",
                 controlPadId = 1,
-                itemType = ItemType.STEP_SLIDER,
+                itemType = ItemType.DPAD,
             )
         )
     }

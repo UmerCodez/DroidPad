@@ -27,13 +27,14 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -42,13 +43,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.umer0586.droidpad.R
+import com.github.umer0586.droidpad.data.DPAD_STYLE
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
@@ -87,107 +92,219 @@ fun ControlPadDpad(
         val dpadSize = 170.dp
         val buttonSize = (dpadSize/2.dp).dp
 
-        Box(
-            modifier = Modifier
-                .size(dpadSize)
-                .clip(CircleShape)
-                .background(Color(properties.backgroundColor))
-
-        ) {
-            ButtonExtended(
+        if(properties.style == DPAD_STYLE.CIRCULAR) {
+            Box(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .size(buttonSize),
-                enabled = enabled,
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = Color(properties.backgroundColor),
-                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = Color(properties.backgroundColor)
-                ),
-                useClickAction = properties.useClickAction,
-                onClick = { onClick?.invoke(DPAD_BUTTON.UP) },
-                onPressed = { onPressed?.invoke(DPAD_BUTTON.UP) },
-                onRelease = { onRelease?.invoke(DPAD_BUTTON.UP) }
+                    .size(dpadSize)
+                    .clip(CircleShape)
+                    .background(Color(properties.backgroundColor))
+
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_up_arrow),
-                    tint = Color(properties.buttonColor),
-                    contentDescription = "up"
-                )
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color(properties.backgroundColor),
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color(properties.backgroundColor)
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.UP) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.UP) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.UP) }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_up_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "up"
+                    )
+                }
+
+
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color(properties.backgroundColor),
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color(properties.backgroundColor)
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.LEFT) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.LEFT) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.LEFT) }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_left_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "left"
+                    )
+                }
+
+
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color(properties.backgroundColor),
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color(properties.backgroundColor)
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.RIGHT) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.RIGHT) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.RIGHT) }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_right_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "right"
+                    )
+                }
+
+
+
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color(properties.backgroundColor),
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color(properties.backgroundColor)
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.DOWN) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.DOWN) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.DOWN) }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_down_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "down"
+                    )
+                }
             }
-
-
-            ButtonExtended(
+        } else if(properties.style == DPAD_STYLE.CROSS){
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .size(buttonSize),
-                enabled = enabled,
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = Color(properties.backgroundColor),
-                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = Color(properties.backgroundColor)
-                ),
-                useClickAction = properties.useClickAction,
-                onClick = { onClick?.invoke(DPAD_BUTTON.LEFT) },
-                onPressed = { onPressed?.invoke(DPAD_BUTTON.LEFT) },
-                onRelease = { onRelease?.invoke(DPAD_BUTTON.LEFT) }
+                    .size(dpadSize)
+                    .drawBehind {
+                        drawRoundedPlus(this, color = Color(properties.backgroundColor))
+                    }
+
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_left_arrow),
-                    tint = Color(properties.buttonColor),
-                    contentDescription = "left"
-                )
-            }
+                val iconOffsetAmount = 15
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color.Transparent,
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color.Transparent
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.UP) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.UP) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.UP) }
+                ) {
+                    Icon(
+                        modifier = Modifier.offset(y = (-iconOffsetAmount).dp),
+                        painter = painterResource(R.drawable.ic_up_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "up"
+                    )
+                }
 
 
-            ButtonExtended(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(buttonSize),
-                enabled = enabled,
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = Color(properties.backgroundColor),
-                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = Color(properties.backgroundColor)
-                ),
-                useClickAction = properties.useClickAction,
-                onClick = { onClick?.invoke(DPAD_BUTTON.RIGHT) },
-                onPressed = { onPressed?.invoke(DPAD_BUTTON.RIGHT) },
-                onRelease = { onRelease?.invoke(DPAD_BUTTON.RIGHT) }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_right_arrow),
-                    tint = Color(properties.buttonColor),
-                    contentDescription = "right"
-                )
-            }
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color.Transparent,
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color.Transparent
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.LEFT) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.LEFT) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.LEFT) }
+                ) {
+                    Icon(
+                        modifier = Modifier.offset(x = (-iconOffsetAmount).dp),
+                        painter = painterResource(R.drawable.ic_left_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "left"
+                    )
+                }
+
+
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color.Transparent,
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color.Transparent
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.RIGHT) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.RIGHT) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.RIGHT) }
+                ) {
+                    Icon(
+                        modifier = Modifier.offset(x = iconOffsetAmount.dp),
+                        painter = painterResource(R.drawable.ic_right_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "right"
+                    )
+                }
 
 
 
-            ButtonExtended(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .size(buttonSize),
-                enabled = enabled,
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = Color(properties.backgroundColor),
-                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = Color(properties.backgroundColor)
-                ),
-                useClickAction = properties.useClickAction,
-                onClick = { onClick?.invoke(DPAD_BUTTON.DOWN) },
-                onPressed = { onPressed?.invoke(DPAD_BUTTON.DOWN) },
-                onRelease = { onRelease?.invoke(DPAD_BUTTON.DOWN) }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_down_arrow),
-                    tint = Color(properties.buttonColor),
-                    contentDescription = "down"
-                )
+                ButtonExtended(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .size(buttonSize),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = Color.Transparent,
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = Color.Transparent
+                    ),
+                    useClickAction = properties.useClickAction,
+                    onClick = { onClick?.invoke(DPAD_BUTTON.DOWN) },
+                    onPressed = { onPressed?.invoke(DPAD_BUTTON.DOWN) },
+                    onRelease = { onRelease?.invoke(DPAD_BUTTON.DOWN) }
+                ) {
+                    Icon(
+                        modifier = Modifier.offset(y = iconOffsetAmount.dp),
+                        painter = painterResource(R.drawable.ic_down_arrow),
+                        tint = Color(properties.buttonColor),
+                        contentDescription = "down"
+                    )
+                }
             }
         }
     }
@@ -245,6 +362,35 @@ private fun ButtonExtended(
     }
 }
 
+
+private fun drawRoundedPlus(drawScope: DrawScope, color: Color = Color.Black) = with(drawScope) {
+    val width = size.width
+    val height = size.height
+    val armWidth = width / 3f
+    val armHeight = height / 3f
+    val cornerRadius = armWidth / 2f
+
+    drawRoundRect(
+        color = color,
+        topLeft = Offset((width - armWidth) / 2f, 0f),
+        size = androidx.compose.ui.geometry.Size(armWidth, height),
+        cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+    )
+
+    drawRoundRect(
+        color = color,
+        topLeft = Offset(0f, (height - armHeight) / 2f),
+        size = androidx.compose.ui.geometry.Size(width, armHeight),
+        cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+    )
+}
+
+@Preview
+@Composable
+private fun RoundedPlusShapePreview() {
+
+}
+
 @Preview
 @Composable
 fun ControlPadDpadPreview(modifier: Modifier = Modifier) {
@@ -262,3 +408,4 @@ fun ControlPadDpadPreview(modifier: Modifier = Modifier) {
         )
     }
 }
+
