@@ -121,6 +121,7 @@ fun ControlPadsScreen(
     onQRGenerateClick: ((ControlPad) -> Unit)? = null,
     onQrScannerClick: (() -> Unit)? = null,
     onImportJsonClick: (() -> Unit)? = null,
+    onPreferenceClick:(() -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -154,6 +155,7 @@ fun ControlPadsScreen(
                 is ControlPadsScreenEvent.OnQrCodeClick -> onQRGenerateClick?.invoke(event.controlPad)
                 is ControlPadsScreenEvent.OnQRScannerClick -> onQrScannerClick?.invoke()
                 is ControlPadsScreenEvent.OnImportJsonClick -> onImportJsonClick?.invoke()
+                is ControlPadsScreenEvent.OnPreferenceClick -> onPreferenceClick?.invoke()
                 else -> {}
             }
         }
@@ -230,6 +232,19 @@ fun ControlPadsScreenContent(
                         },
                         selected = false,
                         onClick = { onUiEvent(ControlPadsScreenEvent.OnImportJsonClick) }
+                    )
+
+                    NavigationDrawerItem(
+                        label = { Text("Preferences") },
+                        icon = {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = "PreferencesIcon"
+                            )
+                        },
+                        selected = false,
+                        onClick = { onUiEvent(ControlPadsScreenEvent.OnPreferenceClick) }
                     )
 
                     NavigationDrawerItem(
