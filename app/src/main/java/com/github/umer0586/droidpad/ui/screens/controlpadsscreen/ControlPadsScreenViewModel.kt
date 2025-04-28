@@ -62,6 +62,7 @@ sealed interface ControlPadsScreenEvent {
     data object OnAboutClick : ControlPadsScreenEvent
     data object OnQRScannerClick : ControlPadsScreenEvent
     data object OnImportJsonClick : ControlPadsScreenEvent
+    data object OnPreferenceClick : ControlPadsScreenEvent
 }
 
 
