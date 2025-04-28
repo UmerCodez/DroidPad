@@ -50,6 +50,8 @@ import com.github.umer0586.droidpad.ui.screens.jsonimporterscreen.JsonImporterSc
 import com.github.umer0586.droidpad.ui.screens.jsonimporterscreen.JsonImporterScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreen
 import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreenViewModel
+import com.github.umer0586.droidpad.ui.screens.preferencescreen.PreferenceScreen
+import com.github.umer0586.droidpad.ui.screens.preferencescreen.PreferenceScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeGeneratorScreen
 import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.qrscannerscreen.QRCodeScannerScreen
@@ -91,6 +93,9 @@ object Route{
     @Serializable
     object JsonImporterScreen
 
+    @Serializable
+    object PreferenceScreen
+
 }
 
 
@@ -114,6 +119,7 @@ fun NavScreen(
     val qrScannerScreenViewModel = hiltViewModel<QRScannerScreenViewModel>()
     val controlPadImporterScreenViewModel = hiltViewModel<ControlPadImporterScreenViewModel>()
     val jsonImporterScreenViewModel = hiltViewModel<JsonImporterScreenViewModel>()
+    val preferenceScreenViewModel = hiltViewModel<PreferenceScreenViewModel>()
 
     val context = LocalContext.current
     val versionName = try {
@@ -190,6 +196,9 @@ fun NavScreen(
                 },
                 onImportJsonClick = {
                     navController.navigateTo(Route.JsonImporterScreen)
+                },
+                onPreferenceClick = {
+                    navController.navigateTo(Route.PreferenceScreen)
                 }
 
             )
@@ -348,6 +357,15 @@ fun NavScreen(
                 },
                 onExternalDataAvailable = { externalData ->
                     navController.navigateTo(Route.ImporterScreen(externalData))
+                }
+            )
+        }
+
+        composable<Route.PreferenceScreen> {
+            PreferenceScreen(
+                viewModel = preferenceScreenViewModel,
+                onBackClick = {
+                    navController.navigateTo(Route.ControlPadListScreen)
                 }
             )
         }
