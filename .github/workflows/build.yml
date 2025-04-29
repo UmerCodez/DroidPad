@@ -5,12 +5,14 @@ on:
     branches: [ "main" ]
     paths-ignore:
       - '**/README.md'
+      - '**/TAGS.md'
       - 'fastlane/**'
       - /.github/workflows/build.yml
   pull_request:
     branches: [ "main" ]
     paths-ignore:
       - '**/README.md'
+      - '**/TAGS.md'
       - 'fastlane/**'
 
 
