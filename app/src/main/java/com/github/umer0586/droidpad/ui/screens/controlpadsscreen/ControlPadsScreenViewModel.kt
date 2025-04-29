@@ -24,6 +24,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ExternalData
+import com.github.umer0586.droidpad.data.connectionconfig.BluetoothConfig
 import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
@@ -151,6 +152,11 @@ class ControlPadsScreenViewModel @Inject constructor(
                                     val updatedConfigJson = mqttConfig.copy(password = "****").toJson()
                                     return@let it.copy(configJson = updatedConfigJson)
 
+                                }
+                                else if(it.connectionType == ConnectionType.BLUETOOTH){
+                                    val bluetoothConfig = BluetoothConfig.fromJson(it.configJson)
+                                    val updatedConfigJson = bluetoothConfig.copy(remoteDevice = null).toJson()
+                                    return@let it.copy(configJson = updatedConfigJson)
                                 }
                                 return@let it
                             }
