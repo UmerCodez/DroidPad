@@ -59,6 +59,7 @@ data class ConnectionConfigScreenState(
     val isBluetoothEnable: Boolean = false,
     val bluetoothServiceUUID: String = UUID_SSP,
     val selectedBluetoothDevice: RemoteBluetoothDevice? = null,
+    val hasBluetoothPermission: Boolean = false,
     val pairedBluetoothDevices: List<RemoteBluetoothDevice> = emptyList()
 )
 
@@ -80,6 +81,7 @@ sealed interface ConnectionConfigScreenEvent {
     data class OnUseCredentialChange(val useCredentials: Boolean) : ConnectionConfigScreenEvent
     data class OnBluetoothUUIDChange(val uuid: String) : ConnectionConfigScreenEvent
     data class OnBluetoothDeviceSelected(val remoteBluetoothDevice: RemoteBluetoothDevice) : ConnectionConfigScreenEvent
+    data object OnBluetoothPermissionStateChange : ConnectionConfigScreenEvent
     data object OnSelectDeviceClick : ConnectionConfigScreenEvent
     data object OnBackPress : ConnectionConfigScreenEvent
 
@@ -118,7 +120,9 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                 } else if (uiState.connectionType == ConnectionType.BLUETOOTH) {
                     _uiState.update {
                         it.copy(
-                            hasInputError = uiState.selectedBluetoothDevice == null || uiState.bluetoothServiceUUID.isEmpty()
+                            hasInputError = uiState.selectedBluetoothDevice == null || uiState.bluetoothServiceUUID.isEmpty(),
+                            hasBluetoothPermission = bluetoothUtil.hasBluetoothPermission()
+
                         )
                     }
                 }
@@ -324,7 +328,16 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         pairedBluetoothDevices = bluetoothUtil.getPairedDevices(),
-                        isBluetoothEnable = bluetoothUtil.isBluetoothEnabled()
+                        isBluetoothEnable = bluetoothUtil.isBluetoothEnabled(),
+                        hasBluetoothPermission = bluetoothUtil.hasBluetoothPermission()
+                    )
+                }
+            }
+
+            is ConnectionConfigScreenEvent.OnBluetoothPermissionStateChange -> {
+                _uiState.update {
+                    it.copy(
+                        hasBluetoothPermission = bluetoothUtil.hasBluetoothPermission()
                     )
                 }
             }

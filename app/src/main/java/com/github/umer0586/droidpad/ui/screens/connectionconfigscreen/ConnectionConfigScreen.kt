@@ -20,6 +20,8 @@
 package com.github.umer0586.droidpad.ui.screens.connectionconfigscreen
 
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +41,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -81,9 +84,12 @@ import com.github.umer0586.droidpad.data.connectionconfig.UUID_SSP
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.ui.components.EnumDropdown
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ConnectionConfigScreen(
     controlPadId: Long,
@@ -101,6 +107,23 @@ fun ConnectionConfigScreen(
     }
 
     val uiState by viewModel.uiState.collectAsState()
+
+    // If Android 12+
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val bluetoothPermissionState =
+            rememberPermissionState(Manifest.permission.BLUETOOTH_CONNECT)
+
+        LaunchedEffect(uiState.connectionType) {
+            if(uiState.connectionType == ConnectionType.BLUETOOTH || uiState.connectionType == ConnectionType.BLUETOOTH_LE){
+                bluetoothPermissionState.launchPermissionRequest()
+            }
+        }
+
+        LaunchedEffect(bluetoothPermissionState.status) {
+            viewModel.onEvent(ConnectionConfigScreenEvent.OnBluetoothPermissionStateChange)
+        }
+    }
+
 
     ConnectionConfigScreenContent(
         controlPadId = controlPadId,
@@ -369,6 +392,21 @@ fun ConnectionConfigScreenContent(
 
             if(uiState.connectionType == ConnectionType.BLUETOOTH){
 
+                if(!uiState.hasBluetoothPermission){
+                    ListItem(
+                        modifier = Modifier
+                            .width(itemWidth)
+                            .padding(horizontal = itemPadding),
+                        headlineContent = { Text("Bluetooth Permission Required") },
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Filled.Warning,
+                                contentDescription = "WarningIcon"
+                            )
+                        }
+                    )
+                }
+
 
                 OutlinedTextField(
                     modifier = Modifier
@@ -409,7 +447,13 @@ fun ConnectionConfigScreenContent(
                                     scope.launch {
                                         snackBarHostState.showSnackbar("Please Enable Bluetooth")
                                     }
-                                }else if(uiState.pairedBluetoothDevices.isNotEmpty()){
+                                }
+                                else if(!uiState.hasBluetoothPermission){
+                                    scope.launch {
+                                        snackBarHostState.showSnackbar("Bluetooth Permission Required")
+                                    }
+                                }
+                                else if(uiState.pairedBluetoothDevices.isNotEmpty()){
                                     showPairedDevices = true
                                 } else { // when bluetooth is enabled but there are no paired devices
                                     scope.launch {
