@@ -108,3 +108,7 @@ RC controller app with [specific feature, e.g., camera control, FPV]
 Android app to control [specific type of RC vehicle, e.g., car, truck, tank, boat, drone]
 DIY Bluetooth RC car controller app Android
 Open source RC controller app Android
+The Arduino based will be controlled using an Android App wherein the communication between the car and Android device will take place by the Bluetooth module.
+Build a car that can be controlled wirelessly via a smartphone using Bluetooth communication. ; Default name for Bluetooth module is
+Bluetooth RC Car APK for Android - Download
+Arduino Car Controller is an innovative Android application designed to transform your smartphone into a remote control for your Arduino-built car.
