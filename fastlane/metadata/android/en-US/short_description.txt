@@ -1,1 +1,1 @@
-Create control interfaces for BLE, WebSocket, MQTT, TCP, and UDP protocols.
+Build control interfaces for WebSocket, Bluetooth/LE, MQTT, TCP & UDP protocols.
