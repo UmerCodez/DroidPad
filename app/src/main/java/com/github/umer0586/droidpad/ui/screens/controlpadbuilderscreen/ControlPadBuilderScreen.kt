@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -79,6 +80,7 @@ import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.Resolution
 import com.github.umer0586.droidpad.data.SliderProperties
+import com.github.umer0586.droidpad.data.SteeringWheelProperties
 import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
@@ -92,6 +94,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadSteeringWheel
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.components.propertieseditor.ItemPropertiesEditorSheet
@@ -526,6 +529,32 @@ fun ControlPadBuilderScreenContent(
                         }
                     )
                 }
+                else if(controlPadItem.itemType == ItemType.STEERING_WHEEL && uiState.transformableStatesMap[controlPadItem.id] != null){
+                    ControlPadSteeringWheel(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        properties = SteeringWheelProperties.fromJson(controlPadItem.properties),
+                        enabled = false,
+                        onDeleteClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnEditItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        }
+                    )
+                }
 
 
 
@@ -570,6 +599,9 @@ fun ControlPadBuilderScreenContent(
                                 ItemType.JOYSTICK -> JoyStickProperties(
                                     backgroundColor = primary.value,
                                     handleColor = onPrimary.value,
+                                ).toJson()
+                                ItemType.STEERING_WHEEL -> SteeringWheelProperties(
+                                    color = primary.value
                                 ).toJson()
                             }
 

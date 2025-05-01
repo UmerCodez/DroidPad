@@ -117,8 +117,8 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                 controlPadItem.copy(
                                     offsetX = newOffset.x,
                                     offsetY = newOffset.y,
-                                    // Joystick should not be rotatable
-                                    rotation = if(controlPadItem.itemType == ItemType.JOYSTICK) 0f else newRotation,
+                                    // Joystick and steering wheel should not be rotatable
+                                    rotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f else newRotation,
                                     scale = newScale.coerceIn(minScale,maxScale)
                                 )
 
@@ -219,8 +219,8 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                         controlPadItem.copy(
                                             offsetX = newOffset.x,
                                             offsetY = newOffset.y,
-                                            // Joystick should not be rotatable
-                                            rotation = if(controlPadItem.itemType == ItemType.JOYSTICK) 0f else newRotation,
+                                            // Joystick and steering wheel should not be rotatable
+                                            rotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f else newRotation,
                                             scale = newScale.coerceIn(minScale,maxScale)
                                         )
 

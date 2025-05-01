@@ -32,7 +32,8 @@ enum class ItemType{
     LABEL,
     JOYSTICK,
     BUTTON,
-    DPAD
+    DPAD,
+    STEERING_WHEEL
 }
 
 @Serializable

@@ -132,6 +132,20 @@ data class JoyStickProperties(
     }
 }
 
+@Serializable
+data class SteeringWheelProperties(
+    val color: ULong = Color(0xFFDBC66E).value,
+    val freeRotation: Boolean = false,
+    val maxAngle: Int = 360,
+    val selfCentering: Boolean = true,
+    val multiTouch: Boolean = false,
+){
+    fun toJson() = JsonCon.encodeToString(this)
+    companion object {
+        fun fromJson(json: String) = JsonCon.decodeFromString<SteeringWheelProperties>(json)
+    }
+}
+
 
 private val idToIconMap = mapOf(
     0 to R.drawable.ic_power,

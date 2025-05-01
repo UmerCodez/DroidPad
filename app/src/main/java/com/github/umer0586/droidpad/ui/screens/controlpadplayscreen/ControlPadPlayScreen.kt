@@ -79,6 +79,7 @@ import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.SliderProperties
+import com.github.umer0586.droidpad.data.SteeringWheelProperties
 import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.connection.ConnectionState
@@ -94,6 +95,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadSteeringWheel
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
@@ -422,7 +424,21 @@ fun ControlPlayScreenContent(
                     )
                 }
 
+                else if(controlPadItem.itemType == ItemType.STEERING_WHEEL){
+                    ControlPadSteeringWheel(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        showControls = false,
+                        properties = SteeringWheelProperties.fromJson(controlPadItem.properties),
+                        onRotate = {
+                            onUiEvent(ControlPadPlayScreenEvent.OnSteeringWheelRotate(id = controlPadItem.itemIdentifier, angle = it))
+                        }
+                    )
+                }
+
             }
+
 
 
             //Lock the pad if not connected to any server

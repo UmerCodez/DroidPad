@@ -27,6 +27,7 @@ import com.github.umer0586.droidpad.data.ButtonEvent
 import com.github.umer0586.droidpad.data.DPadEvent
 import com.github.umer0586.droidpad.data.JoyStickEvent
 import com.github.umer0586.droidpad.data.SliderEvent
+import com.github.umer0586.droidpad.data.SteeringWheelEvent
 import com.github.umer0586.droidpad.data.SwitchEvent
 import com.github.umer0586.droidpad.data.connection.BluetoothConnection
 import com.github.umer0586.droidpad.data.connection.BluetoothLEConnection
@@ -76,6 +77,7 @@ sealed interface ControlPadPlayScreenEvent {
     data class OnDpadButtonRelease(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
     data class OnDpadButtonClick(val id: String, val dPadButton: DPAD_BUTTON) : ControlPadPlayScreenEvent
     data class OnJoyStickMove(val id: String, val x: Float, val y: Float) : ControlPadPlayScreenEvent
+    data class OnSteeringWheelRotate(val id: String, val angle: Float) : ControlPadPlayScreenEvent
     data object OnBackPress : ControlPadPlayScreenEvent
 }
 
@@ -314,6 +316,18 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
+            }
+
+            is ControlPadPlayScreenEvent.OnSteeringWheelRotate -> {
+                val data = if((connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH) && !sendJsonOverBluetooth)
+                    SteeringWheelEvent(id = event.id, angle = event.angle).toCSV()
+                else
+                    SteeringWheelEvent(id = event.id, angle = event.angle).toJson()
+
+                viewModelScope.launch {
+                    connection?.sendData(data)
+                }
+
             }
         }
     }

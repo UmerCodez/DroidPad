@@ -72,3 +72,15 @@ data class JoyStickEvent(
     }
     fun toCSV() = "$id,$x,$y"
 }
+
+@Serializable
+data class SteeringWheelEvent(
+    val id: String,
+    val type: ItemType = ItemType.STEERING_WHEEL,
+    val angle: Float
+){
+    fun toJson(): String {
+        return JsonCon.encodeToString(this)
+    }
+    fun toCSV() = "$id,$angle"
+}

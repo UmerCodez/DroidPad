@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,6 +45,8 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -73,6 +76,7 @@ import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.SliderProperties
+import com.github.umer0586.droidpad.data.SteeringWheelProperties
 import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
@@ -81,6 +85,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadSteeringWheel
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.components.EnumDropdown
@@ -211,6 +216,15 @@ fun ItemPropertiesEditorSheet(
                 onJoyStickPropertiesChange = { joyStickProperties ->
                     modifiedControlPadItem = modifiedControlPadItem.copy(
                         properties = joyStickProperties.toJson()
+                    )
+                }
+            )
+        } else if(controlPadItem.itemType == ItemType.STEERING_WHEEL){
+            SteeringWheelPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onSteeringWheelPropertiesChange = { steeringWheelProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = steeringWheelProperties.toJson()
                     )
                 }
             )
@@ -1149,6 +1163,132 @@ private fun SwitchPropertiesEditor(
     }
 }
 
+@Composable
+private fun SteeringWheelPropertiesEditor(
+    modifier: Modifier = Modifier,
+    controlPadItem: ControlPadItem,
+    onSteeringWheelPropertiesChange: ((SteeringWheelProperties) -> Unit)? = null,
+){
+    var steeringWheelProperties by remember { mutableStateOf(SteeringWheelProperties.fromJson(controlPadItem.properties)) }
+    var showColorPicker by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        ControlPadSteeringWheel(
+            modifier = Modifier.size(150.dp),
+            properties = steeringWheelProperties,
+            showControls = false,
+            enabled = false
+        )
+
+        AnimatedVisibility(showColorPicker) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(steeringWheelProperties.color),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    steeringWheelProperties =
+                        steeringWheelProperties.copy(color = colorEnvelope.color.value)
+                    onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
+                }
+            )
+        }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(steeringWheelProperties.color))
+                        .clickable {
+                            showColorPicker = !showColorPicker
+                        })
+            }
+
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Free Rotation") },
+            trailingContent = {
+                Switch(
+                    checked = steeringWheelProperties.freeRotation,
+                    onCheckedChange = {
+                        steeringWheelProperties = steeringWheelProperties.copy(freeRotation = it)
+                        onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
+                    }
+                )
+            }
+
+        )
+
+        if (!steeringWheelProperties.freeRotation) {
+           ListItem(
+               modifier = Modifier.fillMaxWidth(0.7f),
+               headlineContent = {Slider(
+                   value = steeringWheelProperties.maxAngle.toFloat(),
+                   onValueChange = {
+                       steeringWheelProperties =
+                           steeringWheelProperties.copy(maxAngle = it.toInt())
+                       onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
+                   },
+                   valueRange = 0f..360f,
+               )},
+               overlineContent = {Text("Max Angle")},
+               supportingContent = {
+                   Text(steeringWheelProperties.maxAngle.toString())
+
+               }
+           )
+        }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Self Centering") },
+            trailingContent = {
+                Switch(
+                    checked = steeringWheelProperties.selfCentering,
+                    onCheckedChange = {
+                        steeringWheelProperties = steeringWheelProperties.copy(selfCentering = it)
+                        onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
+                    }
+                )
+            }
+
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Multi Touch") },
+            supportingContent = {Text("Use two fingers to rotate")},
+            trailingContent = {
+                Switch(
+                    checked = steeringWheelProperties.multiTouch,
+                    onCheckedChange = {
+                        steeringWheelProperties = steeringWheelProperties.copy(multiTouch = it)
+                        onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
+                    }
+                )
+            }
+
+        )
+
+
+    }
+
+
+
+}
+
 // Run this in emulator. Bottom Sheet doesn't work properly in interactive mode
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -1201,7 +1341,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "dpad",
                 controlPadId = 1,
-                itemType = ItemType.DPAD,
+                itemType = ItemType.STEERING_WHEEL,
             )
         )
     }
