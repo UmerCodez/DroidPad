@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -232,9 +233,8 @@ fun ItemPropertiesEditorSheet(
 
 
         TextButton(
-            modifier = Modifier
-                .testTag("saveBtn")
-                .fillMaxWidth(0.5f),
+            modifier = Modifier.width(150.dp).padding(16.dp)
+                .testTag("saveBtn"),
             colors = ButtonDefaults.textButtonColors().copy(
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 containerColor = MaterialTheme.colorScheme.primary
@@ -243,6 +243,7 @@ fun ItemPropertiesEditorSheet(
             onClick = {
                 onSaveSubmit?.invoke(modifiedControlPadItem)
             },
+            contentPadding = PaddingValues(16.dp),
             content = {
                 Text("Save")
             }
