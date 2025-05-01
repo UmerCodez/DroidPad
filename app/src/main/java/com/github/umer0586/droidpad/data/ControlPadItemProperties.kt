@@ -157,4 +157,7 @@ private val idToIconMap = mapOf(
     6 to R.drawable.ic_add,
     7 to R.drawable.ic_minus,
     8 to R.drawable.ic_light,
+    9 to R.drawable.ic_bulb_on,
+    10 to R.drawable.ic_refresh,
+    11 to R.drawable.ic_volume
 )
