@@ -117,6 +117,21 @@ For **Bluetooth** and **Bluetooth LE** connections, pressing or releasing a butt
 - The `button` field can be **"LEFT"**,**"RIGHT"**,**"UP"** or **"DOWN"**    
 
 ---
+### **STEERING WHEEL**
+Rotating a steering wheel generates this JSON:
+```json
+{
+  "id": "your id",
+  "type": "STEERING_WHEEL",
+  "angle": 45.233445
+}
+```
+For **Bluetooth** and **Bluetooth LE** connections the `CSV` is `<id>,<angle>`
+
+ - where `angle` is rotation angle of the steering wheel in degrees
+
+---
+
 ### **JoyStick**  
 Moving joystick handle generates this JSON:  
 ```json
