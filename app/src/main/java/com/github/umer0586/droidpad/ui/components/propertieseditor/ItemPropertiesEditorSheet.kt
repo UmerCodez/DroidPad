@@ -511,33 +511,21 @@ private fun StepSliderPropertiesEditor(
             shape = textFieldShape
         )
 
-        OutlinedTextField(
-            singleLine = true,
-            prefix = { Text("Steps") },
-            value = steps,
-            isError = steps.let {
-                it.toIntOrNull()?.also { stepsInt ->
-                    hasError?.invoke(stepsInt <= 0 || stepsInt > 50)
-                    return@let stepsInt <= 0
-                }?: hasError?.invoke(true); return@let true
-            },
-            supportingText = {
-                steps.toIntOrNull()?.also { stepsInt ->
-                    if(stepsInt <= 0 || stepsInt > 50)
-                        Text("Steps should be between 1 and 50")
-                }
-            },
-            onValueChange = {
-                steps = it
-                steps.toIntOrNull()?.also { stepsInt ->
-                    if(stepsInt > 0){
-                        stepSliderProperties = stepSliderProperties.copy(steps = stepsInt)
-                        onStepSliderPropertiesChange?.invoke(stepSliderProperties)
-                    }
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            shape = textFieldShape
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = {Slider(
+                value = stepSliderProperties.steps.toFloat(),
+                onValueChange = {
+                    stepSliderProperties = stepSliderProperties.copy(steps = it.toInt())
+                    onStepSliderPropertiesChange?.invoke(stepSliderProperties)
+                },
+                valueRange = 1f..50f,
+            )},
+            overlineContent = {Text("Steps")},
+            supportingContent = {
+                Text(stepSliderProperties.steps.toString())
+
+            }
         )
 
         ListItem(
@@ -1341,7 +1329,7 @@ private fun ItemEditorPreview() {
                 id = 1,
                 itemIdentifier = "dpad",
                 controlPadId = 1,
-                itemType = ItemType.STEERING_WHEEL,
+                itemType = ItemType.STEP_SLIDER,
             )
         )
     }
