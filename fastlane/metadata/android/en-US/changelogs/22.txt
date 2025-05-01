@@ -1,0 +1,6 @@
+Feature: Added Steering Wheel
+Added 3 new icons
+Remote Bluetooth Device excluded from QRCode
+Remote Bluetooth Device excluded from Json export
+Replaced step slider's step input field with slider
+Added Runtime Permission Request for Bluetooth/Bluetooth LE
