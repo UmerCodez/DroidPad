@@ -233,7 +233,9 @@ fun ItemPropertiesEditorSheet(
 
 
         TextButton(
-            modifier = Modifier.width(150.dp).padding(16.dp)
+            modifier = Modifier
+                .width(150.dp)
+                .padding(16.dp)
                 .testTag("saveBtn"),
             colors = ButtonDefaults.textButtonColors().copy(
                 contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -1221,23 +1223,25 @@ private fun SteeringWheelPropertiesEditor(
         )
 
         if (!steeringWheelProperties.freeRotation) {
-           ListItem(
-               modifier = Modifier.fillMaxWidth(0.7f),
-               headlineContent = {Slider(
-                   value = steeringWheelProperties.maxAngle.toFloat(),
-                   onValueChange = {
-                       steeringWheelProperties =
-                           steeringWheelProperties.copy(maxAngle = it.toInt())
-                       onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
-                   },
-                   valueRange = 0f..360f,
-               )},
-               overlineContent = {Text("Max Angle")},
-               supportingContent = {
-                   Text(steeringWheelProperties.maxAngle.toString())
+            ListItem(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                headlineContent = {
+                    Slider(
+                        value = steeringWheelProperties.maxAngle.toFloat(),
+                        onValueChange = {
+                            steeringWheelProperties =
+                                steeringWheelProperties.copy(maxAngle = it.toInt())
+                            onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
+                        },
+                        valueRange = 45f..360f,
+                    )
+                },
+                overlineContent = { Text("Max Angle") },
+                supportingContent = {
+                    Text(steeringWheelProperties.maxAngle.toString())
 
-               }
-           )
+                }
+            )
         }
 
         ListItem(
