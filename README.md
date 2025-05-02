@@ -31,8 +31,9 @@ Easily configure your control pad to support network protocols such as **Bluetoo
 1. Switch
 2. Button
 3. Slider
-4. Joystick
-5. Steering Wheel
+4. DPAD
+5. Joystick
+6. Steering Wheel
 
 ## How It Works (4 steps) 
 
@@ -136,6 +137,10 @@ Rotating a steering wheel generates this JSON:
 For **Bluetooth** and **Bluetooth LE** connections the `CSV` is `<id>,<angle>`
 
  - where `angle` is rotation angle of the steering wheel in degrees
+   - **Positive values** indicate clockwise rotation
+   - **Negative values** indicate counter-clockwise (anti-clockwise) rotation 
+
+   
 
 ---
 
