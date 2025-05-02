@@ -25,8 +25,14 @@
 Easily configure your control pad to support network protocols such as **Bluetooth LE, WebSocket, MQTT, TCP, and UDP**. Once connected, you can interact with the control pad’s components—including **buttons, sliders, switches, joysticks, and D-PADs**—to send real-time commands directly to the connected server or BLE client, where these commands can be processed.
 
 3. **Switch Connection Type Anytime**  
-   You can change the connection type of a control pad at any time without creating a duplicate for a different connection.  
- 
+   You can change the connection type of a control pad at any time without creating a duplicate for a different connection.
+   
+## Supported Components
+1. Switch
+2. Button
+3. Slider
+4. Joystick
+5. Steering Wheel
 
 ## How It Works (4 steps) 
 
@@ -186,6 +192,5 @@ You can test the connections with Websocket,TCP, UDP servers and BLE client prov
 
 ### TODO
 1. Attaching sensors (Like accelerometer and gyroscope) to control pads
-2. Steering Wheel
-3. TouchPad
+2. TouchPad
 
