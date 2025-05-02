@@ -13,7 +13,7 @@
 ## Create Customizable Control Interfaces for Bluetooth Low Energy, Bluetooth, WebSocket, MQTT, TCP, and UDP Protocols with Simple Drag-and-Drop Functionality. 
 
 <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="250" heigth="250"> <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="250" heigth="250"> <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="250" heigth="250"> <br>
-<img src="https://github.com/umer0586/DroidPad/blob/fastlane-screenshots-update/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="400" heigth="400"> <img src="https://github.com/umer0586/DroidPad/blob/fastlane-screenshots-update/fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="400" heigth="400">
+<img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="400" heigth="400"> <img src="https://github.com/umer0586/DroidPad/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="400" heigth="400">
 
 </div>
 
