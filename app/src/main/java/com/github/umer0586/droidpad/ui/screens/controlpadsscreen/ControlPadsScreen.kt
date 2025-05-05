@@ -129,7 +129,7 @@ fun ControlPadsScreen(
         viewModel.loadConnectionTypes()
     }
 
-    val context = LocalContext.current.applicationContext
+    val context = LocalContext.current
     viewModel.onExportableJsonReady { externalData ->
         shareJsonStringAsFile(
             context = context,
