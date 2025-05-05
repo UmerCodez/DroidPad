@@ -22,7 +22,9 @@ package com.github.umer0586.droidpad.ui.screens.controlpadsscreen
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -110,14 +112,12 @@ import java.io.OutputStreamWriter
 @Composable
 fun ControlPadsScreen(
     viewModel : ControlPadsScreenViewModel = hiltViewModel(),
-    appVersion: String = "X.Y.Z",
     onCreateClick: (() -> Unit)? = null,
     onBuildClick: ((ControlPad) -> Unit)? = null,
     onSettingClick: ((ControlPad) -> Unit)? = null,
     onPlayClick: ((ControlPad) -> Unit)? = null,
     onExitClick: (() -> Unit)? = null,
     onAboutClick: (() -> Unit)? = null,
-    onShareClick: (() -> Unit)? = null,
     onQRGenerateClick: ((ControlPad) -> Unit)? = null,
     onQrScannerClick: (() -> Unit)? = null,
     onImportJsonClick: (() -> Unit)? = null,
@@ -139,7 +139,7 @@ fun ControlPadsScreen(
     }
 
     ControlPadsScreenContent(
-        appVersion = appVersion,
+        appVersion = getAppVersion(context),
         uiState = uiState,
         onUiEvent = { event ->
             viewModel.onEvent(event)
@@ -151,7 +151,15 @@ fun ControlPadsScreen(
                 is ControlPadsScreenEvent.OnPlayClick -> onPlayClick?.invoke(event.controlPad)
                 is ControlPadsScreenEvent.OnExitClick -> onExitClick?.invoke()
                 is ControlPadsScreenEvent.OnAboutClick -> onAboutClick?.invoke()
-                is ControlPadsScreenEvent.OnShareClick -> onShareClick?.invoke()
+                is ControlPadsScreenEvent.OnShareClick -> {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    if(intent.resolveActivity(context.packageManager) != null){
+                        intent.data = Uri.parse("https://www.github.com/umer0586/DroidPad")
+                        context.startActivity(Intent.createChooser(intent,"Select Browser"))
+                    } else {
+                        Toast.makeText(context,"No browser found", Toast.LENGTH_SHORT).show()
+                    }
+                }
                 is ControlPadsScreenEvent.OnQrCodeClick -> onQRGenerateClick?.invoke(event.controlPad)
                 is ControlPadsScreenEvent.OnQRScannerClick -> onQrScannerClick?.invoke()
                 is ControlPadsScreenEvent.OnImportJsonClick -> onImportJsonClick?.invoke()
@@ -734,4 +742,15 @@ private fun shareJsonStringAsFile(context: Context, jsonString: String, name: St
     } catch (e: Exception) {
         e.printStackTrace()
     }
+}
+
+private fun getAppVersion(context: Context) : String{
+    val versionName = try {
+        context.applicationContext.packageManager
+            .getPackageInfo(context.packageName, 0).versionName ?: "Unknown"
+
+    } catch (e: PackageManager.NameNotFoundException) {
+        "Unknown"
+    }
+    return versionName
 }

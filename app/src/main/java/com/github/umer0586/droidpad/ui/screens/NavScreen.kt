@@ -20,10 +20,6 @@
 package com.github.umer0586.droidpad.ui.screens
 
 
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -121,14 +117,6 @@ fun NavScreen(
     val jsonImporterScreenViewModel = hiltViewModel<JsonImporterScreenViewModel>()
     val preferenceScreenViewModel = hiltViewModel<PreferenceScreenViewModel>()
 
-    val context = LocalContext.current
-    val versionName = try {
-        context.packageManager
-            .getPackageInfo(context.packageName, 0).versionName ?: "Unknown"
-
-    } catch (e: PackageManager.NameNotFoundException) {
-         "Unknown"
-    }
 
     NavHost(
         navController = navController,
@@ -137,21 +125,8 @@ fun NavScreen(
 
         composable<Route.AboutScreen> {
             AboutScreen(
-                version = versionName,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
-                },
-                onEmailClick = {
-                    val intent = Intent(Intent.ACTION_SENDTO)
-                    intent.setData(Uri.parse("mailto:")) // only email apps should handle this
-                    intent.putExtra(Intent.EXTRA_EMAIL, "umerfarooq2383@gmail.com")
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
-
-                    try {
-                        context.startActivity(intent)
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()
-                    }
                 }
             )
         }
@@ -159,7 +134,6 @@ fun NavScreen(
         composable<Route.ControlPadListScreen> {
 
             ControlPadsScreen(
-                appVersion = versionName,
                 viewModel = controlPadsScreenViewModel,
                 onCreateClick = {
                     navController.navigateTo(Route.NewControlPadScreen)
@@ -184,15 +158,6 @@ fun NavScreen(
                 },
                 onAboutClick = {
                     navController.navigateTo(Route.AboutScreen)
-                },
-                onShareClick = {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    if(intent.resolveActivity(context.packageManager) != null){
-                        intent.data = Uri.parse("https://www.github.com/umer0586/DroidPad")
-                        context.startActivity(Intent.createChooser(intent,"Select Browser"))
-                    } else {
-                        Toast.makeText(context,"No browser found", Toast.LENGTH_SHORT).show()
-                    }
                 },
                 onImportJsonClick = {
                     navController.navigateTo(Route.JsonImporterScreen)
