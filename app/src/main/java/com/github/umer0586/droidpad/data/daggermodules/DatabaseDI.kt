@@ -22,6 +22,7 @@ package com.github.umer0586.droidpad.data.daggermodules
 import android.content.Context
 import androidx.room.Room
 import com.github.umer0586.droidpad.data.database.AppDatabase
+import com.github.umer0586.droidpad.data.database.MIGRATION_4_TO_5
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,7 +41,9 @@ object DatabaseDI {
             appContext,
             AppDatabase::class.java,
             "droid-pad-database"
-        ).build()
+        )
+            .addMigrations(MIGRATION_4_TO_5)
+            .build()
     }
 
 }
