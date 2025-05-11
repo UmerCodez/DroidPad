@@ -24,11 +24,13 @@ import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadItemRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
+import com.github.umer0586.droidpad.data.repositories.ControlPadSensorRepository
 import com.github.umer0586.droidpad.data.repositories.JsonRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
 import com.github.umer0586.droidpad.data.repositoriesimp.ConnectionConfigRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadItemRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadRepositoryImp
+import com.github.umer0586.droidpad.data.repositoriesimp.ControlPadSensorRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.JsonRepositoryImp
 import com.github.umer0586.droidpad.data.repositoriesimp.PreferenceRepositoryImp
 import dagger.Module
@@ -70,6 +72,12 @@ object RepositoryDI {
     @ViewModelScoped
     fun provideJsonRepository() : JsonRepository {
         return JsonRepositoryImp()
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideControlPadSensorRepository(appDatabase: AppDatabase): ControlPadSensorRepository {
+        return ControlPadSensorRepositoryImp(appDatabase)
     }
 
 
