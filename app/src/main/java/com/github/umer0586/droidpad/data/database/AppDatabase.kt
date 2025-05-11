@@ -24,16 +24,19 @@ import androidx.room.RoomDatabase
 import com.github.umer0586.droidpad.data.database.dao.ConnectionConfigurationDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadItemDao
+import com.github.umer0586.droidpad.data.database.dao.ControlPadSensorDao
 import com.github.umer0586.droidpad.data.database.entities.ConnectionConfig
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
+import com.github.umer0586.droidpad.data.database.entities.ControlPadSensor
 
 @Database(
-    entities = [ControlPadItem::class, ControlPad::class, ConnectionConfig::class],
-    version = 4)
+    entities = [ControlPadItem::class, ControlPad::class, ConnectionConfig::class, ControlPadSensor::class],
+    version = 5)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun controlPadItemDao(): ControlPadItemDao
     abstract fun controlPadDao(): ControlPadDao
     abstract fun connectionConfigurationDao(): ConnectionConfigurationDao
+    abstract fun controlPadSensorDao(): ControlPadSensorDao
 }
 
