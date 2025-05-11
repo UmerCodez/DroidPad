@@ -5,7 +5,12 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.serializarion)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.androidx.room)
 
+}
+// Save database's schema file version in app/schemas directory
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
@@ -73,6 +78,11 @@ android {
         resources {
             excludes += "bundle.properties"
         }
+    }
+
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("debug").assets.srcDirs(files("$projectDir/schemas"))
     }
 
 }
