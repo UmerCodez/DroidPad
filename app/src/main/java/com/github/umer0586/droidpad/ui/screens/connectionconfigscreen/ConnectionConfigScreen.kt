@@ -86,7 +86,6 @@ import com.github.umer0586.droidpad.ui.components.EnumDropdown
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 
 

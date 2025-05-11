@@ -49,9 +49,7 @@ import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
 import com.github.umer0586.droidpad.data.sensor.SensorEventProvider
 import com.github.umer0586.droidpad.data.util.BluetoothUtil
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
-import dagger.Provides
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
