@@ -121,7 +121,8 @@ fun ControlPadsScreen(
     onQRGenerateClick: ((ControlPad) -> Unit)? = null,
     onQrScannerClick: (() -> Unit)? = null,
     onImportJsonClick: (() -> Unit)? = null,
-    onPreferenceClick:(() -> Unit)? = null
+    onPreferenceClick:(() -> Unit)? = null,
+    onAttachSensorsClick: ((ControlPad) -> Unit)? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -164,6 +165,7 @@ fun ControlPadsScreen(
                 is ControlPadsScreenEvent.OnQRScannerClick -> onQrScannerClick?.invoke()
                 is ControlPadsScreenEvent.OnImportJsonClick -> onImportJsonClick?.invoke()
                 is ControlPadsScreenEvent.OnPreferenceClick -> onPreferenceClick?.invoke()
+                is ControlPadsScreenEvent.OnAttachSensorsClick -> onAttachSensorsClick?.invoke(event.controlPad)
                 else -> {}
             }
         }
@@ -419,6 +421,9 @@ fun ControlPadsScreenContent(
                         },
                         onExportJsonClick = {
                             onUiEvent(ControlPadsScreenEvent.OnExportJsonClick(it))
+                        },
+                        onAttachSensorsClick = {
+                            onUiEvent(ControlPadsScreenEvent.OnAttachSensorsClick(it))
                         }
 
                     )
@@ -442,6 +447,7 @@ private fun ItemCard(
     onDuplicateClick: ((ControlPad) -> Unit)? = null,
     onQRCodeClick: ((ControlPad) -> Unit)? = null,
     onExportJsonClick: ((ControlPad) -> Unit)? = null,
+    onAttachSensorsClick: ((ControlPad) -> Unit)? = null,
 
     ){
     Card(
@@ -526,6 +532,15 @@ private fun ItemCard(
                             expanded = false
                         }
                     )
+
+                    DropdownMenuItem(
+                        text = { Text("Attach Sensors") },
+                        onClick = {
+                            onAttachSensorsClick?.invoke(controlPad)
+                            expanded = false
+                        }
+                    )
+
                 }
             }
 

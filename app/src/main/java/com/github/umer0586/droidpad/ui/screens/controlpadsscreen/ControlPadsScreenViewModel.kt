@@ -56,6 +56,7 @@ sealed interface ControlPadsScreenEvent {
     data class OnDuplicateClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnQrCodeClick(val controlPad: ControlPad) : ControlPadsScreenEvent
     data class OnExportJsonClick(val controlPad: ControlPad) : ControlPadsScreenEvent
+    data class OnAttachSensorsClick(val controlPad: ControlPad): ControlPadsScreenEvent
     // Indicates that user clicked the "+" floating action button
     data object OnCreateClick : ControlPadsScreenEvent
     data object OnExitClick : ControlPadsScreenEvent

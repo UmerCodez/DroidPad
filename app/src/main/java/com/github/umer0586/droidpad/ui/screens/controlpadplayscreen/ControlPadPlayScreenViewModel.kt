@@ -44,12 +44,18 @@ import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
+import com.github.umer0586.droidpad.data.repositories.ControlPadSensorRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
+import com.github.umer0586.droidpad.data.sensor.SensorEventProvider
 import com.github.umer0586.droidpad.data.util.BluetoothUtil
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
+import dagger.Provides
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -89,7 +95,9 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     private val connectionConfigRepository: ConnectionConfigRepository,
     private val connectionFactory: ConnectionFactory,
     private val bluetoothUtil: BluetoothUtil,
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
+    private val controlPadSensorRepository: ControlPadSensorRepository,
+    private val sensorEventProvider: SensorEventProvider
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(
@@ -109,6 +117,21 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         viewModelScope.launch {
             preferenceRepository.preference.collect{ preference->
                 sendJsonOverBluetooth = preference.sendJsonOverBluetooth
+            }
+        }
+
+        viewModelScope.launch {
+            // Even though connection.sendData(data) is safe to call on the main thread,
+            // we collect the sensor event flow on the IO dispatcher to avoid frequent
+            // execution on the main thread, as sensor events are emitted very frequently.
+            sensorEventProvider.events.flowOn(Dispatchers.IO).collect{ sensorEvent ->
+                val data = if((connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH) && !sendJsonOverBluetooth)
+                    sensorEvent.toCsv()
+                else
+                    sensorEvent.toJson()
+
+                    connection?.sendData(data)
+
             }
         }
     }
@@ -142,6 +165,13 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                         )
                     }
 
+                    if(connectionConfig.connectionType == ConnectionType.UDP){
+                        viewModelScope.launch {
+                            val controlPadSensorsTypes = controlPadSensorRepository.getControlPadSensorsByControlPadId(controlPad.id).map { it.sensorType }
+                            sensorEventProvider.provideEventsFor(controlPadSensorsTypes)
+                        }
+                    }
+
 
                     launch {
                         connection?.connectionState?.collect { connectionState ->
@@ -163,6 +193,19 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionState.BLUETOOTH_CLIENT_CONNECTED -> true
                                 ConnectionState.BLUETOOTH_CONNECTED -> true
                                 else -> false
+                            }
+
+                            if (isConnected) {
+                                launch {
+                                    val controlPadSensorsTypes =
+                                        controlPadSensorRepository.getControlPadSensorsByControlPadId(
+                                            controlPad.id
+                                        ).map { it.sensorType }
+                                    sensorEventProvider.provideEventsFor(controlPadSensorsTypes)
+                                }
+                            } else if(!isConnecting){ // if not connected and not connecting
+                                // if not connected and not connecting then it means we are in disconnected state,
+                                sensorEventProvider.stopProvidingEvents()
                             }
 
 
@@ -205,6 +248,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 viewModelScope.launch {
                     connection?.tearDown()
                 }
+                sensorEventProvider.stopProvidingEvents()
             }
 
             is ControlPadPlayScreenEvent.OnSwitchCheckedChange -> {
@@ -248,6 +292,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 viewModelScope.launch {
                     connection?.tearDown()
                 }
+                sensorEventProvider.stopProvidingEvents()
             }
 
             is ControlPadPlayScreenEvent.OnButtonPress -> {
@@ -337,6 +382,9 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         viewModelScope.launch {
             connection?.tearDown()
         }
+
+        sensorEventProvider.stopProvidingEvents()
+        sensorEventProvider.cleanUp()
     }
 
 }

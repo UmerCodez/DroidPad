@@ -21,7 +21,6 @@ package com.github.umer0586.droidpad.ui.screens
 
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -52,6 +51,8 @@ import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeGenerator
 import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.qrscannerscreen.QRCodeScannerScreen
 import com.github.umer0586.droidpad.ui.screens.qrscannerscreen.QRScannerScreenViewModel
+import com.github.umer0586.droidpad.ui.screens.sensorsscreen.SensorsScreen
+import com.github.umer0586.droidpad.ui.screens.sensorsscreen.SensorsScreenViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -92,6 +93,9 @@ object Route{
     @Serializable
     object PreferenceScreen
 
+    @Serializable
+    data class SensorsScreen(val controlPad: ControlPad)
+
 }
 
 
@@ -116,6 +120,7 @@ fun NavScreen(
     val controlPadImporterScreenViewModel = hiltViewModel<ControlPadImporterScreenViewModel>()
     val jsonImporterScreenViewModel = hiltViewModel<JsonImporterScreenViewModel>()
     val preferenceScreenViewModel = hiltViewModel<PreferenceScreenViewModel>()
+    val sensorsScreenViewModel = hiltViewModel<SensorsScreenViewModel>()
 
 
     NavHost(
@@ -164,6 +169,9 @@ fun NavScreen(
                 },
                 onPreferenceClick = {
                     navController.navigateTo(Route.PreferenceScreen)
+                },
+                onAttachSensorsClick = { controlPad ->
+                    navController.navigateTo(Route.SensorsScreen(controlPad))
                 }
 
             )
@@ -333,6 +341,25 @@ fun NavScreen(
                     navController.navigateTo(Route.ControlPadListScreen)
                 }
             )
+        }
+
+        composable<Route.SensorsScreen>(
+            typeMap = mapOf(
+                typeOf<ControlPad>() to CustomNavType.ControlPadType
+            )
+        ){ navBackStackEntry ->
+
+            val sensorsScreenRoute = navBackStackEntry.toRoute<Route.SensorsScreen>()
+            val controlPad = sensorsScreenRoute.controlPad
+
+            SensorsScreen(
+                controlPad = controlPad,
+                viewModel = sensorsScreenViewModel,
+                onBackPress = {
+                    navController.navigateTo(Route.ControlPadListScreen)
+                }
+            )
+
         }
 
 
