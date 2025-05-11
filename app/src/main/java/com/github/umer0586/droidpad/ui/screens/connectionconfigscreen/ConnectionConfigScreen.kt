@@ -85,6 +85,7 @@ import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.ui.components.EnumDropdown
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 
@@ -110,16 +111,21 @@ fun ConnectionConfigScreen(
 
     // If Android 12+
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+        // In Android 12+, Bluetooth permissions (BLUETOOTH_CONNECT, BLUETOOTH_ADVERTISE, BLUETOOTH_SCAN)
+        // are displayed to users as a single "Nearby Devices" permission in the system UI.
+        // When requesting these permissions, users see only one permission dialog
+        // regardless of how many individual runtime Bluetooth permissions app needs.
         val bluetoothPermissionState =
-            rememberPermissionState(Manifest.permission.BLUETOOTH_CONNECT)
+            rememberMultiplePermissionsState(listOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_ADVERTISE))
 
         LaunchedEffect(uiState.connectionType) {
             if(uiState.connectionType == ConnectionType.BLUETOOTH || uiState.connectionType == ConnectionType.BLUETOOTH_LE){
-                bluetoothPermissionState.launchPermissionRequest()
+                bluetoothPermissionState.launchMultiplePermissionRequest()
             }
         }
 
-        LaunchedEffect(bluetoothPermissionState.status) {
+        LaunchedEffect(bluetoothPermissionState.permissions) {
             viewModel.onEvent(ConnectionConfigScreenEvent.OnBluetoothPermissionStateChange)
         }
     }
