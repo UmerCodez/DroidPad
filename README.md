@@ -181,6 +181,8 @@ For **Bluetooth** and **Bluetooth LE** connections, dragging the slider thumb ge
 
 ---
 
+## Sensor Readings
+
 ![image](https://github.com/user-attachments/assets/eeb83142-342e-4cfb-974e-4fd45563dd1d)
 
 ### **Accelerometer**
