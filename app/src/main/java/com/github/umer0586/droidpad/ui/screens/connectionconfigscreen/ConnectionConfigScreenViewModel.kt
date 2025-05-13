@@ -99,6 +99,17 @@ class ConnectionConfigScreenViewModel @Inject constructor(
     init {
 
         viewModelScope.launch {
+            bluetoothUtil.bluetoothState.collect{ bluetoothState ->
+                _uiState.update {
+                    it.copy(
+                        isBluetoothEnable = bluetoothState.isEnable,
+                        pairedBluetoothDevices = bluetoothState.pairedDevices
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
 
             _uiState.collect { uiState ->
 
@@ -327,8 +338,6 @@ class ConnectionConfigScreenViewModel @Inject constructor(
             is ConnectionConfigScreenEvent.OnSelectDeviceClick -> {
                 _uiState.update {
                     it.copy(
-                        pairedBluetoothDevices = bluetoothUtil.getPairedDevices(),
-                        isBluetoothEnable = bluetoothUtil.isBluetoothEnabled(),
                         hasBluetoothPermission = bluetoothUtil.hasBluetoothPermission()
                     )
                 }
@@ -426,6 +435,11 @@ class ConnectionConfigScreenViewModel @Inject constructor(
             _onConfigSaved?.invoke()
 
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        bluetoothUtil.cleanUp()
     }
 
 

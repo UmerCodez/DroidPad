@@ -109,8 +109,10 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     private var samplingRate = 200000
 
     init {
-        _uiState.update {
-            it.copy(isBluetoothEnabled = bluetoothUtil.isBluetoothEnabled())
+        viewModelScope.launch {
+            bluetoothUtil.bluetoothState.collect{ bluetoothState ->
+                _uiState.update { it.copy(isBluetoothEnabled = bluetoothState.isEnable) }
+            }
         }
 
         viewModelScope.launch {
@@ -385,6 +387,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
         sensorEventProvider.stopProvidingEvents()
         sensorEventProvider.cleanUp()
+        bluetoothUtil.cleanUp()
     }
 
 }
