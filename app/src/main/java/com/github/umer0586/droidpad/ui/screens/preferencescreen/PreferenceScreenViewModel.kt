@@ -12,11 +12,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class PreferenceScreenState(
-    val jsonForBluetooth: Boolean = false
+    val jsonForBluetooth: Boolean = false,
+    val sensorSamplingRate: Int = 200000
 )
 
 sealed interface PreferenceScreenEvent{
     data class OnJsonForBluetoothChange(val jsonForBluetooth: Boolean) : PreferenceScreenEvent
+    data class OnSensorSamplingRateChange(val sensorSamplingRate: Int) : PreferenceScreenEvent
+    data object OnSensorSamplingRateChangeFinished : PreferenceScreenEvent
     data object OnBackClick : PreferenceScreenEvent
 }
 
@@ -35,7 +38,10 @@ class PreferenceScreenViewModel @Inject constructor(
         viewModelScope.launch {
             preferenceRepository.preference.collect{
                 _uiState.update {
-                    it.copy(jsonForBluetooth = it.jsonForBluetooth)
+                    it.copy(
+                        jsonForBluetooth = it.jsonForBluetooth,
+                        sensorSamplingRate = it.sensorSamplingRate
+                    )
                 }
             }
         }
@@ -50,6 +56,18 @@ class PreferenceScreenViewModel @Inject constructor(
                 viewModelScope.launch {
                     preferenceRepository.updatePreference {
                         it.copy(sendJsonOverBluetooth = event.jsonForBluetooth)
+                    }
+                }
+            }
+            is PreferenceScreenEvent.OnSensorSamplingRateChange -> {
+                _uiState.update {
+                    it.copy(sensorSamplingRate = event.sensorSamplingRate)
+                }
+            }
+            is PreferenceScreenEvent.OnSensorSamplingRateChangeFinished -> {
+                viewModelScope.launch {
+                    preferenceRepository.updatePreference {
+                        it.copy(sensorSamplingRate = uiState.value.sensorSamplingRate)
                     }
                 }
             }

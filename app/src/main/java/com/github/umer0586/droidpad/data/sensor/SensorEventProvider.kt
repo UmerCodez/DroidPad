@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SensorEventProvider {
     val events: Flow<SensorEvent>
-    fun provideEventsFor(sensorTypes : List<Int>)
+    fun provideEventsFor(sensorTypes : List<Int>, samplingRate: Int = 200000)
     fun stopProvidingEvents()
     fun cleanUp()
 }

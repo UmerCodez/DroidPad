@@ -106,6 +106,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
     private var connection: Connection? = null
     private var sendJsonOverBluetooth = false
+    private var samplingRate = 200000
 
     init {
         _uiState.update {
@@ -115,6 +116,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         viewModelScope.launch {
             preferenceRepository.preference.collect{ preference->
                 sendJsonOverBluetooth = preference.sendJsonOverBluetooth
+                samplingRate = preference.sensorSamplingRate
             }
         }
 
@@ -166,7 +168,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                     if(connectionConfig.connectionType == ConnectionType.UDP){
                         viewModelScope.launch {
                             val controlPadSensorsTypes = controlPadSensorRepository.getControlPadSensorsByControlPadId(controlPad.id).map { it.sensorType }
-                            sensorEventProvider.provideEventsFor(controlPadSensorsTypes)
+                            sensorEventProvider.provideEventsFor(controlPadSensorsTypes, samplingRate)
                         }
                     }
 
@@ -199,7 +201,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                         controlPadSensorRepository.getControlPadSensorsByControlPadId(
                                             controlPad.id
                                         ).map { it.sensorType }
-                                    sensorEventProvider.provideEventsFor(controlPadSensorsTypes)
+                                    sensorEventProvider.provideEventsFor(controlPadSensorsTypes, samplingRate)
                                 }
                             } else if(!isConnecting){ // if not connected and not connecting
                                 // if not connected and not connecting then it means we are in disconnected state,

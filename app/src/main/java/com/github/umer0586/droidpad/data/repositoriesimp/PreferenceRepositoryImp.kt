@@ -26,6 +26,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.github.umer0586.droidpad.data.Preference
@@ -51,12 +52,14 @@ class PreferenceRepositoryImp(
         val builderScreenPortraitResolution = stringPreferencesKey("BUILDER_SCREEN_PORTRAIT_RESOLUTION")
         val builderScreenLandscapeResolution = stringPreferencesKey("BUILDER_SCREEN_LANDSCAPE_RESOLUTION")
         val jsonTypeForBluetooth = booleanPreferencesKey("JSON_TYPE_FOR_BLUETOOTH")
+        val sensorSamplingRate = intPreferencesKey("SENSOR_SAMPLING_RATE")
     }
 
     private object Defaults {
         val builderScreenPortraitResolution = Resolution(width = 0, height = 0).toJson()
         val builderScreenLandscapeResolution = Resolution(width = 0, height = 0).toJson()
         val jsonTypeForBluetooth = false
+        val sensorSamplingRate = 200000
     }
 
 
@@ -65,6 +68,7 @@ class PreferenceRepositoryImp(
             pref[Key.builderScreenPortraitResolution] = preference.builderScreenPortraitResolution.toJson()
             pref[Key.builderScreenLandscapeResolution] = preference.builderScreenLandscapeResolution.toJson()
             pref[Key.jsonTypeForBluetooth] = preference.sendJsonOverBluetooth
+            pref[Key.sensorSamplingRate] = preference.sensorSamplingRate
         }
     }
 
@@ -73,7 +77,8 @@ class PreferenceRepositoryImp(
             Preference(
                 builderScreenPortraitResolution = Resolution.fromJson(pref[Key.builderScreenPortraitResolution] ?: Defaults.builderScreenPortraitResolution),
                 builderScreenLandscapeResolution = Resolution.fromJson(pref[Key.builderScreenLandscapeResolution] ?: Defaults.builderScreenLandscapeResolution),
-                sendJsonOverBluetooth = pref[Key.jsonTypeForBluetooth] ?: Defaults.jsonTypeForBluetooth
+                sendJsonOverBluetooth = pref[Key.jsonTypeForBluetooth] ?: Defaults.jsonTypeForBluetooth,
+                sensorSamplingRate = pref[Key.sensorSamplingRate] ?: Defaults.sensorSamplingRate
             )
         }.flowOn(ioDispatcher)
 

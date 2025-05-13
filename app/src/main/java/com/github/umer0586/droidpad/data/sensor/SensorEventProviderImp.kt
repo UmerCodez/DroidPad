@@ -57,7 +57,7 @@ class SensorEventProviderImp(
     }
 
 
-    override fun provideEventsFor(sensorTypes: List<Int>) {
+    override fun provideEventsFor(sensorTypes: List<Int>, samplingRate: Int) {
 
         _sensorTypes = sensorTypes
 
@@ -66,7 +66,7 @@ class SensorEventProviderImp(
             val sensor = sensorManager.getDefaultSensor(sensorType)
                 ?: throw IllegalArgumentException("Sensor not found")
 
-            sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL,handler)
+            sensorManager.registerListener(this,sensor,samplingRate,handler)
 
         }
 
