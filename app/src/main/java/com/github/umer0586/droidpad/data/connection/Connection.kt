@@ -21,7 +21,7 @@ package com.github.umer0586.droidpad.data.connection
 
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 enum class ConnectionState{
     NONE,
@@ -41,7 +41,7 @@ enum class ConnectionState{
 
 abstract class Connection {
     private val _connectionState = MutableStateFlow(ConnectionState.NONE)
-    val connectionState = _connectionState.asSharedFlow()
+    val connectionState = _connectionState.asStateFlow()
 
     protected fun notifyConnectionState(newState: ConnectionState) {
         _connectionState.value = newState
