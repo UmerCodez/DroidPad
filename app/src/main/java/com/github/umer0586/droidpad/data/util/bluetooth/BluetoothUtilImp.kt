@@ -1,4 +1,4 @@
-package com.github.umer0586.droidpad.data.util
+package com.github.umer0586.droidpad.data.util.bluetooth
 
 import android.Manifest
 import android.bluetooth.BluetoothManager
@@ -7,12 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import com.github.umer0586.droidpad.data.connectionconfig.RemoteBluetoothDevice
-
-interface BluetoothUtil {
-    fun isBluetoothEnabled() : Boolean
-    fun getPairedDevices() : List<RemoteBluetoothDevice>
-    fun hasBluetoothPermission() : Boolean
-}
 
 class BluetoothUtilImp(private val applicationContext: Context): BluetoothUtil {
 

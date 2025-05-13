@@ -5,8 +5,8 @@ import com.github.umer0586.droidpad.data.sensor.SensorEventProvider
 import com.github.umer0586.droidpad.data.sensor.SensorEventProviderImp
 import com.github.umer0586.droidpad.data.sensor.SensorManagerUtil
 import com.github.umer0586.droidpad.data.sensor.SensorManagerUtilImp
-import com.github.umer0586.droidpad.data.util.BluetoothUtil
-import com.github.umer0586.droidpad.data.util.BluetoothUtilImp
+import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtil
+import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtilImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

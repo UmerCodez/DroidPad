@@ -31,7 +31,7 @@ import com.github.umer0586.droidpad.data.connectionconfig.UUID_SSP
 import com.github.umer0586.droidpad.data.connectionconfig.WebsocketConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
-import com.github.umer0586.droidpad.data.util.BluetoothUtil
+import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

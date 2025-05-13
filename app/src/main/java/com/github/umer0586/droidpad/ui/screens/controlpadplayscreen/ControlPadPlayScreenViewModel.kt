@@ -47,7 +47,7 @@ import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadSensorRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
 import com.github.umer0586.droidpad.data.sensor.SensorEventProvider
-import com.github.umer0586.droidpad.data.util.BluetoothUtil
+import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtil
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
