@@ -179,7 +179,52 @@ For **Bluetooth** and **Bluetooth LE** connections, dragging the slider thumb ge
 - The `value` field represents the current position of the slider.  
 - The value is always within the range of the minimum and maximum values specified during the slider's configuration.  
 
---- 
+---
+
+![image](https://github.com/user-attachments/assets/eeb83142-342e-4cfb-974e-4fd45563dd1d)
+
+### **Accelerometer**
+
+Accelerometer data is sent in the following JSON format:
+
+```json
+{
+  "type": "ACCELEROMETER",
+  "x": 0.31892395,
+  "y": -0.97802734,
+  "z": 10.049896
+}
+```
+For **Bluetooth** and **Bluetooth LE** : `ACCELEROMTER,<x>,<y>,<z>`
+
+#### **Fields**
+* `x`: Acceleration force (in m/s²) applied along the **x-axis**, including the force of gravity.
+* `y`: Acceleration force (in m/s²) applied along the **y-axis**, including the force of gravity.
+* `z`: Acceleration force (in m/s²) applied along the **z-axis**, including the force of gravity.
+
+---
+
+### **Gyroscope**
+
+Gyroscope data is sent in the following JSON format:
+
+```json
+{
+  "type": "GYROSCOPE",
+  "x": 0.15387291,
+  "y": -0.22954187,
+  "z": 0.08163925
+}
+```
+For **Bluetooth** and **Bluetooth LE** : `GYROSCOPE,<x>,<y>,<z>`
+
+#### **Fields**
+
+* `x`: Rate of rotation around the **x-axis** in **radians per second (rad/s)**.
+* `y`: Rate of rotation around the **y-axis** in **radians per second (rad/s)**.
+* `z`: Rate of rotation around the **z-axis** in **radians per second (rad/s)**.
+
+---
 
 ## Important Note for Bluetooth and Bluetooth Low Energy  
 A long Bluetooth device name can cause advertisement failure (In case of BLE). To avoid this issue, use a shorter name. In your device's Bluetooth settings, change the Bluetooth device name to five or fewer characters, such as `dev`.
@@ -196,6 +241,5 @@ You can test the connections with Websocket,TCP, UDP servers and BLE client prov
 
 
 ### TODO
-1. Attaching sensors (Like accelerometer and gyroscope) to control pads
-2. TouchPad
+1. TouchPad
 
