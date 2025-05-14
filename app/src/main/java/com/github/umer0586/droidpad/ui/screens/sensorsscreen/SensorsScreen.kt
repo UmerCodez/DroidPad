@@ -20,7 +20,9 @@
 package com.github.umer0586.droidpad.ui.screens.sensorsscreen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,9 +35,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -154,22 +159,40 @@ fun SensorScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp),
             ) {
-                items(state.availableSensors.filter { it !in state.selectedSensors }){
+                items(state.availableSensors.filter { it !in state.selectedSensors }){ sensor ->
+
+                    var showInfo by remember { mutableStateOf(false) }
 
                     ListItem(
-                        headlineContent = { Text(it.name) },
+                        headlineContent = { Text(sensor.name) },
                         trailingContent = {
-                            IconButton(
-                                onClick = { onEvent(SensorsScreenEvent.OnSensorSelected(controlPad,it)) }
+                            TextButton(
+                                onClick = { onEvent(SensorsScreenEvent.OnSensorSelected(controlPad,sensor)) }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = "AddIcon"
-                                )
+                                Text("Attach")
                             }
-                        }
+                        },
+                        supportingContent = {
 
+                            Text(
+                                modifier = Modifier.clickable { showInfo = !showInfo },
+                                text = if(showInfo) "Hide" else "Info",
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+
+                        }
                     )
+                    AnimatedVisibility(visible = showInfo) {
+                        Column (Modifier.padding(horizontal = 10.dp, vertical = 10.dp)){
+                            Text("Max Range: ${sensor.maximumRange}")
+                            Text("Power: ${sensor.power}mA")
+                            Text("Resolution: ${sensor.resolution}")
+                            Text("Vendor: ${sensor.vendor}")
+                            Text("Max Delay: ${sensor.maxDelay}µs")
+                            Text("Min Delay: ${sensor.minDelay}µs")
+                        }
+                    }
+
 
                 }
             }
