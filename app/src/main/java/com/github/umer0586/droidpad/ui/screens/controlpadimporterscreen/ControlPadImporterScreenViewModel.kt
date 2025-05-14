@@ -20,6 +20,7 @@
 
 package com.github.umer0586.droidpad.ui.screens.controlpadimporterscreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ExternalData
@@ -73,6 +74,11 @@ class ControlPadImporterScreenViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ImporterScreenState())
     val uiState = _uiState.asStateFlow()
+    private val tag = javaClass.simpleName
+
+    init {
+        Log.d(tag, "init : ${hashCode()}")
+    }
 
     private var _onControlPadReadyCallBack: ((ControlPad) -> Unit)? = null
     fun onControlPadReady(callback:(ControlPad) -> Unit) {
@@ -222,5 +228,10 @@ class ControlPadImporterScreenViewModel @Inject constructor(
             Orientation.LANDSCAPE -> settings.builderScreenLandscapeResolution
             Orientation.PORTRAIT -> settings.builderScreenPortraitResolution
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
     }
 }

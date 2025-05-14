@@ -19,6 +19,7 @@
 
 package com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.connectionconfig.WebsocketConfig
@@ -63,6 +64,12 @@ class NewControlPadScreenViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(NewControlPadScreenState())
     val uiState = _uiState.asStateFlow()
+
+    private val tag = javaClass.simpleName
+
+    init {
+        Log.d(tag, "init : ${hashCode()}")
+    }
 
     private var _onControlPadCreated: ((controlPad: ControlPad) -> Unit)? = null
     fun onControlPadCreated(callBack: ((controlPad: ControlPad) -> Unit)? = null) {
@@ -119,6 +126,12 @@ class NewControlPadScreenViewModel @Inject constructor(
 
             NewControlPadScreenEvent.OnBackPress -> {}
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
+
     }
 
 

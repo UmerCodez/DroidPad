@@ -19,6 +19,7 @@
 
 package com.github.umer0586.droidpad.ui.screens.connectionconfigscreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.connectionconfig.BluetoothConfig
@@ -95,8 +96,11 @@ class ConnectionConfigScreenViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ConnectionConfigScreenState())
     val uiState = _uiState.asStateFlow()
+    private val tag = javaClass.simpleName
 
     init {
+
+        Log.d(tag, "init : ${hashCode()}")
 
         viewModelScope.launch {
             bluetoothUtil.bluetoothState.collect{ bluetoothState ->
@@ -440,6 +444,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         bluetoothUtil.cleanUp()
+        Log.d(tag,"onCleared : ${hashCode()}")
     }
 
 

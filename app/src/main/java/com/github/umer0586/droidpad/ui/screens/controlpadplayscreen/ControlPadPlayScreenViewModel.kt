@@ -108,7 +108,11 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     private var sendJsonOverBluetooth = false
     private var samplingRate = 200000
 
+    private val tag = javaClass.simpleName
+
     init {
+
+        Log.d(tag, "init : ${hashCode()}")
         viewModelScope.launch {
             bluetoothUtil.bluetoothState.collect{ bluetoothState ->
                 _uiState.update { it.copy(isBluetoothEnabled = bluetoothState.isEnable) }
@@ -388,6 +392,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         sensorEventProvider.stopProvidingEvents()
         sensorEventProvider.cleanUp()
         bluetoothUtil.cleanUp()
+        Log.d(tag, "onCleared: ${hashCode()}")
     }
 
 }

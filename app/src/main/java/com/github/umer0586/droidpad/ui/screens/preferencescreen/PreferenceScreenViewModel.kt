@@ -1,5 +1,6 @@
 package com.github.umer0586.droidpad.ui.screens.preferencescreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
@@ -34,7 +35,12 @@ class PreferenceScreenViewModel @Inject constructor(
 
     val uiState = _uiState.asStateFlow()
 
+    private val tag = javaClass.simpleName
+
     init {
+
+        Log.d(tag, "init : ${hashCode()}")
+
         viewModelScope.launch {
             preferenceRepository.preference.collect{
                 _uiState.update {
@@ -74,5 +80,10 @@ class PreferenceScreenViewModel @Inject constructor(
 
             PreferenceScreenEvent.OnBackClick -> {}
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
     }
 }

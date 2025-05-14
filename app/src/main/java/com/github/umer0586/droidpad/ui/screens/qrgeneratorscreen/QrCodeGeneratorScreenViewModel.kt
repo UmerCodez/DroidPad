@@ -22,6 +22,7 @@
 package com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ExternalData
@@ -59,6 +60,12 @@ class QrCodeScreenViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(QRCodeScreenState())
     val uiState = _uiState.asStateFlow()
+
+    private val tag = javaClass.simpleName
+
+    init {
+        Log.d(tag, "init : ${hashCode()}")
+    }
 
     fun onEvent(event: QRCodeScreenEvent) {
         when (event) {
@@ -129,6 +136,11 @@ class QrCodeScreenViewModel @Inject constructor(
 
         }
 
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
     }
 
 

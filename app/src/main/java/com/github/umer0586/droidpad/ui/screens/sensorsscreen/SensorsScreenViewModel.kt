@@ -19,6 +19,7 @@
 
 package com.github.umer0586.droidpad.ui.screens.sensorsscreen
 
+import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,9 +61,10 @@ class SensorsScreenViewModel @Inject constructor(
     )
 
     val uiState = _uiState.asStateFlow()
-
+    private val tag = javaClass.simpleName
 
     init {
+        Log.d(tag, "init : ${hashCode()}")
 
         _uiState.value.availableSensors.clear()
         _uiState.value.availableSensors.addAll(
@@ -126,6 +128,12 @@ class SensorsScreenViewModel @Inject constructor(
 
     private fun ControlPadSensor.toDeviceSensor() : DeviceSensor{
         return sensorManagerUtil.getSensor(this.sensorType)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
+
     }
 
 }

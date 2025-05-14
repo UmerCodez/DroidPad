@@ -19,6 +19,7 @@
 
 package com.github.umer0586.droidpad.ui.screens.controlpadsscreen
 
+import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
@@ -84,8 +85,12 @@ class ControlPadsScreenViewModel @Inject constructor(
         _onExportableJsonReady = callback
     }
 
+    private val tag = javaClass.simpleName
 
     init {
+
+        Log.d(tag, "init : ${hashCode()}")
+
         viewModelScope.launch {
 
             controlPadsRepository.getControlPads().collect { controlPadList ->
@@ -205,5 +210,10 @@ class ControlPadsScreenViewModel @Inject constructor(
 
 
             }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
     }
 }

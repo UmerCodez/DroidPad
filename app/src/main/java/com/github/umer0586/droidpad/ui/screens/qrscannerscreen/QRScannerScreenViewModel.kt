@@ -21,6 +21,7 @@
 package com.github.umer0586.droidpad.ui.screens.qrscannerscreen
 
 import android.util.Base64
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ExternalData
@@ -57,6 +58,12 @@ class QRScannerScreenViewModel : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     private lateinit var qrString: String
+
+    private val tag = javaClass.simpleName
+
+    init {
+        Log.d(tag, "init : ${hashCode()}")
+    }
 
     private var _onExternalDataAvailable: ((ExternalData) -> Unit)? = null
     fun onExternalDataAvailable(callback:(ExternalData) -> Unit) {
@@ -126,5 +133,10 @@ class QRScannerScreenViewModel : ViewModel() {
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
+
+    }
 
 }

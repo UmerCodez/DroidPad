@@ -19,6 +19,7 @@
 
 package com.github.umer0586.droidpad.ui.screens.jsonimporterscreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ExternalData
@@ -53,6 +54,12 @@ class JsonImporterScreenViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(JsonImporterScreenState())
     val uiState = _uiState.asStateFlow()
+
+    private val tag = javaClass.simpleName
+
+    init {
+        Log.d(tag, "init : ${hashCode()}")
+    }
 
 
     private var _onExternalDataAvailable: ((ExternalData) -> Unit)? = null
@@ -158,6 +165,12 @@ class JsonImporterScreenViewModel @Inject constructor(
         }
 
         return externalData
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(tag, "onCleared : ${hashCode()}")
+
     }
 
 }
