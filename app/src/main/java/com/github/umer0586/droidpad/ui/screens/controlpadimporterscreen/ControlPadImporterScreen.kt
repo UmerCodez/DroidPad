@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.database.entities.ConnectionConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
@@ -59,7 +60,7 @@ import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 @Composable
 fun ControlPadImporterScreen(
     externalData: ExternalData,
-    viewModel: ControlPadImporterScreenViewModel,
+    viewModel: ControlPadImporterScreenViewModel = hiltViewModel(),
     onBackPress: (() -> Unit)? = null,
     onBuilderScreenResRequired: ((ExternalData) -> Unit)? = null,
     onControlPadReady: ((ControlPad) -> Unit)? = null,

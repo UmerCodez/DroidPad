@@ -47,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.sensor.accelerometer
@@ -57,7 +58,7 @@ import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 @Composable
 fun SensorsScreen(
     controlPad: ControlPad,
-    viewModel: SensorsScreenViewModel,
+    viewModel: SensorsScreenViewModel = hiltViewModel(),
     onBackPress: (() -> Unit)? = null
 ) {
 

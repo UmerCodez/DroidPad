@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.util.ImageShareUtil
@@ -54,7 +55,7 @@ import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 @Composable
 fun QrCodeGeneratorScreen(
-    viewModel: QrCodeScreenViewModel,
+    viewModel: QrCodeScreenViewModel = hiltViewModel(),
     controlPad: ControlPad,
     onBackPress: (() -> Unit)? = null
 

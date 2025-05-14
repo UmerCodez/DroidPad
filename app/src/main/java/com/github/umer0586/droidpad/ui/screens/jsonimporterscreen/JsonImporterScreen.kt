@@ -65,6 +65,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
@@ -75,7 +76,7 @@ import java.io.IOException
 
 @Composable
 fun JsonImporterScreen(
-    viewModel: JsonImporterScreenViewModel,
+    viewModel: JsonImporterScreenViewModel = hiltViewModel(),
     onExternalDataAvailable: ((ExternalData) -> Unit)? = null,
     onBackPress: (() -> Unit)? = null
 ) {

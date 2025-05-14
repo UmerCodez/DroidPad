@@ -21,7 +21,6 @@ package com.github.umer0586.droidpad.ui.screens
 
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,27 +31,16 @@ import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.ui.screens.aboutscreen.AboutScreen
 import com.github.umer0586.droidpad.ui.screens.connectionconfigscreen.ConnectionConfigScreen
-import com.github.umer0586.droidpad.ui.screens.connectionconfigscreen.ConnectionConfigScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen.ControlPadBuilderScreen
-import com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen.ControlPadBuilderScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadimporterscreen.ControlPadImporterScreen
-import com.github.umer0586.droidpad.ui.screens.controlpadimporterscreen.ControlPadImporterScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadplayscreen.ControlPadPlayScreen
-import com.github.umer0586.droidpad.ui.screens.controlpadplayscreen.ControlPadPlayScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.controlpadsscreen.ControlPadsScreen
-import com.github.umer0586.droidpad.ui.screens.controlpadsscreen.ControlPadsScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.jsonimporterscreen.JsonImporterScreen
-import com.github.umer0586.droidpad.ui.screens.jsonimporterscreen.JsonImporterScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreen
-import com.github.umer0586.droidpad.ui.screens.newcontrolpadscreen.NewControlPadScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.preferencescreen.PreferenceScreen
-import com.github.umer0586.droidpad.ui.screens.preferencescreen.PreferenceScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeGeneratorScreen
-import com.github.umer0586.droidpad.ui.screens.qrgeneratorscreen.QrCodeScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.qrscannerscreen.QRCodeScannerScreen
-import com.github.umer0586.droidpad.ui.screens.qrscannerscreen.QRScannerScreenViewModel
 import com.github.umer0586.droidpad.ui.screens.sensorsscreen.SensorsScreen
-import com.github.umer0586.droidpad.ui.screens.sensorsscreen.SensorsScreenViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -107,22 +95,6 @@ fun NavScreen(
 ) {
     val navController = rememberNavController()
 
-    // ViewModels must be initialized here to ensure a single instance is used.
-    // If they are initialized inside composable<Route>, a new ViewModel instance
-    // will be created each time navController.navigate() is called for that route.
-    val controlPadsScreenViewModel = hiltViewModel<ControlPadsScreenViewModel>()
-    val controlPadBuilderScreenViewModel = hiltViewModel<ControlPadBuilderScreenViewModel>()
-    val controlPadPlayScreenViewModel = hiltViewModel<ControlPadPlayScreenViewModel>()
-    val connectionConfigScreenViewModel = hiltViewModel<ConnectionConfigScreenViewModel>()
-    val newControlPadScreenViewModel = hiltViewModel<NewControlPadScreenViewModel>()
-    val qrCodeScreenViewModel = hiltViewModel<QrCodeScreenViewModel>()
-    val qrScannerScreenViewModel = hiltViewModel<QRScannerScreenViewModel>()
-    val controlPadImporterScreenViewModel = hiltViewModel<ControlPadImporterScreenViewModel>()
-    val jsonImporterScreenViewModel = hiltViewModel<JsonImporterScreenViewModel>()
-    val preferenceScreenViewModel = hiltViewModel<PreferenceScreenViewModel>()
-    val sensorsScreenViewModel = hiltViewModel<SensorsScreenViewModel>()
-
-
     NavHost(
         navController = navController,
         startDestination = Route.ControlPadListScreen
@@ -139,7 +111,7 @@ fun NavScreen(
         composable<Route.ControlPadListScreen> {
 
             ControlPadsScreen(
-                viewModel = controlPadsScreenViewModel,
+
                 onCreateClick = {
                     navController.navigateTo(Route.NewControlPadScreen)
                 },
@@ -180,7 +152,6 @@ fun NavScreen(
         composable<Route.NewControlPadScreen> {
 
             NewControlPadScreen(
-                viewModel = newControlPadScreenViewModel,
                 onControlPadCreated = {
                     navController.navigateTo(Route.ControlPadListScreen)
                 },
@@ -206,7 +177,6 @@ fun NavScreen(
 
 
             ControlPadBuilderScreen(
-                viewModel = controlPadBuilderScreenViewModel,
                 controlPad = controlPad,
                 onSaveClick = {
                     navController.navigateTo(Route.ControlPadListScreen)
@@ -231,8 +201,8 @@ fun NavScreen(
             )
         ) { navBackStackEntry ->
             val connectionConfigScreen = navBackStackEntry.toRoute<Route.ConnectionConfigScreen>()
+
             ConnectionConfigScreen(
-                viewModel = connectionConfigScreenViewModel,
                 controlPadId = connectionConfigScreen.controlPadId,
                 onConfigSaved = {
                     navController.navigateTo(Route.ControlPadListScreen)
@@ -252,7 +222,6 @@ fun NavScreen(
             val controlPad = controlPadPlayScreenRoute.controlPad
 
             ControlPadPlayScreen(
-                viewModel = controlPadPlayScreenViewModel,
                 controlPad = controlPad,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
@@ -269,7 +238,6 @@ fun NavScreen(
             val controlPad = qRCodeScreenRoute.controlPad
 
             QrCodeGeneratorScreen(
-                viewModel = qrCodeScreenViewModel,
                 controlPad = controlPad,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
@@ -280,7 +248,6 @@ fun NavScreen(
         composable<Route.QRScannerScreen> {
 
             QRCodeScannerScreen(
-                viewModel = qrScannerScreenViewModel,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
                 },
@@ -301,7 +268,7 @@ fun NavScreen(
             val externalData = importerScreenRoute.externalData
 
             ControlPadImporterScreen(
-                viewModel = controlPadImporterScreenViewModel,
+
                 externalData = externalData,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
@@ -324,7 +291,6 @@ fun NavScreen(
 
         composable<Route.JsonImporterScreen> {
             JsonImporterScreen(
-                viewModel = jsonImporterScreenViewModel,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
                 },
@@ -336,7 +302,6 @@ fun NavScreen(
 
         composable<Route.PreferenceScreen> {
             PreferenceScreen(
-                viewModel = preferenceScreenViewModel,
                 onBackClick = {
                     navController.navigateTo(Route.ControlPadListScreen)
                 }
@@ -354,7 +319,6 @@ fun NavScreen(
 
             SensorsScreen(
                 controlPad = controlPad,
-                viewModel = sensorsScreenViewModel,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
                 }

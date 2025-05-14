@@ -25,11 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 @Composable
 fun PreferenceScreen(
-    viewModel: PreferenceScreenViewModel,
+    viewModel: PreferenceScreenViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null
 ) {
 
