@@ -24,7 +24,9 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,9 +51,10 @@ fun Joystick(
     enable: Boolean = false,
     backgroundColor: Color = Color.LightGray,
     handleColor: Color = Color.Blue,
+    handleRadiusFactor: Float = 0.4f, // Ratio of handle radius to joystick radius, min:0.4 max:0.9
     onMove: (Float, Float) -> Unit
 ) {
-    val handleRadiusFactor = 0.4f // Ratio of handle radius to joystick radius
+
     var handlePosition by remember { mutableStateOf(Offset(0f, 0f)) }
     var isDraggingHandle by remember { mutableStateOf(false) } // Track if the handle is being dragged
 
@@ -68,7 +71,8 @@ fun Joystick(
                                 val canvasCenter = Offset(size.toPx() / 2, size.toPx() / 2)
 
                                 // Distance from touch point to joystick handle
-                                val distanceToHandle = (offset - (canvasCenter + handlePosition)).getDistance()
+                                val distanceToHandle =
+                                    (offset - (canvasCenter + handlePosition)).getDistance()
 
                                 // Start dragging only if within the handle radius
                                 val handleRadius = (size.toPx() / 2) * handleRadiusFactor
@@ -78,7 +82,8 @@ fun Joystick(
                                 if (isDraggingHandle) {
                                     // Calculate new handle position
                                     val joystickRadius = size.toPx() / 2
-                                    val newOffset = handlePosition + Offset(dragAmount.x, dragAmount.y)
+                                    val newOffset =
+                                        handlePosition + Offset(dragAmount.x, dragAmount.y)
 
                                     // Clamp the handle within the circular boundary
                                     val distance = sqrt(newOffset.x.pow(2) + newOffset.y.pow(2))
@@ -141,6 +146,21 @@ fun Joystick(
 @Composable
 private fun JoyStickPreview(modifier: Modifier = Modifier) {
     DroidPadTheme {
+        Box{
+            Joystick(
+                enable = true,
+                onMove = { x, y ->
+
+                }
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun JoyStickInteractivePreview(modifier: Modifier = Modifier) {
+    DroidPadTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -150,13 +170,15 @@ private fun JoyStickPreview(modifier: Modifier = Modifier) {
             }
 
             Text(
-                modifier = Modifier.align(Alignment.TopCenter),
-                text = cords
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 20.dp),
+                text = cords,
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Joystick(
                 modifier = modifier.size(250.dp),
                 enable = true,
+                handleRadiusFactor = 0.8f,
                 onMove = { x, y ->
                     cords = "($x,$y)"
                 }

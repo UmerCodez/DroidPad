@@ -125,6 +125,7 @@ data class StepSliderProperties(
 data class JoyStickProperties(
     val backgroundColor: ULong = Color(0xFFDBC66E).value,
     val handleColor: ULong = Color(0xFF393000).value,
+    val handleRadiusFactor: Float = 0.4f,
 ){
     fun toJson() = JsonCon.encodeToString(this)
     companion object {
