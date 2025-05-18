@@ -34,6 +34,7 @@ Easily configure your control pad to support network protocols such as **Bluetoo
 4. DPAD
 5. Joystick
 6. Steering Wheel
+7. Accelerometer and Gyroscope (If supported by the device)
 
 ## How It Works (4 steps) 
 
