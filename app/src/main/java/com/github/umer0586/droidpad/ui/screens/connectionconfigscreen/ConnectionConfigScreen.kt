@@ -493,7 +493,7 @@ fun ConnectionConfigScreenContent(
 
 
             TextButton(
-                modifier = Modifier.fillMaxWidth(0.4f),
+                modifier = Modifier.width(itemWidth).padding(itemPadding),
                 contentPadding = PaddingValues(20.dp),
                 onClick = { onUiEvent(ConnectionConfigScreenEvent.OnSaveClick(controlPadId)) },
                 enabled = !uiState.hasInputError,
@@ -501,7 +501,7 @@ fun ConnectionConfigScreenContent(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
-            ) { Text("Save") }
+            ) { Text("Save", style = MaterialTheme.typography.titleMedium) }
         }
 
     }
