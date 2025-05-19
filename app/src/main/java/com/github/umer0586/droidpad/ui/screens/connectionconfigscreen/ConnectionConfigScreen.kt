@@ -282,41 +282,32 @@ fun ConnectionConfigScreenContent(
                     }
                 }
 
-                // Dont't use ListItem() Composable
-                // We want this item to be of same with as above OutLineTextFields
-                OutlinedTextField(
-                    value = "SSL",
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent,
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    enabled = false,
-                    onValueChange = {},
-                    trailingIcon = {
+
+                ListItem(
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .padding(horizontal = itemPadding),
+                    headlineContent = { Text("SSL") },
+                    trailingContent = {
                         Switch(
                             checked = uiState.useSSL,
-                            onCheckedChange = { onUiEvent(
-                                ConnectionConfigScreenEvent.OnUseSSLChange(
-                                    it
+                            onCheckedChange = {
+                                onUiEvent(
+                                    ConnectionConfigScreenEvent.OnUseSSLChange(
+                                        it
+                                    )
                                 )
-                            ) }
+                            }
                         )
                     }
                 )
 
-                OutlinedTextField(
-                    value = "Websocket",
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent,
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    enabled = false,
-                    onValueChange = {},
-                    trailingIcon = {
+                ListItem(
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .padding(horizontal = itemPadding),
+                    headlineContent = { Text("Websocket") },
+                    trailingContent = {
                         Switch(
                             checked = uiState.useWebsocket,
                             onCheckedChange = { onUiEvent(
@@ -326,19 +317,15 @@ fun ConnectionConfigScreenContent(
                             ) }
                         )
                     }
+
                 )
 
-                OutlinedTextField(
-                    value = "User Credentials",
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent,
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    enabled = false,
-                    onValueChange = {},
-                    trailingIcon = {
+                ListItem(
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .padding(horizontal = itemPadding),
+                    headlineContent = { Text("Use Credentials") },
+                    trailingContent = {
                         Switch(
                             checked = uiState.useCredentials,
                             onCheckedChange = { onUiEvent(
@@ -348,6 +335,7 @@ fun ConnectionConfigScreenContent(
                             ) }
                         )
                     }
+
                 )
 
 
@@ -536,7 +524,7 @@ private fun ConnectionConfigScreenContentPreview()  {
     var uiState by remember {
         mutableStateOf(
             ConnectionConfigScreenState(
-                connectionType = ConnectionType.BLUETOOTH,
+                connectionType = ConnectionType.MQTT_V5,
                 bluetoothServiceUUID = "00001101-0000-1000-8000-00805F9B34FB",
                 selectedBluetoothDevice = null,
             )
