@@ -1,0 +1,7 @@
+fix(ui): Increase text limit for id field to 30 characters
+feature: add vibration effect
+feature: Allow user to change joystick handle size
+UI changes
+    1. Replaced add icon to text button
+    2. Added button to show sensor info
+
