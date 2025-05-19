@@ -53,6 +53,7 @@ class PreferenceRepositoryImp(
         val builderScreenLandscapeResolution = stringPreferencesKey("BUILDER_SCREEN_LANDSCAPE_RESOLUTION")
         val jsonTypeForBluetooth = booleanPreferencesKey("JSON_TYPE_FOR_BLUETOOTH")
         val sensorSamplingRate = intPreferencesKey("SENSOR_SAMPLING_RATE")
+        val vibrate = booleanPreferencesKey("VIBRATE")
     }
 
     private object Defaults {
@@ -60,6 +61,7 @@ class PreferenceRepositoryImp(
         val builderScreenLandscapeResolution = Resolution(width = 0, height = 0).toJson()
         val jsonTypeForBluetooth = false
         val sensorSamplingRate = 200000
+        val vibrate = false
     }
 
 
@@ -69,6 +71,7 @@ class PreferenceRepositoryImp(
             pref[Key.builderScreenLandscapeResolution] = preference.builderScreenLandscapeResolution.toJson()
             pref[Key.jsonTypeForBluetooth] = preference.sendJsonOverBluetooth
             pref[Key.sensorSamplingRate] = preference.sensorSamplingRate
+            pref[Key.vibrate] = preference.vibrate
         }
     }
 
@@ -78,7 +81,8 @@ class PreferenceRepositoryImp(
                 builderScreenPortraitResolution = Resolution.fromJson(pref[Key.builderScreenPortraitResolution] ?: Defaults.builderScreenPortraitResolution),
                 builderScreenLandscapeResolution = Resolution.fromJson(pref[Key.builderScreenLandscapeResolution] ?: Defaults.builderScreenLandscapeResolution),
                 sendJsonOverBluetooth = pref[Key.jsonTypeForBluetooth] ?: Defaults.jsonTypeForBluetooth,
-                sensorSamplingRate = pref[Key.sensorSamplingRate] ?: Defaults.sensorSamplingRate
+                sensorSamplingRate = pref[Key.sensorSamplingRate] ?: Defaults.sensorSamplingRate,
+                vibrate = pref[Key.vibrate] ?: Defaults.vibrate
             )
         }.flowOn(ioDispatcher)
 

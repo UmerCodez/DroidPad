@@ -14,12 +14,14 @@ import javax.inject.Inject
 
 data class PreferenceScreenState(
     val jsonForBluetooth: Boolean = false,
-    val sensorSamplingRate: Int = 200000
+    val sensorSamplingRate: Int = 200000,
+    val vibrate: Boolean = false
 )
 
 sealed interface PreferenceScreenEvent{
     data class OnJsonForBluetoothChange(val jsonForBluetooth: Boolean) : PreferenceScreenEvent
     data class OnSensorSamplingRateChange(val sensorSamplingRate: Int) : PreferenceScreenEvent
+    data class OnVibrateChange(val vibrate: Boolean) : PreferenceScreenEvent
     data object OnSensorSamplingRateChangeFinished : PreferenceScreenEvent
     data object OnBackClick : PreferenceScreenEvent
 }
@@ -42,11 +44,13 @@ class PreferenceScreenViewModel @Inject constructor(
         Log.d(tag, "init : ${hashCode()}")
 
         viewModelScope.launch {
-            preferenceRepository.preference.collect{
+            preferenceRepository.preference.collect{ pref ->
+
                 _uiState.update {
                     it.copy(
-                        jsonForBluetooth = it.jsonForBluetooth,
-                        sensorSamplingRate = it.sensorSamplingRate
+                        jsonForBluetooth = pref.sendJsonOverBluetooth,
+                        sensorSamplingRate = pref.sensorSamplingRate,
+                        vibrate = pref.vibrate
                     )
                 }
             }
@@ -74,6 +78,16 @@ class PreferenceScreenViewModel @Inject constructor(
                 viewModelScope.launch {
                     preferenceRepository.updatePreference {
                         it.copy(sensorSamplingRate = uiState.value.sensorSamplingRate)
+                    }
+                }
+            }
+            is PreferenceScreenEvent.OnVibrateChange -> {
+                _uiState.update {
+                    it.copy(vibrate = event.vibrate)
+                }
+                viewModelScope.launch {
+                    preferenceRepository.updatePreference {
+                        it.copy(vibrate = event.vibrate)
                     }
                 }
             }

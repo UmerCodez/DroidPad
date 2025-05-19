@@ -48,6 +48,7 @@ import com.github.umer0586.droidpad.data.repositories.ControlPadSensorRepository
 import com.github.umer0586.droidpad.data.repositories.PreferenceRepository
 import com.github.umer0586.droidpad.data.sensor.SensorEventProvider
 import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtil
+import com.github.umer0586.droidpad.data.util.vibrator.VibratorUtil
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -95,7 +96,8 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     private val bluetoothUtil: BluetoothUtil,
     private val preferenceRepository: PreferenceRepository,
     private val controlPadSensorRepository: ControlPadSensorRepository,
-    private val sensorEventProvider: SensorEventProvider
+    private val sensorEventProvider: SensorEventProvider,
+    private val vibratorUtil: VibratorUtil
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(
@@ -107,6 +109,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     private var connection: Connection? = null
     private var sendJsonOverBluetooth = false
     private var samplingRate = 200000
+    private var vibrate = false
 
     private val tag = javaClass.simpleName
 
@@ -123,6 +126,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             preferenceRepository.preference.collect{ preference->
                 sendJsonOverBluetooth = preference.sendJsonOverBluetooth
                 samplingRate = preference.sensorSamplingRate
+                vibrate = preference.vibrate
             }
         }
 
@@ -263,6 +267,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 else
                     SwitchEvent(id = event.id, state = event.checked).toJson()
 
+                vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
@@ -289,6 +294,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 else
                     ButtonEvent(id = event.id, state = "CLICK").toJson()
 
+                vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
@@ -308,6 +314,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 else
                     ButtonEvent(id = event.id, state = "PRESS").toJson()
 
+                vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
@@ -318,6 +325,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 else
                     ButtonEvent(id = event.id, state = "RELEASE").toJson()
 
+                vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
@@ -330,6 +338,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 else
                     DPadEvent(id = event.id, button = event.dPadButton, state = "CLICK").toJson()
 
+                vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
@@ -342,6 +351,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                     DPadEvent(id = event.id, button = event.dPadButton, state = "PRESS").toJson()
 
 
+                vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
@@ -353,6 +363,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 else
                     DPadEvent(id = event.id, button = event.dPadButton, state = "RELEASE").toJson()
 
+                vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
                 }
@@ -380,6 +391,12 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 }
 
             }
+        }
+    }
+
+    private fun vibrate() {
+        if(vibrate){
+            vibratorUtil.vibrate()
         }
     }
 

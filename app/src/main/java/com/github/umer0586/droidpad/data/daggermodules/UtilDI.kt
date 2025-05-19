@@ -7,6 +7,8 @@ import com.github.umer0586.droidpad.data.sensor.SensorManagerUtil
 import com.github.umer0586.droidpad.data.sensor.SensorManagerUtilImp
 import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtil
 import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtilImp
+import com.github.umer0586.droidpad.data.util.vibrator.VibratorUtil
+import com.github.umer0586.droidpad.data.util.vibrator.VibratorUtilImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +37,12 @@ object UtilDI {
     @ViewModelScoped
     fun provideSensorEventProvider(@ApplicationContext appContext: Context): SensorEventProvider {
         return SensorEventProviderImp(appContext)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideVibratorUtil(@ApplicationContext appContext: Context): VibratorUtil {
+        return VibratorUtilImp(appContext)
     }
 
 

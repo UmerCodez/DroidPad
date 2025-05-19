@@ -119,6 +119,19 @@ fun PreferenceScreenContent(
                 },
                 supportingContent = { Text("Fastest: 0μs\nNormal: 200000μs")}
             )
+
+            ListItem(
+                headlineContent = {Text("Vibrate")},
+                trailingContent = {
+                    Switch(
+                        checked = uiState.vibrate,
+                        onCheckedChange = {
+                            onEvent(PreferenceScreenEvent.OnVibrateChange(it))
+                        }
+                    )
+                }
+
+            )
         }
     }
 
