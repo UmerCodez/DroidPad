@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,6 +42,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
+import androidx.compose.ui.unit.sp
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -50,6 +52,7 @@ fun Joystick(
     modifier: Modifier = Modifier,
     enable: Boolean = false,
     showCoordinates: Boolean = false,
+    showValues: Boolean = false,
     backgroundColor: Color = Color.LightGray,
     handleColor: Color = Color.Blue,
     handleRadiusFactor: Float = 0.4f, // Ratio of handle radius to joystick radius, min:0.4 max:0.9
@@ -58,6 +61,8 @@ fun Joystick(
 
     var handlePosition by remember { mutableStateOf(Offset(0f, 0f)) }
     var isDraggingHandle by remember { mutableStateOf(false) } // Track if the handle is being dragged
+    var normalizedX by remember { mutableFloatStateOf(0f) }
+    var normalizedY by remember { mutableFloatStateOf(0f) }
 
     BoxWithConstraints(modifier = modifier) {
         val size = min(maxWidth, maxHeight) // Dp value for joystick size
@@ -99,8 +104,8 @@ fun Joystick(
                                     // Normalize to range [-1, 1]
                                     // The joystick's normalized value gets very close to 1 or -1 (e.g., 0.9999324) but never reaches exactly 1 due to floating-point precision.
                                     // TODO: To handle this, set a threshold: if the value is greater than or equal to 0.9999, treat it as 1 (or -1).
-                                    val normalizedX = handlePosition.x / joystickRadius
-                                    val normalizedY = -handlePosition.y / joystickRadius
+                                    normalizedX = handlePosition.x / joystickRadius
+                                    normalizedY = -handlePosition.y / joystickRadius
 
                                     onMove(normalizedX, normalizedY)
 
@@ -112,6 +117,8 @@ fun Joystick(
                                 // Snap handle back to center
 
                                 handlePosition = Offset(0f, 0f)
+                                normalizedX = 0f
+                                normalizedY = 0f
 
                                 onMove(0f, 0f)
 
@@ -164,6 +171,24 @@ fun Joystick(
                 center = canvasCenter + handlePosition
             )
         }
+
+        // Box scope
+        if(showValues){
+
+            Text(
+                modifier = Modifier.align( if(normalizedY >= 0) Alignment.TopCenter else Alignment.BottomCenter),
+                text = normalizedY.toString(),
+                color = backgroundColor.contrastColor(),
+                fontSize = 8.sp
+            )
+            Text(
+                modifier = Modifier.align(if(normalizedX >= 0) Alignment.CenterEnd else Alignment.CenterStart),
+                text = normalizedX.toString(),
+                color = backgroundColor.contrastColor(),
+                fontSize = 8.sp
+            )
+        }
+
     }
 }
 
@@ -181,6 +206,7 @@ private fun JoyStickPreview(modifier: Modifier = Modifier) {
         Box{
             Joystick(
                 backgroundColor = Color.Green,
+                showValues = true,
                 showCoordinates = true,
                 enable = true,
                 onMove = { x, y ->
@@ -212,7 +238,9 @@ private fun JoyStickInteractivePreview(modifier: Modifier = Modifier) {
             Joystick(
                 modifier = modifier.size(250.dp),
                 showCoordinates = true,
+                showValues = true,
                 enable = true,
+                backgroundColor = Color.Yellow,
                 handleRadiusFactor = 0.5f,
                 onMove = { x, y ->
                     cords = "($x,$y)"

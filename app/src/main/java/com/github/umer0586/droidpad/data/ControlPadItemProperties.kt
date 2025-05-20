@@ -126,7 +126,8 @@ data class JoyStickProperties(
     val backgroundColor: ULong = Color(0xFFDBC66E).value,
     val handleColor: ULong = Color(0xFF393000).value,
     val handleRadiusFactor: Float = 0.4f,
-    val showCoordinates: Boolean = false
+    val showCoordinates: Boolean = false,
+    val showValues: Boolean = false
 ){
     fun toJson() = JsonCon.encodeToString(this)
     companion object {

@@ -134,12 +134,29 @@ fun JoyStickPropertiesEditor(
                 Switch(
                     checked = joyStickProperties.showCoordinates,
                     onCheckedChange = {
-                        joyStickProperties = joyStickProperties.copy(showCoordinates = it)
+                        // "show values" only allowed with "show coordinates"
+                        joyStickProperties = joyStickProperties.copy(showCoordinates = it, showValues = false)
                         onJoyStickPropertiesChange?.invoke(joyStickProperties)
                     }
                 )
             }
         )
+
+        AnimatedVisibility(joyStickProperties.showCoordinates) {
+            ListItem(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                headlineContent = { Text(text = "Show Values") },
+                trailingContent = {
+                    Switch(
+                        checked = joyStickProperties.showValues,
+                        onCheckedChange = {
+                            joyStickProperties = joyStickProperties.copy(showValues = it)
+                            onJoyStickPropertiesChange?.invoke(joyStickProperties)
+                        }
+                    )
+                }
+            )
+        }
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),

@@ -63,6 +63,7 @@ fun ControlPadJoyStick(
             handleColor = Color(properties.handleColor),
             handleRadiusFactor = properties.handleRadiusFactor,
             showCoordinates = properties.showCoordinates,
+            showValues = properties.showValues,
             onMove = { x, y ->
                 onMove?.invoke(x, y)
             }
