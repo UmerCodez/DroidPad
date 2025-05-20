@@ -40,6 +40,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
@@ -125,6 +126,20 @@ fun JoyStickPropertiesEditor(
                 }
             )
         }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Show Coordinates") },
+            trailingContent = {
+                Switch(
+                    checked = joyStickProperties.showCoordinates,
+                    onCheckedChange = {
+                        joyStickProperties = joyStickProperties.copy(showCoordinates = it)
+                        onJoyStickPropertiesChange?.invoke(joyStickProperties)
+                    }
+                )
+            }
+        )
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),

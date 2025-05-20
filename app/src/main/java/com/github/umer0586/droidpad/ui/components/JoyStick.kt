@@ -49,6 +49,7 @@ import kotlin.math.sqrt
 fun Joystick(
     modifier: Modifier = Modifier,
     enable: Boolean = false,
+    showCoordinates: Boolean = false,
     backgroundColor: Color = Color.LightGray,
     handleColor: Color = Color.Blue,
     handleRadiusFactor: Float = 0.4f, // Ratio of handle radius to joystick radius, min:0.4 max:0.9
@@ -131,14 +132,45 @@ fun Joystick(
                 center = canvasCenter
             )
 
+
+            if(showCoordinates) {
+
+                // Coordinate lines (X and Y axes) between joystick area and handle
+                drawLine(
+                    color = backgroundColor.contrastColor(),
+                    strokeWidth = 2f,
+                    start = Offset(0f, canvasCenter.y),
+                    end = Offset(size.toPx(), canvasCenter.y)
+                )
+                drawLine(
+                    color = backgroundColor.contrastColor(),
+                    strokeWidth = 2f,
+                    start = Offset(canvasCenter.x, 0f),
+                    end = Offset(canvasCenter.x, size.toPx())
+                )
+
+                // A small dot
+                drawCircle(
+                    color = backgroundColor.contrastColor(),
+                    radius = 15f,
+                    center = canvasCenter + handlePosition
+                )
+            }
+
             // Draw the joystick handle
             drawCircle(
-                color = handleColor,
+                color = handleColor.copy(alpha = if(showCoordinates) 0.3f else 1f),
                 radius = handleRadius,
                 center = canvasCenter + handlePosition
             )
         }
     }
+}
+
+private fun Color.contrastColor(): Color {
+    // Convert to luminance using the sRGB luminance formula
+    val luminance = (0.299 * red + 0.587 * green + 0.114 * blue)
+    return if (luminance > 0.5) Color.Black else Color.White
 }
 
 
@@ -148,6 +180,8 @@ private fun JoyStickPreview(modifier: Modifier = Modifier) {
     DroidPadTheme {
         Box{
             Joystick(
+                backgroundColor = Color.Green,
+                showCoordinates = true,
                 enable = true,
                 onMove = { x, y ->
 
@@ -177,8 +211,9 @@ private fun JoyStickInteractivePreview(modifier: Modifier = Modifier) {
 
             Joystick(
                 modifier = modifier.size(250.dp),
+                showCoordinates = true,
                 enable = true,
-                handleRadiusFactor = 0.8f,
+                handleRadiusFactor = 0.5f,
                 onMove = { x, y ->
                     cords = "($x,$y)"
                 }
