@@ -72,7 +72,7 @@ data class ButtonProperties(
 }
 
 enum class DPAD_STYLE{
-    CIRCULAR,CROSS
+    CIRCULAR,CROSS,SPLIT
 }
 @Serializable
 data class DpadProperties(
