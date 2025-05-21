@@ -71,7 +71,7 @@ data class ButtonProperties(
     }
 }
 
-enum class DPAD_STYLE{
+enum class DPADSTYLE{
     CIRCULAR,CROSS,SPLIT
 }
 @Serializable
@@ -79,7 +79,7 @@ data class DpadProperties(
     val backgroundColor: ULong = Color(0xFFDBC66E).value,
     val buttonColor: ULong = Color(0xFF393000).value,
     val useClickAction: Boolean = false,
-    val style: DPAD_STYLE = DPAD_STYLE.CIRCULAR
+    val style: DPADSTYLE = DPADSTYLE.CIRCULAR
 ){
     fun toJson() = JsonCon.encodeToString(this)
     companion object {

@@ -58,7 +58,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.umer0586.droidpad.R
-import com.github.umer0586.droidpad.data.DPAD_STYLE
+import com.github.umer0586.droidpad.data.DPADSTYLE
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 enum class DPAD_BUTTON {
@@ -68,7 +68,7 @@ enum class DPAD_BUTTON {
 @Composable
 fun Dpad(
     modifier: Modifier = Modifier,
-    style: DPAD_STYLE = DPAD_STYLE.CIRCULAR,
+    style: DPADSTYLE = DPADSTYLE.CIRCULAR,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     buttonColor: Color = MaterialTheme.colorScheme.onPrimary,
     useClickAction: Boolean = false,
@@ -80,7 +80,7 @@ fun Dpad(
     val dpadSize: Dp = 170.dp // do not change this value, changing this would break ui exported via QR or JSON
     val buttonSize = (dpadSize/2.dp).dp
 
-    if(style == DPAD_STYLE.CIRCULAR) {
+    if(style == DPADSTYLE.CIRCULAR) {
         Box(
             modifier = modifier
                 .size(dpadSize)
@@ -189,7 +189,7 @@ fun Dpad(
                 )
             }
         }
-    } else if(style == DPAD_STYLE.CROSS){
+    } else if(style == DPADSTYLE.CROSS){
         Box(
             modifier = modifier
                 .size(dpadSize)
@@ -299,7 +299,7 @@ fun Dpad(
                 )
             }
         }
-    } else if(style == DPAD_STYLE.SPLIT){
+    } else if(style == DPADSTYLE.SPLIT){
         Box(
             modifier = modifier
                 .size(dpadSize)
@@ -486,7 +486,7 @@ private fun drawRoundedPlus(drawScope: DrawScope, color: Color = Color.Black) = 
 private fun DpadPreview(modifier: Modifier = Modifier) {
     DroidPadTheme {
         Dpad(
-            style = DPAD_STYLE.SPLIT,
+            style = DPADSTYLE.SPLIT,
         )
     }
 }
@@ -504,7 +504,7 @@ private fun DpadInteractivePreview(modifier: Modifier = Modifier) {
 
             Dpad(
                 modifier = Modifier.align(Alignment.Center),
-                style = DPAD_STYLE.SPLIT,
+                style = DPADSTYLE.SPLIT,
                 enabled = true,
                 onPressed = {
                     dpadAction.value = "Pressed: $it"

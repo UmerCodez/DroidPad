@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import com.github.umer0586.droidpad.data.DPAD_STYLE
+import com.github.umer0586.droidpad.data.DPADSTYLE
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
@@ -79,7 +79,7 @@ fun DPadPropertiesEditor(
             properties = dPadProperties,
         )
 
-        EnumDropdown<DPAD_STYLE>(
+        EnumDropdown<DPADSTYLE>(
             modifier = Modifier.fillMaxWidth(0.7f),
             label = "Style",
             selectedValue = dPadProperties.style,
