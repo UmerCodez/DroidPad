@@ -25,14 +25,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -50,16 +56,20 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.github.umer0586.droidpad.data.ButtonProperties
+import com.github.umer0586.droidpad.data.ButtonShape
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
+import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
+import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
+import java.util.Locale
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ButtonPropertiesEditor(
     modifier: Modifier = Modifier,
@@ -112,6 +122,39 @@ fun ButtonPropertiesEditor(
             },
             label = { Text("Text") },
             shape = textFieldShape
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Shape") },
+            supportingContent = {Text(text = buttonProperties.shape.name.lowercase(Locale.getDefault()))},
+            trailingContent = {
+                var expanded by remember { mutableStateOf(false) }
+                IconButton(
+                    onClick = { expanded = !expanded }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = null
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    ButtonShape.entries.forEach { shape ->
+                        DropdownMenuItem(
+                            text = { Text(text = shape.name) },
+                            onClick = {
+                                expanded = false
+                                buttonProperties = buttonProperties.copy(shape = shape)
+                                onButtonPropertiesChange?.invoke(buttonProperties)
+                            }
+                        )
+                    }
+                }
+            }
         )
 
         ListItem(
@@ -288,6 +331,29 @@ fun ButtonPropertiesEditor(
                     }
                 )
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ButtonPropertiesEditorPreview(modifier: Modifier = Modifier) {
+    DroidPadTheme {
+        val buttonProperties = remember { mutableStateOf(ButtonProperties()) }
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            ButtonPropertiesEditor(
+                modifier = Modifier.fillMaxWidth(),
+                buttonTextMaxLength = 10,
+                controlPadItem = ControlPadItem(
+                    itemIdentifier = "button",
+                    controlPadId = 1,
+                    properties = buttonProperties.value.toJson(),
+                    itemType = ItemType.BUTTON,
+                ),
+                onButtonPropertiesChange = {
+                    buttonProperties.value = it
+                }
+            )
         }
     }
 }

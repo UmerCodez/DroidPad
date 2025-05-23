@@ -53,6 +53,10 @@ data class SwitchProperties(
     }
 }
 
+
+enum class ButtonShape{
+    CIRCLE,SQUARE
+}
 @Serializable
 data class ButtonProperties(
     val text: String = "Btn",
@@ -61,7 +65,8 @@ data class ButtonProperties(
     val useIcon: Boolean = false,
     val useClickAction: Boolean = false,
     val iconId: Int = 0,
-    val iconColor: ULong = Color(0xFF393000).value
+    val iconColor: ULong = Color(0xFF393000).value,
+    val shape: ButtonShape = ButtonShape.CIRCLE
 ){
     fun toJson() = JsonCon.encodeToString(this)
     companion object{
