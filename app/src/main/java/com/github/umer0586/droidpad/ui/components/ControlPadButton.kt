@@ -23,9 +23,12 @@ import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -42,9 +45,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
@@ -108,7 +115,8 @@ fun ControlPadButton(
             onClick = {
                 if (properties.useClickAction)
                     onClick?.invoke()
-            }
+            },
+            contentPadding = PaddingValues(5.dp),
         ) {
             if(properties.useIcon){
                 Icon(
@@ -118,9 +126,12 @@ fun ControlPadButton(
                     tint = Color(properties.iconColor),
                 )
             } else {
-                Text(
+                BasicText(
+                    /*modifier = Modifier.fillMaxSize(),*/
                     text = properties.text,
-                    color = Color(properties.textColor)
+                    style = TextStyle(textAlign = TextAlign.Center, fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                    autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, maxFontSize = 12.sp)
                 )
             }
         }
@@ -131,14 +142,15 @@ fun ControlPadButton(
 @Preview(showBackground = true)
 @Composable
 private fun ControlPadButtonPreview(){
-    val buttonProperties = ButtonProperties(
-        text = "Btn",
-        buttonColor = Color(0xFF7D5260).value,
-        useIcon = true,
-        iconId = 1,
-        iconColor = Color(0xFFFFFCFC).value
-    )
+
     DroidPadTheme {
+        val buttonProperties = ButtonProperties(
+            text = "Button And",
+            buttonColor = MaterialTheme.colorScheme.primary.value,
+            useIcon = false,
+            iconId = 1,
+            iconColor = MaterialTheme.colorScheme.onPrimary.value
+        )
         Box(Modifier.size(100.dp)){
             ControlPadButton(
                 properties = buttonProperties,
