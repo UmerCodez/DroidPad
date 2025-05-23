@@ -39,6 +39,6 @@ class VibratorUtilImp(context: Context) : VibratorUtil {
     }
 
     companion object {
-        private const val SHORT_VIBRATION_DURATION = 10L // milliseconds
+        private const val SHORT_VIBRATION_DURATION = 100L // milliseconds
     }
 }
