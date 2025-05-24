@@ -1,0 +1,8 @@
+Features
+1. Allow users to select button shape (square or circular).
+2. Added "split" style to D-pad.
+3. Added "show values" option to display XY values on the joystick.
+4. Added "show coordinates" option to display XY coordinates over the joystick.
+Fixes
+1. Fit button text without wrapping to a new line.
+2. Increased short vibration duration to 100ms.
