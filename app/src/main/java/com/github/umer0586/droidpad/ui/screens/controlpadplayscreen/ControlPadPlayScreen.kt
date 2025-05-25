@@ -289,7 +289,7 @@ fun ControlPlayScreenContent(
                         scale = controlPadItem.scale,
                         properties = switchProperties,
                         checked = checked,
-                        showControls = false,
+                        showActionExpander = false,
                         onCheckedChange = {
                             checked = it
                             onUiEvent(
@@ -312,7 +312,7 @@ fun ControlPlayScreenContent(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        showControls = false,
+                        showActionExpander = false,
                         properties = sliderProperties,
                         value = value,
                         onValueChange = {
@@ -336,7 +336,7 @@ fun ControlPlayScreenContent(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        showControls = false,
+                        showActionExpander = false,
                         properties = stepSliderProperties,
                         value = value,
                         onValueChange = {
@@ -356,7 +356,7 @@ fun ControlPlayScreenContent(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        showControls = false,
+                        showActionExpander = false,
                         properties = LabelProperties.fromJson(controlPadItem.properties),
                     )
                 }
@@ -367,7 +367,7 @@ fun ControlPlayScreenContent(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        showControls = false,
+                        showActionExpander = false,
                         properties = ButtonProperties.fromJson(controlPadItem.properties),
                         onPressed = { onUiEvent(ControlPadPlayScreenEvent.OnButtonPress(controlPadItem.itemIdentifier)) },
                         onRelease = { onUiEvent(ControlPadPlayScreenEvent.OnButtonRelease(controlPadItem.itemIdentifier)) },
@@ -381,7 +381,7 @@ fun ControlPlayScreenContent(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        showControls = false,
+                        showActionExpander = false,
                         properties = DpadProperties.fromJson(controlPadItem.properties),
                         onPressed = { dpadButton ->
                             onUiEvent(
@@ -416,7 +416,7 @@ fun ControlPlayScreenContent(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        showControls = false,
+                        showActionExpander = false,
                         properties = JoyStickProperties.fromJson(controlPadItem.properties),
                         onMove = {x,y ->
                             onUiEvent(ControlPadPlayScreenEvent.OnJoyStickMove(id = controlPadItem.itemIdentifier, x = x, y = y))
@@ -429,7 +429,7 @@ fun ControlPlayScreenContent(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
-                        showControls = false,
+                        showActionExpander = false,
                         properties = SteeringWheelProperties.fromJson(controlPadItem.properties),
                         onRotate = {
                             onUiEvent(ControlPadPlayScreenEvent.OnSteeringWheelRotate(id = controlPadItem.itemIdentifier, angle = it))

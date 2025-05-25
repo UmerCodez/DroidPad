@@ -52,7 +52,7 @@ fun ControlPadStepSlider(
     scale: Float = 1f,
     transformableState: TransformableState? = null,
     properties: StepSliderProperties = StepSliderProperties(),
-    showControls: Boolean = true,
+    showActionExpander: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     value: Float = 2.5f,
@@ -66,7 +66,7 @@ fun ControlPadStepSlider(
         rotation = rotation,
         scale = scale,
         transformableState = transformableState,
-        showControls = showControls,
+        showActionExpander = showActionExpander,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
 

@@ -71,7 +71,7 @@ fun SwitchPropertiesEditor(
             scale = 1f,
             rotation = 0f,
             checked = true,
-            showControls = false,
+            showActionExpander = false,
             properties = switchProperties,
         )
 

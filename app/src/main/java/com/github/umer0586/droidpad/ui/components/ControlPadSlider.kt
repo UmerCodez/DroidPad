@@ -51,7 +51,7 @@ fun ControlPadSlider(
     scale: Float,
     transformableState: TransformableState? = null,
     properties: SliderProperties = SliderProperties(),
-    showControls: Boolean = true,
+    showActionExpander: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     value: Float = 2.5f,
@@ -66,7 +66,7 @@ fun ControlPadSlider(
         rotation = rotation,
         scale = scale,
         transformableState = transformableState,
-        showControls = showControls,
+        showActionExpander = showActionExpander,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
 

@@ -91,7 +91,7 @@ fun JoyStickPropertiesEditor(
             offset = Offset.Zero,
             scale = 1f,
             rotation = 0f,
-            showControls = false,
+            showActionExpander = false,
             enabled = false,
             properties = joyStickProperties,
         )

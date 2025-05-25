@@ -97,7 +97,7 @@ fun ButtonPropertiesEditor(
             offset = Offset.Zero,
             scale = 1f,
             rotation = 0f,
-            showControls = false,
+            showActionExpander = false,
             properties = buttonProperties,
         )
 

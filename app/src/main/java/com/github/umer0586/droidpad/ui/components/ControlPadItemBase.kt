@@ -71,7 +71,7 @@ fun ControlPadItemBase(
     rotation: Float,
     scale: Float,
     transformableState: TransformableState? = null,
-    showControls: Boolean = true,
+    showActionExpander: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     content: @Composable() (() -> Unit)
@@ -96,7 +96,7 @@ fun ControlPadItemBase(
                 else Modifier
             )
             .then(
-                if (showControls) Modifier.border(
+                if (showActionExpander) Modifier.border(
                     width = 1.dp, color = Color.LightGray
                 ) else Modifier
             ),
@@ -127,7 +127,7 @@ fun ControlPadItemBase(
             )
         }
 
-        if(showControls && !showActions) {
+        if(showActionExpander && !showActions) {
             IconButton(
                 modifier = Modifier
                     .size(handleSize)
@@ -229,7 +229,7 @@ private fun TransformableSample() {
             rotation = rotation,
             scale = scale,
             transformableState = state,
-            showControls = true,
+            showActionExpander = true,
 
             ) {
             var sliderValue by remember { mutableFloatStateOf(1f) }

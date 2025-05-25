@@ -95,7 +95,7 @@ fun SliderPropertiesEditor(
             offset = Offset.Zero,
             scale = 1f,
             rotation = 0f,
-            showControls = false,
+            showActionExpander = false,
             value = 5f,
             properties = sliderProperties.copy(minValue = 0f, maxValue = 10f),
         )
