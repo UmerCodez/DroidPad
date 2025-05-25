@@ -46,9 +46,9 @@ import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 @Composable
 fun ControlPadSlider(
     modifier: Modifier = Modifier,
-    offset: Offset,
-    rotation: Float,
-    scale: Float,
+    offset: Offset = Offset.Zero,
+    rotation: Float = 0f,
+    scale: Float = 1f,
     transformableState: TransformableState? = null,
     properties: SliderProperties = SliderProperties(),
     showActionExpander: Boolean = true,

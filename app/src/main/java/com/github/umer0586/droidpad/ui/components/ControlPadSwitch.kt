@@ -36,9 +36,9 @@ import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 @Composable
 fun ControlPadSwitch(
     modifier: Modifier = Modifier,
-    offset: Offset,
-    rotation: Float,
-    scale: Float,
+    offset: Offset = Offset.Zero,
+    rotation: Float = 0f,
+    scale: Float = 1f,
     properties: SwitchProperties = SwitchProperties(),
     transformableState: TransformableState? = null,
     onEditClick: (() -> Unit)? = null,

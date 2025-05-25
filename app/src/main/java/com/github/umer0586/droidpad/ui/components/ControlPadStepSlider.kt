@@ -47,8 +47,8 @@ import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 @Composable
 fun ControlPadStepSlider(
     modifier: Modifier = Modifier,
-    offset: Offset,
-    rotation: Float,
+    offset: Offset = Offset.Zero,
+    rotation: Float = 0f,
     scale: Float = 1f,
     transformableState: TransformableState? = null,
     properties: StepSliderProperties = StepSliderProperties(),
