@@ -20,20 +20,29 @@
 
 package com.github.umer0586.droidpad.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,11 +52,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -64,7 +76,9 @@ fun ControlPadItemBase(
     onDeleteClick: (() -> Unit)? = null,
     content: @Composable() (() -> Unit)
 ) {
-    val handleSize = 15.dp
+    val handleSize = 20.dp
+
+    var showActions by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -78,15 +92,12 @@ fun ControlPadItemBase(
             // add transformable to listen to multitouch transformation events
             // after offset
             .then(
-                if (transformableState != null)
-                    Modifier.transformable(state = transformableState)
-                else
-                    Modifier
+                if (transformableState != null) Modifier.transformable(state = transformableState)
+                else Modifier
             )
             .then(
                 if (showControls) Modifier.border(
-                    width = 1.dp,
-                    color = Color.LightGray
+                    width = 1.dp, color = Color.LightGray
                 ) else Modifier
             ),
         contentAlignment = Alignment.Center
@@ -96,31 +107,104 @@ fun ControlPadItemBase(
 
         content()
 
-        if (showControls) {
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(x = (-15).dp)
-                    .size(handleSize)
-                    .clickable {
-                        onEditClick?.invoke()
-                    },
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "editHandle",
-            )
 
-            Icon(
+        AnimatedVisibility(
+            visible = showActions,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = (-40).dp)
+        ) {
+            Actions(
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .offset(x = (-15).dp)
-                    .size(handleSize)
-                    .clickable {
-                        onDeleteClick?.invoke()
-                    },
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "deleteHandle",
+                    .rotate(-rotation),
+                onActionClick = {
+                    when (it) {
+                        ActionItem.EDIT -> onEditClick?.invoke()
+                        ActionItem.DELETE -> onDeleteClick?.invoke()
+                    }
+                },
+                onCloseClick = { showActions = false }
             )
         }
+
+        if(showControls && !showActions) {
+            IconButton(
+                modifier = Modifier
+                    .size(handleSize)
+                    .align(Alignment.TopCenter)
+                    .offset(y = (-25).dp),
+                onClick = { showActions = true },
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = null,
+                )
+            }
+        }
+
+    }
+}
+
+private enum class ActionItem{
+    EDIT,DELETE
+}
+
+@Composable
+private fun Actions(
+    modifier: Modifier = Modifier,
+    iconButtonColors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
+    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    onActionClick: ((ActionItem) -> Unit)? = null,
+    onCloseClick: (() -> Unit)? = null
+) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Row(Modifier
+            .clip(CircleShape)
+            .background(backgroundColor)) {
+            ActionItem.entries.forEach { item ->
+                when (item) {
+                    ActionItem.EDIT -> {
+                        IconButton(onClick = { onActionClick?.invoke(ActionItem.EDIT) }, colors = iconButtonColors) {
+                            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+                        }
+                    }
+
+                    ActionItem.DELETE -> {
+                        IconButton(onClick = { onActionClick?.invoke(ActionItem.DELETE) }, colors = iconButtonColors) {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                        }
+                    }
+                }
+            }
+        }
+
+        IconButton(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(y = (-30).dp, x = (25).dp),
+            colors = iconButtonColors,
+            onClick = { onCloseClick?.invoke() }) {
+            Icon(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .clip(CircleShape)
+                    .background(backgroundColor),
+                imageVector = Icons.Filled.Close, contentDescription = null
+            )
+        }
+    }
+}
+
+// Preview for the Tools composable
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF) // Added background color for better visibility
+@Composable
+private fun ActionsPreview() {
+    DroidPadTheme  {
+        Actions(
+            modifier = Modifier
+                .padding(16.dp), // Add some padding for better visual spacing in preview
+
+        )
     }
 }
 
@@ -130,8 +214,8 @@ fun ControlPadItemBase(
 private fun TransformableSample() {
     // set up all transformation states
     var scale by remember { mutableFloatStateOf(1f) }
-    var rotation by remember { mutableFloatStateOf(0f) }
-    var offset by remember { mutableStateOf(Offset.Zero) }
+    var rotation by remember { mutableFloatStateOf(45f) }
+    var offset by remember { mutableStateOf(Offset(120f,150f)) }
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
         scale *= zoomChange
         rotation += rotationChange
@@ -141,19 +225,19 @@ private fun TransformableSample() {
         Modifier.fillMaxSize()
     ) {
         ControlPadItemBase(
-            modifier = Modifier.background(Color.Green),
             offset = offset,
             rotation = rotation,
             scale = scale,
             transformableState = state,
-            showControls = false,
+            showControls = true,
 
             ) {
             var sliderValue by remember { mutableFloatStateOf(1f) }
             Slider(
                 value = sliderValue,
                 onValueChange = { sliderValue = it },
-                valueRange = 0.5f..2f
+                valueRange = 0.5f..2f,
+                enabled = false
             )
         }
     }
