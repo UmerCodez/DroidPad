@@ -154,68 +154,6 @@ fun ControlPadBuilderScreen(
 
 }
 
-@Composable
-private fun ItemSelectionBottomSheetContent(
-    modifier: Modifier = Modifier,
-    controlPadItemTypes: Array<ItemType> = ItemType.entries.toTypedArray(),
-    onItemClick: ((ItemType) -> Unit)? = null
-) {
-
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        items(controlPadItemTypes) { item ->
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        onItemClick?.invoke(item)
-                    }
-                    .fillMaxWidth(0.5f)
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Icon(
-                    modifier = Modifier.size(25.dp),
-                    painter = painterResource(
-                        when (item) {
-                            ItemType.SWITCH -> R.drawable.ic_switch
-                            ItemType.JOYSTICK -> R.drawable.ic_joystick
-                            ItemType.STEERING_WHEEL -> R.drawable.ic_steering_wheel
-                            ItemType.DPAD -> R.drawable.ic_dpad
-                            ItemType.SLIDER -> R.drawable.ic_slider
-                            ItemType.STEP_SLIDER -> R.drawable.ic_slider
-                            ItemType.LABEL -> R.drawable.ic_label
-                            ItemType.BUTTON -> R.drawable.ic_button_circle
-                        }
-                    ),
-                    contentDescription = item.name,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.width(10.dp))
-                Text(
-                    modifier = Modifier.weight(0.3f),
-                    text = item.name.replace("_", " ")
-                )
-
-            }
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun ItemSelectionBottomSheetContentPreview() {
-    DroidPadTheme {
-        Surface {
-            ItemSelectionBottomSheetContent()
-        }
-    }
-}
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -684,6 +622,68 @@ fun ControlPadBuilderScreenContent(
         }
     }
 
+}
+
+
+@Composable
+private fun ItemSelectionBottomSheetContent(
+    modifier: Modifier = Modifier,
+    controlPadItemTypes: Array<ItemType> = ItemType.entries.toTypedArray(),
+    onItemClick: ((ItemType) -> Unit)? = null
+) {
+
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        items(controlPadItemTypes) { item ->
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        onItemClick?.invoke(item)
+                    }
+                    .fillMaxWidth(0.5f)
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Icon(
+                    modifier = Modifier.size(25.dp),
+                    painter = painterResource(
+                        when (item) {
+                            ItemType.SWITCH -> R.drawable.ic_switch
+                            ItemType.JOYSTICK -> R.drawable.ic_joystick
+                            ItemType.STEERING_WHEEL -> R.drawable.ic_steering_wheel
+                            ItemType.DPAD -> R.drawable.ic_dpad
+                            ItemType.SLIDER -> R.drawable.ic_slider
+                            ItemType.STEP_SLIDER -> R.drawable.ic_slider
+                            ItemType.LABEL -> R.drawable.ic_label
+                            ItemType.BUTTON -> R.drawable.ic_button_circle
+                        }
+                    ),
+                    contentDescription = item.name,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    modifier = Modifier.weight(0.3f),
+                    text = item.name.replace("_", " ")
+                )
+
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun ItemSelectionBottomSheetContentPreview() {
+    DroidPadTheme {
+        Surface {
+            ItemSelectionBottomSheetContent()
+        }
+    }
 }
 
 
