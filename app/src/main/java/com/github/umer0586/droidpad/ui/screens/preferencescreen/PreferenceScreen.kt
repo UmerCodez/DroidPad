@@ -120,6 +120,7 @@ fun PreferenceScreenContent(
 
             ListItem(
                 headlineContent = {Text("Vibrate")},
+                supportingContent = { Text("Vibrate on button, DPad and switch interaction") },
                 trailingContent = {
                     Switch(
                         checked = uiState.vibrate,
