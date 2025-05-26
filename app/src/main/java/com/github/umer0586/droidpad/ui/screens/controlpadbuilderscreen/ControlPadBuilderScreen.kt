@@ -26,6 +26,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,6 +53,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -68,10 +72,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.ExternalData
@@ -160,15 +166,55 @@ private fun ItemSelectionBottomSheetContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(controlPadItemTypes) { item ->
-            TextButton(
-                onClick = { onItemClick?.invoke(item) },
-                content = {
-                    Text(text = item.name)
-                }
-            )
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        onItemClick?.invoke(item)
+                    }
+                    .fillMaxWidth(0.5f)
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Icon(
+                    modifier = Modifier.size(25.dp),
+                    painter = painterResource(
+                        when (item) {
+                            ItemType.SWITCH -> R.drawable.ic_switch
+                            ItemType.JOYSTICK -> R.drawable.ic_joystick
+                            ItemType.STEERING_WHEEL -> R.drawable.ic_steering_wheel
+                            ItemType.DPAD -> R.drawable.ic_dpad
+                            ItemType.SLIDER -> R.drawable.ic_slider
+                            ItemType.STEP_SLIDER -> R.drawable.ic_slider
+                            ItemType.LABEL -> R.drawable.ic_label
+                            ItemType.BUTTON -> R.drawable.ic_button_circle
+                        }
+                    ),
+                    contentDescription = item.name,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    modifier = Modifier.weight(0.3f),
+                    text = item.name.replace("_", " ")
+                )
+
+            }
         }
     }
 }
+
+
+@Preview(showBackground = true)
+@Composable
+private fun ItemSelectionBottomSheetContentPreview() {
+    DroidPadTheme {
+        Surface {
+            ItemSelectionBottomSheetContent()
+        }
+    }
+}
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
