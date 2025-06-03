@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Button
@@ -109,7 +110,7 @@ fun ControlPadButton(
                 .padding(10.dp),
             shape = when(properties.shape){
                 ButtonShape.CIRCLE -> CircleShape
-                ButtonShape.SQUARE -> RectangleShape // RectangleShape will be squared shape since size is 100dp (i-e equal with and height)
+                ButtonShape.SQUARE -> RoundedCornerShape(16.dp) // RectangleShape will be squared shape since size is 100dp (i-e equal with and height)
             },
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
