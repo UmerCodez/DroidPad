@@ -1,0 +1,3 @@
+Added vibration setting description
+Added icons for items in item selector
+Enhanced ControlPadItemBase with action menu
