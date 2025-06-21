@@ -29,7 +29,6 @@ import io.ktor.network.sockets.TypeOfService
 import io.ktor.network.sockets.aSocket
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteWriteChannel
-import io.ktor.utils.io.awaitFreeSpace
 import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
