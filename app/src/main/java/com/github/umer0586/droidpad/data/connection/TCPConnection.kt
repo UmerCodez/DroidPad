@@ -69,12 +69,6 @@ class TCPConnection(
                 withTimeout(tcpConfig.timeoutSecs*1000L) {
                     socket = aSocket(selectorManager)
                         .tcp()
-                        .configure {
-                            if (this is SocketOptions.TCPClientSocketOptions) {
-                                this.noDelay = false;
-                                this.typeOfService = TypeOfService.IPTOS_LOWDELAY
-                            }
-                        }
                         .connect(tcpConfig.host, tcpConfig.port)
                 }
 
