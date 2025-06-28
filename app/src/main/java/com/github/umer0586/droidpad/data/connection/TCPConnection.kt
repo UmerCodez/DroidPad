@@ -24,8 +24,6 @@ import com.github.umer0586.droidpad.data.connectionconfig.TCPConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import io.ktor.network.selector.SelectorManager
 import io.ktor.network.sockets.Socket
-import io.ktor.network.sockets.SocketOptions
-import io.ktor.network.sockets.TypeOfService
 import io.ktor.network.sockets.aSocket
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteWriteChannel
