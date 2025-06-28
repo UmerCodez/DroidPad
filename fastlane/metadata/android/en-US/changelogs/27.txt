@@ -1,0 +1,1 @@
+Fixed NullPointerException in TCPConnection caused by concurrent writes
