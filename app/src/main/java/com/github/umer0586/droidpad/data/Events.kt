@@ -21,6 +21,12 @@ data class SliderEvent(
         return JsonCon.encodeToString(this)
     }
     fun toCSV() = "$id,$value"
+
+    companion object {
+        fun fromJson(json: String): SliderEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
 }
 
 @Serializable
@@ -33,6 +39,12 @@ data class SwitchEvent(
         return JsonCon.encodeToString(this)
     }
     fun toCSV() = "$id,$state"
+
+    companion object {
+        fun fromJson(json: String): SwitchEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
 }
 
 @Serializable
