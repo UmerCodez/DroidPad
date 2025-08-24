@@ -20,7 +20,7 @@ data class SliderEvent(
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,$value"
+    fun toCSV() = "$id,SLIDER,$value"
 
     companion object {
         fun fromJson(json: String): SliderEvent {
@@ -38,7 +38,7 @@ data class SwitchEvent(
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,$state"
+    fun toCSV() = "$id,SWITCH,$state"
 
     companion object {
         fun fromJson(json: String): SwitchEvent {
@@ -56,7 +56,7 @@ data class ButtonEvent(
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,$state"
+    fun toCSV() = "$id,BUTTON,$state"
 }
 
 @Serializable
@@ -69,7 +69,7 @@ data class DPadEvent(
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,$button,$state"
+    fun toCSV() = "$id,DPAD,$button,$state"
 }
 
 @Serializable
@@ -82,7 +82,7 @@ data class JoyStickEvent(
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,$x,$y"
+    fun toCSV() = "$id,JOYSTICK,$x,$y"
 }
 
 @Serializable
@@ -94,5 +94,5 @@ data class SteeringWheelEvent(
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,$angle"
+    fun toCSV() = "$id,STEERING_WHEEL,$angle"
 }
