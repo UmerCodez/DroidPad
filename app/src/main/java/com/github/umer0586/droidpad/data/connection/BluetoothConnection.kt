@@ -101,7 +101,7 @@ class BluetoothConnection(
     override suspend fun sendData(data: String) {
         withContext(ioDispatcher) {
             try {
-                outputStream?.write(data.toByteArray())
+                outputStream?.write((data + "\n").toByteArray())
             } catch (e: Exception) {
                 e.printStackTrace()
                 notifyConnectionState(ConnectionState.BLUETOOTH_DATA_SENT_ERROR)
