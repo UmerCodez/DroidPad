@@ -240,6 +240,8 @@ You can test the connections with Websocket,TCP, UDP servers and BLE client prov
 ## Projects
 1. A Tank controlled by an Arduino Uno R4 WiFi using the DroidPad App [https://github.com/Klixxy/ArduTank](https://github.com/Klixxy/ArduTank) by [Klixxy](https://github.com/Klixxy)
 2. 3D-printed hexapod with 6-DOF pose control, adaptive gait, and FPV video streaming. Controlled via a Python GUI (TCP/UDP) or the DroidPad Android app. Powered by XIAO ESP32-S3 Sense [https://github.com/Ozzi06/ESP_Hexapod](https://github.com/Ozzi06/ESP_Hexapod) by [Ozzi06](https://github.com/Ozzi06)
+3. Simple websocket server that allows you to use droidpad as a game controller [https://github.com/Tofixrs/droidpad-gamepad](https://github.com/Tofixrs/droidpad-gamepad) by [Tofixrs](https://github.com/Tofixrs)
+
 
 
 ### TODOs
