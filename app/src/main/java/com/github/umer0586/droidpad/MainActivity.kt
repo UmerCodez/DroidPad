@@ -22,6 +22,8 @@ package com.github.umer0586.droidpad
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat
 import com.github.umer0586.droidpad.ui.screens.NavScreen
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,8 +35,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO : enableEdgeToEdge
-        //enableEdgeToEdge()
+        enableEdgeToEdge()
         setContent {
             // TODO: Add dark/light theme switch
             DroidPadTheme {
