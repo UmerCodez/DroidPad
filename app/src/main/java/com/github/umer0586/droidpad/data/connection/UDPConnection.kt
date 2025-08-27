@@ -22,7 +22,12 @@ package com.github.umer0586.droidpad.data.connection
 import com.github.umer0586.droidpad.data.connectionconfig.UDPConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -30,16 +35,34 @@ import java.net.InetAddress
 
 class UDPConnection(
     val udpConfig: UDPConfig,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
+
 ) : Connection(){
 
 
     private var datagramSocket: DatagramSocket = DatagramSocket()
+    private var dataReceivingJob: Job? = null
 
     override val connectionType: ConnectionType
         get() = ConnectionType.UDP
 
     override suspend fun setup() {
+
+        dataReceivingJob = scope.launch {
+            try {
+                val buffer = ByteArray(2048)
+                val packet = DatagramPacket(buffer, buffer.size)
+                while (isActive) {
+                    datagramSocket.receive(packet)
+                    val data = packet.data.decodeToString(0, packet.length)
+                    notifyReceivedData(data)
+                }
+            } catch (e : Exception){
+                e.printStackTrace()
+            }
+
+        }
 
     }
 
@@ -59,10 +82,11 @@ class UDPConnection(
         }
     }
 
-    override suspend fun tearDown() = withContext(ioDispatcher){
+    override suspend fun tearDown() = withContext<Unit>(ioDispatcher){
         try {
 
             datagramSocket.close()
+            dataReceivingJob?.cancel()
 
         } catch (e: Exception) {
             notifyConnectionState(ConnectionState.UDP_ERROR)

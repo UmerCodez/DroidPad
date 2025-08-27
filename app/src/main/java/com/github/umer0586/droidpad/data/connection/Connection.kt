@@ -20,7 +20,9 @@
 package com.github.umer0586.droidpad.data.connection
 
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 enum class ConnectionState{
@@ -43,8 +45,14 @@ abstract class Connection {
     private val _connectionState = MutableStateFlow(ConnectionState.NONE)
     val connectionState = _connectionState.asStateFlow()
 
+    private val _receivedData = MutableSharedFlow<String>()
+    val receivedData = _receivedData.asSharedFlow()
+
     protected fun notifyConnectionState(newState: ConnectionState) {
         _connectionState.value = newState
+    }
+    protected suspend fun notifyReceivedData(data: String) {
+        _receivedData.emit(data)
     }
 
     abstract val connectionType: ConnectionType

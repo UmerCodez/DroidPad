@@ -22,9 +22,12 @@ package com.github.umer0586.droidpad.data.connection
 import com.github.umer0586.droidpad.data.connectionconfig.WebsocketConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.util.concurrent.TimeUnit
@@ -32,7 +35,8 @@ import java.util.concurrent.TimeUnit
 
 class WebsocketConnection(
     val webSocketConfig: WebsocketConfig,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 ): Connection(){
 
     override val connectionType: ConnectionType
@@ -84,7 +88,11 @@ class WebsocketConnection(
         }
 
         override fun onMessage(message: String?) {
-            // No need to implement
+            message?.also { msg ->
+                scope.launch {
+                    notifyReceivedData(msg)
+                }
+            }
         }
 
         override fun onClose(code: Int, reason: String?, closeByServer: Boolean) {

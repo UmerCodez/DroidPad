@@ -22,7 +22,10 @@ package com.github.umer0586.droidpad.data.connection
 import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.eclipse.paho.mqttv5.client.IMqttToken
 import org.eclipse.paho.mqttv5.client.MqttActionListener
@@ -38,7 +41,8 @@ import java.net.SocketTimeoutException
 
 class Mqttv5Connection(
     val mqttConfig: MqttConfig,
-    val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 ) : Connection(), MqttCallback {
 
     private var mqttAsyncClient: MqttAsyncClient? = null
@@ -152,7 +156,11 @@ class Mqttv5Connection(
     }
 
     override fun messageArrived(topic: String?, message: MqttMessage?) {
-
+        scope.launch {
+            message?.payload?.let {
+                notifyReceivedData(it.decodeToString())
+            }
+        }
     }
 
     override fun deliveryComplete(token: IMqttToken?) {
@@ -161,6 +169,7 @@ class Mqttv5Connection(
 
     override fun connectComplete(reconnect: Boolean, serverURI: String?) {
         notifyConnectionState(ConnectionState.MQTT_CONNECTED)
+        mqttAsyncClient?.subscribe("DroidPad/feed",0)
     }
 
     override fun authPacketArrived(reasonCode: Int, properties: MqttProperties?) {

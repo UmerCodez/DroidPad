@@ -30,15 +30,22 @@ import androidx.core.app.ActivityCompat
 import com.github.umer0586.droidpad.data.connectionconfig.BluetoothConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.io.OutputStream
+import java.io.BufferedReader
 import java.util.UUID
 
 class BluetoothConnection(
     private val context: Context,
     val bluetoothConfig: BluetoothConfig,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 ) : Connection() {
 
     private val bluetoothManager =
@@ -46,6 +53,7 @@ class BluetoothConnection(
     private val bluetoothAdapter = bluetoothManager.adapter
     private var socket: BluetoothSocket? = null
     private var outputStream: OutputStream? = null
+    private var dataReceivingJob: Job? = null
 
     override val connectionType: ConnectionType
         get() = ConnectionType.BLUETOOTH
@@ -89,6 +97,28 @@ class BluetoothConnection(
 
                 notifyConnectionState(ConnectionState.BLUETOOTH_CONNECTED)
 
+                dataReceivingJob = scope.launch {
+
+                    try {
+
+                        socket?.inputStream?.use { inputStream ->
+                            val reader = BufferedReader(inputStream.reader())
+                            var line: String?
+                            while (isActive) {
+                                // reader.readLine() returns null when socket input stream ends (remote peer closed connection or we closed the socket)
+                                line = reader.readLine()
+                                    ?: break // Returns the line as a String, or null if the end of the stream is reached.
+                                notifyReceivedData(line)
+
+                            }
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+
 
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -117,6 +147,7 @@ class BluetoothConnection(
                 socket?.close()
                 outputStream = null
                 socket = null
+                dataReceivingJob?.cancel()
                 notifyConnectionState(ConnectionState.BLUETOOTH_DISCONNECTED)
             }catch (e: Exception){
                 e.printStackTrace()

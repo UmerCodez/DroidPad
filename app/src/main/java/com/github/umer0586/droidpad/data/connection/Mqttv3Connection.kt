@@ -22,7 +22,10 @@ package com.github.umer0586.droidpad.data.connection
 import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.eclipse.paho.client.mqttv3.IMqttActionListener
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
@@ -37,7 +40,8 @@ import java.net.SocketTimeoutException
 
 class Mqttv3Connection(
     val mqttConfig: MqttConfig,
-    val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 ) : Connection(), MqttCallback {
 
     private var mqttAsyncClient: MqttAsyncClient? = null
@@ -88,6 +92,7 @@ class Mqttv3Connection(
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     println(asyncActionToken)
                     notifyConnectionState(ConnectionState.MQTT_CONNECTED)
+                    mqttAsyncClient?.subscribe("DroidPad/feed",0)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -154,7 +159,15 @@ class Mqttv3Connection(
     }
 
     override fun messageArrived(topic: String?, message: MqttMessage?) {
-
+        scope.launch {
+            topic?.also { topic ->
+                if (topic == "DroidPad/feed") {
+                    message?.also {
+                        notifyReceivedData(it.payload.decodeToString())
+                    }
+                }
+            }
+        }
     }
 
     override fun deliveryComplete(token: IMqttDeliveryToken?) {

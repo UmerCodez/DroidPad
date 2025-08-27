@@ -20,6 +20,8 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,6 +29,7 @@ import com.github.umer0586.droidpad.data.ButtonEvent
 import com.github.umer0586.droidpad.data.DPadEvent
 import com.github.umer0586.droidpad.data.JoyStickEvent
 import com.github.umer0586.droidpad.data.SliderEvent
+import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelEvent
 import com.github.umer0586.droidpad.data.SwitchEvent
 import com.github.umer0586.droidpad.data.connection.BluetoothConnection
@@ -42,6 +45,7 @@ import com.github.umer0586.droidpad.data.connection.WebsocketConnection
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
+import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadRepository
 import com.github.umer0586.droidpad.data.repositories.ControlPadSensorRepository
@@ -57,12 +61,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import javax.inject.Inject
 
 
 data class ControlPadPlayScreenState(
     val controlPadItems: List<ControlPadItem> = emptyList(),
     val connectionState: ConnectionState = ConnectionState.NONE,
+    val switchStates: SnapshotStateMap<Long,Boolean> = mutableStateMapOf(),
+    val sliderStates: SnapshotStateMap<Long,Float> = mutableStateMapOf(),
     val connectionType: ConnectionType = ConnectionType.TCP,
     val isConnecting: Boolean = false,
     val isConnected: Boolean = false,
@@ -73,8 +82,8 @@ data class ControlPadPlayScreenState(
 sealed interface ControlPadPlayScreenEvent {
     data object OnConnectClick : ControlPadPlayScreenEvent
     data object OnDisconnectClick : ControlPadPlayScreenEvent
-    data class OnSwitchCheckedChange(val id: String, val checked: Boolean) : ControlPadPlayScreenEvent
-    data class OnSliderValueChange(val id: String, val value: Float) : ControlPadPlayScreenEvent
+    data class OnSwitchCheckedChange(val id: String, val idLong: Long, val checked: Boolean) : ControlPadPlayScreenEvent
+    data class OnSliderValueChange(val id: String, val idLong: Long, val value: Float) : ControlPadPlayScreenEvent
     data class OnButtonPress(val id: String) : ControlPadPlayScreenEvent
     data class OnButtonRelease(val id: String) : ControlPadPlayScreenEvent
     data class OnButtonClick(val id: String) : ControlPadPlayScreenEvent
@@ -144,20 +153,40 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             }
         }
+
+
     }
 
 
     fun loadControlPadItemsFor(controlPad: ControlPad) {
 
         viewModelScope.launch {
+            val controlPadItems = controlPadRepository.getControlPadItemsOf(controlPad)
             _uiState.value = _uiState.value.copy(
-                controlPadItems = controlPadRepository.getControlPadItemsOf(controlPad),
+                controlPadItems = controlPadItems,
                 controlPadBackgroundColor = controlPad.backgroundColor,
             )
 
+
+            controlPadRepository.getControlPadItemsOf(controlPad)
+                .filter { it.itemType == ItemType.SWITCH }.forEach { switch ->
+                uiState.value.switchStates[switch.id] = false
+            }
+
+            controlPadRepository.getControlPadItemsOf(controlPad)
+                .filter { it.itemType == ItemType.SLIDER }.forEach { slider ->
+                    val sliderProperties = SliderProperties.fromJson(slider.properties)
+                    uiState.value.sliderStates[slider.id] = sliderProperties.minValue
+                }
+
             connectionConfigRepository.getConfigForControlPad(controlPad.id)
                 ?.also { connectionConfig ->
-                    connection = connectionFactory.getConnection(connectionConfig)
+                    connection = connectionFactory.getConnection(connectionConfig, scope = viewModelScope)
+
+                    if(connection?.connectionType == ConnectionType.UDP)
+                        connection?.setup()
+
+                    handleIncomingData(controlPadItems)
 
                     _uiState.update {
                         it.copy(
@@ -267,6 +296,8 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 else
                     SwitchEvent(id = event.id, state = event.checked).toJson()
 
+                uiState.value.switchStates[event.idLong] = event.checked
+
                 vibrate()
                 viewModelScope.launch {
                     connection?.sendData(data)
@@ -281,6 +312,8 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                     SliderEvent(id = event.id, value = event.value).toCSV()
                 else
                     SliderEvent(id = event.id, value = event.value).toJson()
+
+                uiState.value.sliderStates[event.idLong] = event.value
 
                 viewModelScope.launch {
                     connection?.sendData(data)
@@ -411,6 +444,51 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         bluetoothUtil.cleanUp()
         Log.d(tag, "onCleared: ${hashCode()}")
     }
+
+    private fun handleIncomingData(controlPadItems: List<ControlPadItem>){
+        viewModelScope.launch {
+            connection?.receivedData?.collect{ jsonString ->
+
+                val jsonElement = try {
+                    Json.parseToJsonElement(jsonString)
+                }catch (e: Exception){
+                    e.printStackTrace()
+                    return@collect
+                }
+
+                if(jsonElement is JsonObject){
+
+                    try {
+
+                        if ("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "SWITCH") {
+                            val switchEvent = SwitchEvent.fromJson(jsonString)
+                            controlPadItems.filter { it.itemType == ItemType.SWITCH }
+                                .find { switchItem ->
+                                    switchItem.itemIdentifier == switchEvent.id
+                                }?.also { switchItem ->
+                                    uiState.value.switchStates[switchItem.id] = switchEvent.state
+                                }
+                        }
+                        else if ("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "SLIDER") {
+                            val sliderEvent = SliderEvent.fromJson(jsonString)
+                            controlPadItems.filter { it.itemType == ItemType.SLIDER }
+                                .find { sliderItem ->
+                                    sliderItem.itemIdentifier == sliderEvent.id
+                                }?.also { sliderItem ->
+                                    val sliderProperties = SliderProperties.fromJson(sliderItem.properties)
+                                    uiState.value.sliderStates[sliderItem.id] = sliderEvent.value.coerceIn(sliderProperties.minValue, sliderProperties.maxValue)
+                                }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+            }
+        }
+    }
+
+
 
 }
 

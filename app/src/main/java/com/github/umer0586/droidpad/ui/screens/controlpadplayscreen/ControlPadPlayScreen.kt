@@ -281,20 +281,19 @@ fun ControlPlayScreenContent(
                 if (controlPadItem.itemType == ItemType.SWITCH) {
 
                     val switchProperties = SwitchProperties.fromJson(controlPadItem.properties)
-                    var checked by remember { mutableStateOf(false) }
 
                     ControlPadSwitch(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
                         properties = switchProperties,
-                        checked = checked,
+                        checked = uiState.switchStates[controlPadItem.id] ?: false,
                         showActionExpander = false,
                         onCheckedChange = {
-                            checked = it
                             onUiEvent(
                                 ControlPadPlayScreenEvent.OnSwitchCheckedChange(
                                     id = controlPadItem.itemIdentifier,
+                                    idLong = controlPadItem.id,
                                     checked = it
                                 )
                             )
@@ -306,7 +305,7 @@ fun ControlPlayScreenContent(
                 else if (controlPadItem.itemType == ItemType.SLIDER) {
 
                     val sliderProperties = SliderProperties.fromJson(controlPadItem.properties)
-                    var value by remember { mutableFloatStateOf(sliderProperties.minValue) }
+                    //var value by remember { mutableFloatStateOf(sliderProperties.minValue) }
 
                     ControlPadSlider(
                         offset = controlPadItem.offset,
@@ -314,13 +313,13 @@ fun ControlPlayScreenContent(
                         scale = controlPadItem.scale,
                         showActionExpander = false,
                         properties = sliderProperties,
-                        value = value,
+                        value = uiState.sliderStates[controlPadItem.id] ?: sliderProperties.minValue,
                         onValueChange = {
-                            value = it
                             onUiEvent(
                                 ControlPadPlayScreenEvent.OnSliderValueChange(
-                                    controlPadItem.itemIdentifier,
-                                    it
+                                    id = controlPadItem.itemIdentifier,
+                                    idLong = controlPadItem.id,
+                                    value = it
                                 )
                             )
                         }
@@ -343,8 +342,9 @@ fun ControlPlayScreenContent(
                             value = it
                             onUiEvent(
                                 ControlPadPlayScreenEvent.OnSliderValueChange(
-                                    controlPadItem.itemIdentifier,
-                                    it
+                                    id = controlPadItem.itemIdentifier,
+                                    idLong = controlPadItem.id,
+                                    value = it
                                 )
                             )
                         }
