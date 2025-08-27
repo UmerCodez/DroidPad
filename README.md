@@ -241,6 +241,7 @@ You can test the connections with Websocket,TCP, UDP servers and BLE client prov
 1. A Tank controlled by an Arduino Uno R4 WiFi using the DroidPad App [https://github.com/Klixxy/ArduTank](https://github.com/Klixxy/ArduTank) by [Klixxy](https://github.com/Klixxy)
 2. 3D-printed hexapod with 6-DOF pose control, adaptive gait, and FPV video streaming. Controlled via a Python GUI (TCP/UDP) or the DroidPad Android app. Powered by XIAO ESP32-S3 Sense [https://github.com/Ozzi06/ESP_Hexapod](https://github.com/Ozzi06/ESP_Hexapod) by [Ozzi06](https://github.com/Ozzi06)
 3. Simple websocket server that allows you to use droidpad as a game controller [https://github.com/Tofixrs/droidpad-gamepad](https://github.com/Tofixrs/droidpad-gamepad) by [Tofixrs](https://github.com/Tofixrs)
+4. Parse structured data from Sockets Services for Vizzy, written to parse data sended by Droid Pad to control vehicles in Juno:New Origins with a mobile phone or tablet [https://github.com/FourthDing/DataProcessingHelper](https://github.com/FourthDing/DataProcessingHelper)
 
 
 
