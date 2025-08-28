@@ -228,7 +228,6 @@ For **Bluetooth** and **Bluetooth LE** : `GYROSCOPE,<x>,<y>,<z>`
 * `z`: Rate of rotation around the **z-axis** in **radians per second (rad/s)**.
 
 ---
-Here’s the paragraph rewritten in markdown for clarity:
 
 ## Sending JSON Messages to DroidPad
 
