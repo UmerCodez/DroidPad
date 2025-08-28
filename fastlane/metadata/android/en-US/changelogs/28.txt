@@ -1,0 +1,4 @@
+Fixed edge-to-edge display and applied navigation bar padding
+Fixed Bluetooth by appending a newline to sent data
+Added support for two-way communication for all connection types (except BLE)
+Breaking change: Included control type in CSV output
