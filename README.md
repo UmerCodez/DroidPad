@@ -228,6 +228,24 @@ For **Bluetooth** and **Bluetooth LE** : `GYROSCOPE,<x>,<y>,<z>`
 * `z`: Rate of rotation around the **z-axis** in **radians per second (rad/s)**.
 
 ---
+Here’s the paragraph rewritten in markdown for clarity:
+
+## Sending JSON Messages to DroidPad
+
+You can send JSON messages to DroidPad to update the UI. Currently, only **SWITCH** and **SLIDER** can be updated. All connection types are supported except for **BLE**.
+
+To update a **SWITCH** or a **SLIDER**, send a JSON object message similar to the ones specified in the [SWITCH](#switch) and [SLIDER](#slider) sections, with the desired value or state.
+
+For **Bluetooth Classic** and **TCP** connections, you must send each JSON message on a new line. This is because DroidPad reads the incoming stream line by line. Each JSON message should be on a single line, and multiple messages should be separated by a line feed (`\n`).
+
+For example:
+
+```
+{"id":"s1","type":"SLIDER","value":1.4}\n{"id":"s1","type":"SLIDER","value":1.5}\n{"id":"s1","type":"SLIDER","value":1.4}
+```
+
+For **MQTT**, **WebSocket**, and **UDP** connections, you can send formatted JSON without the one-line and line feed restrictions, as these are message-based protocols.
+
 
 ## Important Note for Bluetooth and Bluetooth Low Energy  
 A long Bluetooth device name can cause advertisement failure (In case of BLE). To avoid this issue, use a shorter name. In your device's Bluetooth settings, change the Bluetooth device name to five or fewer characters, such as `dev`.
