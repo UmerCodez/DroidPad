@@ -83,7 +83,7 @@ Toggling a switch generates the following JSON:
   "state": true
 }
 ```
-For **Bluetooth** and **Bluetooth LE** connections, toggling a switch generates a `CSV` message in the format: `<id>,<state>`.
+For **Bluetooth** and **Bluetooth LE** connections, toggling a switch generates a `CSV` message in the format: `<id>,SWITCH,<state>`.
 
 - The `state` field indicates whether the switch is **on** (`true`) or **off** (`false`).  
 
@@ -98,7 +98,7 @@ Pressing or releasing a button generates this JSON:
   "state": "PRESS"
 }
 ```
-For **Bluetooth** and **Bluetooth LE** connections, pressing or releasing a button generates a `CSV` message in the format: `<id>,<state>`.
+For **Bluetooth** and **Bluetooth LE** connections, pressing or releasing a button generates a `CSV` message in the format: `<id>,BUTTON,<state>`.
 
 - The `state` field can have following values:  
   - **"PRESS"**: When the button is being pressed (finger on the button).  
@@ -117,7 +117,7 @@ Pressing or releasing a button on DPAD generates this JSON:
   "state": "CLICK"
 }
 ```
-For **Bluetooth** and **Bluetooth LE** connections, pressing or releasing a button on DPAD generates a `CSV` message in the format: `<id>,<button>,<state>`.
+For **Bluetooth** and **Bluetooth LE** connections, pressing or releasing a button on DPAD generates a `CSV` message in the format: `<id>,DPAD,<button>,<state>`.
 
 - The `state` field can have following values:  
   - **"PRESS"**: When the button is being pressed (finger on the button).  
@@ -135,7 +135,7 @@ Rotating a steering wheel generates this JSON:
   "angle": 45.233445
 }
 ```
-For **Bluetooth** and **Bluetooth LE** connections the `CSV` is `<id>,<angle>`
+For **Bluetooth** and **Bluetooth LE** connections the `CSV` is `<id>,STEERING_WHEEL,<angle>`
 
  - where `angle` is rotation angle of the steering wheel in degrees
    - **Positive values** indicate clockwise rotation
@@ -155,7 +155,7 @@ Moving joystick handle generates this JSON:
   "y": -0.13367589
 }
 ```
-For **Bluetooth** and **Bluetooth LE** : `<id>,<x>,<y>`
+For **Bluetooth** and **Bluetooth LE** : `<id>,JOYSTICK,<x>,<y>`
 
 <img src="https://github.com/user-attachments/assets/fd3b1b14-d1c5-42d5-8813-f01745856191" width="150" height="150">
 
@@ -175,7 +175,7 @@ Dragging the slider thumb generates the following JSON:
   "value": 1.4
 }
 ```
-For **Bluetooth** and **Bluetooth LE** connections, dragging the slider thumb generates a `CSV` message in the format: `<id>,<value>`.
+For **Bluetooth** and **Bluetooth LE** connections, dragging the slider thumb generates a `CSV` message in the format: `<id>,SLIDER,<value>`.
 
 - The `value` field represents the current position of the slider.  
 - The value is always within the range of the minimum and maximum values specified during the slider's configuration.  
