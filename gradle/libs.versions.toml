@@ -1,5 +1,5 @@
 [versions]
-agp = "8.10.0"
+agp = "8.12.1"
 # Make sure that a KSP version aligned with project's Kotlin version
 # https://developer.android.com/build/migrate-to-ksp#add-ksp
 colorpickerCompose = "1.1.2"
