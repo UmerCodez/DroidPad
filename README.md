@@ -261,8 +261,9 @@ See Ardunio code template for CSV and JSON parsing [umer0586/DroidPad-Arduino-te
 1. A Tank controlled by an Arduino Uno R4 WiFi using the DroidPad App [https://github.com/Klixxy/ArduTank](https://github.com/Klixxy/ArduTank) by [Klixxy](https://github.com/Klixxy)
 2. 3D-printed hexapod with 6-DOF pose control, adaptive gait, and FPV video streaming. Controlled via a Python GUI (TCP/UDP) or the DroidPad Android app. Powered by XIAO ESP32-S3 Sense [https://github.com/Ozzi06/ESP_Hexapod](https://github.com/Ozzi06/ESP_Hexapod) by [Ozzi06](https://github.com/Ozzi06)
 3. Simple websocket server that allows you to use droidpad as a game controller [https://github.com/Tofixrs/droidpad-gamepad](https://github.com/Tofixrs/droidpad-gamepad) by [Tofixrs](https://github.com/Tofixrs)
-4. Parse structured data from Sockets Services for Vizzy, written to parse data sended by Droid Pad to control vehicles in Juno:New Origins with a mobile phone or tablet [https://github.com/FourthDing/DataProcessingHelper](https://github.com/FourthDing/DataProcessingHelper)
-5. [droidpad.py](https://github.com/mlimonv12/MISE/blob/main/sw/MaqueenLib_proj/droidpad.py) is a Python script that serves as a network bridge between an Android device running DroidPad and the Maqueen robot. It receives commands from DroidPad and translates them into Maqueen’s actions, such as movement, LED control, and buzzer activation.
+4.  A simple server for DroidPad, that can convert DroidPad messages into actual input events on your PC. It can be used alongside DroidPad, to emulate joysticks/keyboards/mouses, and is scriptable using Janet. [https://github.com/agent-kilo/jumper](https://github.com/agent-kilo/jumper)
+5. Parse structured data from Sockets Services for Vizzy, written to parse data sended by Droid Pad to control vehicles in Juno:New Origins with a mobile phone or tablet [https://github.com/FourthDing/DataProcessingHelper](https://github.com/FourthDing/DataProcessingHelper)
+6. [droidpad.py](https://github.com/mlimonv12/MISE/blob/main/sw/MaqueenLib_proj/droidpad.py) is a Python script that serves as a network bridge between an Android device running DroidPad and the Maqueen robot. It receives commands from DroidPad and translates them into Maqueen’s actions, such as movement, LED control, and buzzer activation.
 
 
 
