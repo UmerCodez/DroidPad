@@ -72,6 +72,3 @@ jobs:
           name: ${{ github.event.inputs.tag_name }}
           prerelease: false
           bodyFile: changelog.txt
-          draft: true
-          name: ${{ github.event.inputs.tag_name }}
-          prerelease: false
