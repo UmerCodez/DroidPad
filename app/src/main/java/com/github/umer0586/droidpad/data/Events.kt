@@ -2,6 +2,7 @@ package com.github.umer0586.droidpad.data
 
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
+import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -95,4 +96,17 @@ data class SteeringWheelEvent(
         return JsonCon.encodeToString(this)
     }
     fun toCSV() = "$id,STEERING_WHEEL,$angle"
+}
+
+@Serializable
+data class LedEvent(
+    val id: String,
+    val type: ItemType = ItemType.LED,
+    val state: LEDSTATE
+){
+    companion object {
+        fun fromJson(json: String): LedEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
 }

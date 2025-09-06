@@ -28,6 +28,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ButtonEvent
 import com.github.umer0586.droidpad.data.DPadEvent
 import com.github.umer0586.droidpad.data.JoyStickEvent
+import com.github.umer0586.droidpad.data.LedEvent
 import com.github.umer0586.droidpad.data.SliderEvent
 import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelEvent
@@ -54,6 +55,7 @@ import com.github.umer0586.droidpad.data.sensor.SensorEventProvider
 import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtil
 import com.github.umer0586.droidpad.data.util.vibrator.VibratorUtil
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
+import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,6 +74,7 @@ data class ControlPadPlayScreenState(
     val connectionState: ConnectionState = ConnectionState.NONE,
     val switchStates: SnapshotStateMap<Long,Boolean> = mutableStateMapOf(),
     val sliderStates: SnapshotStateMap<Long,Float> = mutableStateMapOf(),
+    val ledStates: SnapshotStateMap<Long, LEDSTATE> = mutableStateMapOf(),
     val connectionType: ConnectionType = ConnectionType.TCP,
     val isConnecting: Boolean = false,
     val isConnected: Boolean = false,
@@ -171,6 +174,11 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             controlPadRepository.getControlPadItemsOf(controlPad)
                 .filter { it.itemType == ItemType.SWITCH }.forEach { switch ->
                 uiState.value.switchStates[switch.id] = false
+            }
+
+            controlPadRepository.getControlPadItemsOf(controlPad)
+                .filter { it.itemType == ItemType.LED }.forEach { led ->
+                uiState.value.ledStates[led.id] = LEDSTATE.OFF
             }
 
             controlPadRepository.getControlPadItemsOf(controlPad)
@@ -477,6 +485,15 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 }?.also { sliderItem ->
                                     val sliderProperties = SliderProperties.fromJson(sliderItem.properties)
                                     uiState.value.sliderStates[sliderItem.id] = sliderEvent.value.coerceIn(sliderProperties.minValue, sliderProperties.maxValue)
+                                }
+                        }
+                        else if("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "LED"){
+                            val ledEvent = LedEvent.fromJson(jsonString)
+                            controlPadItems.filter { it.itemType == ItemType.LED }
+                                .find { ledItem ->
+                                    ledItem.itemIdentifier == ledEvent.id
+                                }?.also { ledItem ->
+                                    uiState.value.ledStates[ledItem.id] = ledEvent.state
                                 }
                         }
                     } catch (e: Exception) {

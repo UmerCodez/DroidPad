@@ -78,6 +78,7 @@ import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
+import com.github.umer0586.droidpad.data.LEDProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelProperties
@@ -94,11 +95,13 @@ import com.github.umer0586.droidpad.ui.bottomBarHeight
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
+import com.github.umer0586.droidpad.ui.components.ControlPadLED
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSteeringWheel
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
+import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.github.umer0586.droidpad.ui.utils.LockScreenOrientation
 import kotlinx.coroutines.launch
@@ -436,6 +439,17 @@ fun ControlPlayScreenContent(
                         onRotate = {
                             onUiEvent(ControlPadPlayScreenEvent.OnSteeringWheelRotate(id = controlPadItem.itemIdentifier, angle = it))
                         }
+                    )
+                }
+
+                else if(controlPadItem.itemType == ItemType.LED){
+                    ControlPadLED(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        state = uiState.ledStates[controlPadItem.id] ?: LEDSTATE.OFF,
+                        showActionExpander = false,
+                        properties = LEDProperties.fromJson(controlPadItem.properties),
                     )
                 }
 

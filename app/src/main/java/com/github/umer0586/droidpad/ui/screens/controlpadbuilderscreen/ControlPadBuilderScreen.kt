@@ -83,6 +83,7 @@ import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.JoyStickProperties
+import com.github.umer0586.droidpad.data.LEDProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.Resolution
 import com.github.umer0586.droidpad.data.SliderProperties
@@ -98,11 +99,13 @@ import com.github.umer0586.droidpad.ui.bottomBarHeight
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
+import com.github.umer0586.droidpad.ui.components.ControlPadLED
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSteeringWheel
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
+import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import com.github.umer0586.droidpad.ui.components.propertieseditor.ItemPropertiesEditorSheet
 import com.github.umer0586.droidpad.ui.components.rotateBy
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
@@ -541,6 +544,35 @@ fun ControlPadBuilderScreenContent(
                     )
                 }
 
+                else if(controlPadItem.itemType == ItemType.LED && uiState.transformableStatesMap[controlPadItem.id] != null){
+
+                    ControlPadLED(
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        properties = LEDProperties.fromJson(controlPadItem.properties),
+                        state = LEDSTATE.OFF,
+                        onDeleteClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnEditItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        }
+
+                    )
+                }
+
 
 
 
@@ -588,6 +620,10 @@ fun ControlPadBuilderScreenContent(
                                 ItemType.STEERING_WHEEL -> SteeringWheelProperties(
                                     color = primary.value
                                 ).toJson()
+                                ItemType.LED -> LEDProperties(
+                                    color = primary.value
+                                ).toJson()
+
                             }
 
                             onUiEvent(
@@ -661,6 +697,7 @@ private fun ItemSelectionBottomSheetContent(
                             ItemType.STEP_SLIDER -> R.drawable.ic_slider
                             ItemType.LABEL -> R.drawable.ic_label
                             ItemType.BUTTON -> R.drawable.ic_button_circle
+                            ItemType.LED -> R.drawable.ic_light
                         }
                     ),
                     contentDescription = item.name,

@@ -190,6 +190,16 @@ fun ItemPropertiesEditorSheet(
                     )
                 }
             )
+
+        } else if(controlPadItem.itemType == ItemType.LED){
+            LEDPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onLEDPropertiesChange = { ledProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = ledProperties.toJson()
+                    )
+                }
+            )
         }
 
 

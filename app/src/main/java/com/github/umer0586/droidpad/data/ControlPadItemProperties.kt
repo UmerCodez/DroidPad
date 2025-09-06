@@ -154,6 +154,16 @@ data class SteeringWheelProperties(
     }
 }
 
+@Serializable
+data class LEDProperties(
+    val color: ULong = Color(0xFFDBC66E).value
+){
+    fun toJson() = JsonCon.encodeToString(this)
+    companion object {
+        fun fromJson(json: String) = JsonCon.decodeFromString<LEDProperties>(json)
+    }
+}
+
 
 private val idToIconMap = mapOf(
     0 to R.drawable.ic_power,
