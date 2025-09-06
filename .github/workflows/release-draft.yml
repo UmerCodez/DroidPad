@@ -55,7 +55,12 @@ jobs:
         id: release_notes
         run: |
           git fetch --tags
-          git log $(git describe --tags --abbrev=0 2>/dev/null || echo --root)..HEAD --pretty=format:"%s %h" > changelog.txt          
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            git log --pretty=format:"%s %h" > changelog.txt
+          else
+            git log ${LAST_TAG}..HEAD --pretty=format:"%s %h" > changelog.txt
+          fi          
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
