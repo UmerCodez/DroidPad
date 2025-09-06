@@ -11,6 +11,9 @@ on:
         description: 'Tag Name'
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   build-release:
     runs-on: ubuntu-latest
