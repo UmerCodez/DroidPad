@@ -1,4 +1,4 @@
-name: Manual Release APK
+name: APK Release Draft
 
 on:
   workflow_dispatch:
