@@ -42,7 +42,7 @@ fun ControlPadLabel(
     scale: Float = 1f,
     transformableState: TransformableState? = null,
     properties: LabelProperties = LabelProperties(),
-    showActionExpander: Boolean = true,
+    showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
 ){
@@ -53,7 +53,7 @@ fun ControlPadLabel(
         rotation = rotation,
         scale = scale,
         transformableState = transformableState,
-        showActionExpander = showActionExpander,
+        showControls = showControls,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
     ){
@@ -76,7 +76,7 @@ private fun ControlPadLabelItemPreview(){
                 offset = Offset.Zero,
                 rotation = 0f,
                 scale = 1f,
-                showActionExpander = true,
+                showControls = true,
             )
         }
     }

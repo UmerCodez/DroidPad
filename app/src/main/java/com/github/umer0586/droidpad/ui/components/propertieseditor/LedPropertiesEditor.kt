@@ -44,7 +44,7 @@ fun LEDPropertiesEditor(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ControlPadLED(
-            showActionExpander = false,
+            showControls = false,
             properties = ledProperties,
         )
 

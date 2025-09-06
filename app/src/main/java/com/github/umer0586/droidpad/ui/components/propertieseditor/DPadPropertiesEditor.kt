@@ -75,7 +75,7 @@ fun DPadPropertiesEditor(
             offset = Offset.Zero,
             scale = 1f,
             rotation = 0f,
-            showActionExpander = false,
+            showControls = false,
             properties = dPadProperties,
         )
 

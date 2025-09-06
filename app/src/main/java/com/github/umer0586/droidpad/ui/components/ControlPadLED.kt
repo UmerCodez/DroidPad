@@ -29,7 +29,7 @@ fun ControlPadLED(
     properties: LEDProperties = LEDProperties(),
     state: LEDSTATE = LEDSTATE.OFF,
     transformableState: TransformableState? = null,
-    showActionExpander: Boolean = true,
+    showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
 ) {
@@ -39,7 +39,7 @@ fun ControlPadLED(
         offset = offset,
         rotation = rotation,
         scale = scale,
-        showActionExpander = showActionExpander,
+        showControls = showControls,
         transformableState = transformableState,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
@@ -79,7 +79,7 @@ fun ControlPadLED(
 fun ControlPadLEDPreview() {
     DroidPadTheme {
         ControlPadLED(
-            showActionExpander = false,
+            showControls = false,
             state = LEDSTATE.BLINK,
         )
     }

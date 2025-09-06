@@ -69,7 +69,7 @@ fun SteeringWheelPropertiesEditor(
         ControlPadSteeringWheel(
             modifier = Modifier.size(150.dp),
             properties = steeringWheelProperties,
-            showActionExpander = false,
+            showControls = false,
             enabled = false
         )
 

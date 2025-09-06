@@ -39,7 +39,7 @@ fun ControlPadDpad(
     properties: DpadProperties = DpadProperties(),
     enabled: Boolean = true,
     transformableState: TransformableState? = null,
-    showActionExpander: Boolean = true,
+    showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     onClick: ((DPAD_BUTTON) -> Unit)? = null,
@@ -53,7 +53,7 @@ fun ControlPadDpad(
         rotation = rotation,
         scale = scale,
         transformableState = transformableState,
-        showActionExpander = showActionExpander,
+        showControls = showControls,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ) {

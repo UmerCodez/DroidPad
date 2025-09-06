@@ -39,7 +39,7 @@ fun ControlPadJoyStick(
     properties: JoyStickProperties = JoyStickProperties(),
     enabled: Boolean = true,
     transformableState: TransformableState? = null,
-    showActionExpander: Boolean = true,
+    showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     onMove: ((Float, Float) -> Unit)? = null
@@ -52,7 +52,7 @@ fun ControlPadJoyStick(
         rotation = rotation,
         scale = scale,
         transformableState = transformableState,
-        showActionExpander = showActionExpander,
+        showControls = showControls,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ){
@@ -84,7 +84,7 @@ private fun ControlPadJoyStickPreview() {
             offset = Offset.Zero,
             rotation = 0f,
             scale = 1f,
-            showActionExpander = true
+            showControls = true
         )
     }
 }

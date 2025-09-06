@@ -67,7 +67,7 @@ fun ControlPadButton(
     properties: ButtonProperties = ButtonProperties(),
     enabled: Boolean = true,
     transformableState: TransformableState? = null,
-    showActionExpander: Boolean = true,
+    showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     onPressed: (() -> Unit)? = null,
@@ -81,7 +81,7 @@ fun ControlPadButton(
         rotation = rotation,
         scale = scale,
         transformableState = transformableState,
-        showActionExpander = showActionExpander,
+        showControls = showControls,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ) {

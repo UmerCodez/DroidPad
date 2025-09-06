@@ -98,7 +98,7 @@ fun StepSliderPropertiesEditor(
             offset = Offset.Zero,
             scale = 1f,
             rotation = 0f,
-            showActionExpander = false,
+            showControls = false,
             value = 5f,
             properties = stepSliderProperties.copy(minValue = 0f, maxValue = 10f),
         )
