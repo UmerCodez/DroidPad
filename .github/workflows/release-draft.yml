@@ -51,6 +51,12 @@ jobs:
           mv app/build/outputs/apk/release/app-release.apk "${{ github.event.inputs.app_name }}-${{ github.event.inputs.tag_name }}.apk"
           echo "renamed_apk=${{ github.event.inputs.app_name }}-${{ github.event.inputs.tag_name }}.apk" >> $GITHUB_ENV
 
+      - name: Get commit messages since last tag
+        id: release_notes
+        run: |
+          git fetch --tags
+          git log $(git describe --tags --abbrev=0 2>/dev/null || echo --root)..HEAD --pretty=format:"%s %h" > changelog.txt          
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -62,6 +68,10 @@ jobs:
         with:
           artifacts: ${{ env.renamed_apk }}
           tag: ${{ github.event.inputs.tag_name }}
+          draft: true
+          name: ${{ github.event.inputs.tag_name }}
+          prerelease: false
+          bodyFile: changelog.txt
           draft: true
           name: ${{ github.event.inputs.tag_name }}
           prerelease: false
