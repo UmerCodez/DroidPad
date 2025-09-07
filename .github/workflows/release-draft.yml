@@ -51,8 +51,10 @@ jobs:
           mv app/build/outputs/apk/release/app-release.apk "${{ github.event.inputs.app_name }}-${{ github.event.inputs.tag_name }}.apk"
           echo "renamed_apk=${{ github.event.inputs.app_name }}-${{ github.event.inputs.tag_name }}.apk" >> $GITHUB_ENV
 
+      # It uses `continue-on-error: true` so the job won't fail if it breaks
       - name: Get commit messages since last tag
         id: release_notes
+        continue-on-error: true
         run: |
           git fetch --tags
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
@@ -60,7 +62,14 @@ jobs:
             git log --pretty=format:"%s %h" > changelog.txt
           else
             git log ${LAST_TAG}..HEAD --pretty=format:"%s %h" > changelog.txt
-          fi          
+          fi
+          
+
+      # If previous step failed
+      - name: Ensure changelog.txt exists
+        if: failure() || !exists('changelog.txt')
+        run: echo "unable to find commits from last tag" > changelog.txt
+
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
