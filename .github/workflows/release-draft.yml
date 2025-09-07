@@ -67,7 +67,7 @@ jobs:
 
       # If previous step failed
       - name: Ensure changelog.txt exists
-        if: failure() || !exists('changelog.txt')
+        if: failure()
         run: echo "unable to find commits from last tag" > changelog.txt
 
 
