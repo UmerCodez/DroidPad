@@ -26,6 +26,10 @@ Easily configure your control pad to support network protocols such as **Bluetoo
 
 3. **Switch Connection Type Anytime**  
    You can change the connection type of a control pad at any time without creating a duplicate for a different connection.
+
+4. **Update UI From your Script**  
+   You can change the state of SWITCH,SLIDER and LED from your script    
+   
    
 ## Supported Components
 1. Switch
@@ -34,7 +38,8 @@ Easily configure your control pad to support network protocols such as **Bluetoo
 4. DPAD
 5. Joystick
 6. Steering Wheel
-7. Accelerometer and Gyroscope (If supported by the device)
+7. LED
+8. Accelerometer and Gyroscope (If supported by the device)
 
 ## How It Works (4 steps) 
 
@@ -182,6 +187,22 @@ For **Bluetooth** and **Bluetooth LE** connections, dragging the slider thumb ge
 
 ---
 
+### **LED**
+To update the LED, send the following JSON message to the app:
+```json
+{
+  "id": "the id you specified",
+  "type": "LED",
+  "state": "ON"
+}
+```
+- `state` accepts the following values:
+
+  - `"ON"` – Turns the LED on
+  - `"OFF"` – Turns the LED off
+  - `"BLINK"` – Makes the LED blink
+
+  
 ## Sensor Readings
 
 ![image](https://github.com/user-attachments/assets/eeb83142-342e-4cfb-974e-4fd45563dd1d)
@@ -231,9 +252,13 @@ For **Bluetooth** and **Bluetooth LE** : `GYROSCOPE,<x>,<y>,<z>`
 
 ## Sending JSON Messages to DroidPad
 
-You can send JSON messages to DroidPad to update the UI. Currently, only **SWITCH** and **SLIDER** can be updated. All connection types are supported except for **BLE**.
+You can send JSON messages to DroidPad to update the UI. All connection types are supported except for **BLE**. You can update following component
 
-To update a **SWITCH** or a **SLIDER**, send a JSON object message similar to the ones specified in the [SWITCH](#switch) and [SLIDER](#slider) sections, with the desired value or state.
+- SWITCH
+- SLIDER
+- LED
+
+To update a **SWITCH**, **SLIDER** or **LED** send a JSON object message similar to the ones specified in the [SWITCH](#switch), [SLIDER](#slider) and [LED](#led) sections, with the desired value or state.
 
 For **Bluetooth Classic** and **TCP** connections, you must send each JSON message on a new line. This is because DroidPad reads the incoming stream line by line. Each JSON message should be on a single line, and multiple messages should be separated by a line feed (`\n`).
 
@@ -243,7 +268,7 @@ For example:
 {"id":"s1","type":"SLIDER","value":1.4}\n{"id":"s1","type":"SLIDER","value":1.5}\n{"id":"s1","type":"SLIDER","value":1.4}
 ```
 
-For **MQTT**, **WebSocket**, and **UDP** connections, you can send formatted JSON without the one-line and line feed restrictions, as these are message-based protocols.
+For **MQTT**, **WebSocket**, and **UDP** connections, you can send formatted JSON without the one-line and line feed restrictions, as these are message-based protocols. For **MQTT** you have to publish to `DroidPad/feed` topic
 
 
 ## Important Note for Bluetooth and Bluetooth Low Energy  
