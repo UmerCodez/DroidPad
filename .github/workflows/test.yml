@@ -10,6 +10,7 @@ on:
       - 'fastlane/**'
       - /.github/workflows/build.yml
       - /.github/workflows/test.yml
+      - /.github/workflows/release-draft.yml
   pull_request:
     branches: [ "main" ]
     paths-ignore:
