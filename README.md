@@ -39,7 +39,8 @@ Easily configure your control pad to support network protocols such as **Bluetoo
 5. Joystick
 6. Steering Wheel
 7. LED
-8. Accelerometer and Gyroscope (If supported by the device)
+8. LOG
+9. Accelerometer and Gyroscope (If supported by the device)
 
 ## How It Works (4 steps) 
 
@@ -201,7 +202,24 @@ To update the LED, send the following JSON message to the app:
   - `"ON"` – Turns the LED on
   - `"OFF"` – Turns the LED off
   - `"BLINK"` – Makes the LED blink
+ 
+---
 
+### **LOG**
+
+Each control pad includes an associated log terminal that displays logs sent from your script.  
+When you click the **list icon** on the control pad, a bottom sheet will appear showing these logs.
+
+To send a log message from your script, use the following JSON payload:
+
+```json
+{
+  "type": "LOG",
+  "message": "hello world"
+}
+```
+
+---
   
 ## Sensor Readings
 
