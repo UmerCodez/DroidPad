@@ -32,7 +32,7 @@ import com.github.umer0586.droidpad.data.database.entities.ControlPadSensor
 
 @Database(
     entities = [ControlPadItem::class, ControlPad::class, ConnectionConfig::class, ControlPadSensor::class],
-    version = 5)
+    version = 6)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun controlPadItemDao(): ControlPadItemDao
     abstract fun controlPadDao(): ControlPadDao

@@ -38,7 +38,8 @@ data class ControlPad(
     val orientation : Orientation,
     val backgroundColor : Long = Color(0xFF3C3C3E).value.toLong(),
     val width: Int = 0,
-    val height: Int = 0
+    val height: Int = 0,
+    val logging: Boolean = false
 )
 
 fun ControlPad.toJson() = Json.encodeToString(this)

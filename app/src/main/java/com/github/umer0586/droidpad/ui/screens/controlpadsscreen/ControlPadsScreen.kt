@@ -74,6 +74,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -90,6 +91,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -424,6 +426,9 @@ fun ControlPadsScreenContent(
                         },
                         onAttachSensorsClick = {
                             onUiEvent(ControlPadsScreenEvent.OnAttachSensorsClick(it))
+                        },
+                        onLoggingChange = { controlPad, logging ->
+                            onUiEvent(ControlPadsScreenEvent.OnLoggingChange(controlPad.copy(logging = logging)))
                         }
 
                     )
@@ -448,6 +453,7 @@ private fun ItemCard(
     onQRCodeClick: ((ControlPad) -> Unit)? = null,
     onExportJsonClick: ((ControlPad) -> Unit)? = null,
     onAttachSensorsClick: ((ControlPad) -> Unit)? = null,
+    onLoggingChange: ((ControlPad, Boolean) -> Unit)? = null,
 
     ){
     Card(
@@ -538,6 +544,26 @@ private fun ItemCard(
                         onClick = {
                             onAttachSensorsClick?.invoke(controlPad)
                             expanded = false
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = {Text("Logging")},
+                        onClick = {
+                            expanded = false
+                        },
+                        trailingIcon = {
+                            Switch(
+                                modifier = Modifier.graphicsLayer{
+                                    scaleX = 0.6f
+                                    scaleY = 0.6f
+                                },
+                                checked = controlPad.logging,
+                                onCheckedChange = {
+                                    onLoggingChange?.invoke(controlPad, it)
+
+                                }
+                            )
                         }
                     )
 

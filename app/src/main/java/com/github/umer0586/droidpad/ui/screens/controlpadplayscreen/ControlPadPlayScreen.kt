@@ -35,9 +35,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
@@ -52,6 +58,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -59,16 +66,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -80,6 +91,7 @@ import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LEDProperties
 import com.github.umer0586.droidpad.data.LabelProperties
+import com.github.umer0586.droidpad.data.LogEvent
 import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelProperties
 import com.github.umer0586.droidpad.data.StepSliderProperties
@@ -128,6 +140,7 @@ fun ControlPadPlayScreen(
 
 
     ControlPlayScreenContent(
+        controlPad = controlPad,
         uiState = uiState,
         onUiEvent = {event->
             viewModel.onEvent(event)
@@ -142,12 +155,14 @@ fun ControlPadPlayScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ControlPlayScreenContent(
+    controlPad: ControlPad,
     uiState: ControlPadPlayScreenState,
     onUiEvent: (ControlPadPlayScreenEvent) -> Unit,
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var showLog by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(key1 = uiState.connectionState) {
@@ -198,6 +213,21 @@ fun ControlPlayScreenContent(
                         .padding(10.dp)
                         .clip(shape = RoundedCornerShape(50.dp))
                 ) {
+
+                    if(controlPad.logging) {
+
+                        IconButton(
+                            onClick = {
+                                showLog = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.List,
+                                contentDescription = "LogIcon",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
 
                     if (!uiState.isConnected && uiState.connectionType != ConnectionType.UDP ) {
                         IconButton(
@@ -530,7 +560,103 @@ fun ControlPlayScreenContent(
     }
 
 
+    if(showLog){
+        ModalBottomSheet(
+            onDismissRequest = { showLog = false },
+            sheetState = rememberModalBottomSheetState(
+                skipPartiallyExpanded = true
+            )
+        ) {
+            Log(
+                logState = uiState.logState,
+            )
+        }
+
+    }
+
+
 }
+
+@Composable
+private fun Log(
+    modifier: Modifier = Modifier,
+    logState: List<LogEvent>,
+) {
+
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        state = listState
+    ) {
+
+        item {
+            if(logState.isEmpty()){
+                Text(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "No Log Entries"
+                )
+            }
+        }
+
+        items(items = logState){ logEvent ->
+
+            Row(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .padding(5.dp),
+                    text = logEvent.timestamp,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+
+                Text(
+                    modifier = Modifier.padding(5.dp),
+                    text = logEvent.message,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(logState.size) {
+        if (logState.isNotEmpty()) {
+            listState.scrollToItem(logState.lastIndex)
+        }
+    }
+
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+private fun LogPreview() {
+    DroidPadTheme {
+        Surface {
+            Log(
+                logState = listOf(
+                    LogEvent(timestamp = "10:10:10", message = "message 1"),
+                    LogEvent(timestamp = "10:10:11", message = "message 2"),
+                    LogEvent(timestamp = "10:10:12", message = "message 3 message 3 \n message 3 "),
+                    LogEvent(timestamp = "10:10:13", message = "message 4"),
+                )
+            )
+        }
+    }
+}
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -566,6 +692,7 @@ fun ControlPadPlayScreenContentPreview(modifier: Modifier = Modifier) {
         controlPadItems = controlPadItems,
         connectionState = ConnectionState.WEBSOCKET_CONNECTED,
         connectionType = ConnectionType.WEBSOCKET,
+            logState = mutableStateListOf(LogEvent(message = "hello")),
         isConnecting = false,
         isConnected = true,
         hostAddress = "org.mosquitto.org:80807",
@@ -585,9 +712,15 @@ fun ControlPadPlayScreenContentPreview(modifier: Modifier = Modifier) {
 
     DroidPadTheme {
         ControlPlayScreenContent(
+            controlPad = ControlPad(
+                id = 100,
+                name = "myController",
+                orientation = Orientation.LANDSCAPE,
+                logging = true
+            ),
             uiState = uiState,
             onUiEvent = {}
-
         )
     }
 }
+

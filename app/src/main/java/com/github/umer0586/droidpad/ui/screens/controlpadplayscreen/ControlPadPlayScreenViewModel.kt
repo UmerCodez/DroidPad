@@ -20,7 +20,9 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -29,6 +31,7 @@ import com.github.umer0586.droidpad.data.ButtonEvent
 import com.github.umer0586.droidpad.data.DPadEvent
 import com.github.umer0586.droidpad.data.JoyStickEvent
 import com.github.umer0586.droidpad.data.LedEvent
+import com.github.umer0586.droidpad.data.LogEvent
 import com.github.umer0586.droidpad.data.SliderEvent
 import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelEvent
@@ -66,6 +69,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
 
 
@@ -75,6 +80,7 @@ data class ControlPadPlayScreenState(
     val switchStates: SnapshotStateMap<Long,Boolean> = mutableStateMapOf(),
     val sliderStates: SnapshotStateMap<Long,Float> = mutableStateMapOf(),
     val ledStates: SnapshotStateMap<Long, LEDSTATE> = mutableStateMapOf(),
+    val logState: SnapshotStateList<LogEvent> = mutableStateListOf(),
     val connectionType: ConnectionType = ConnectionType.TCP,
     val isConnecting: Boolean = false,
     val isConnected: Boolean = false,
@@ -181,6 +187,8 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 uiState.value.ledStates[led.id] = LEDSTATE.OFF
             }
 
+            uiState.value.logState.clear()
+
             controlPadRepository.getControlPadItemsOf(controlPad)
                 .filter { it.itemType == ItemType.SLIDER }.forEach { slider ->
                     val sliderProperties = SliderProperties.fromJson(slider.properties)
@@ -194,7 +202,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                     if(connection?.connectionType == ConnectionType.UDP)
                         connection?.setup()
 
-                    handleIncomingData(controlPadItems)
+                    handleIncomingData(controlPad, controlPadItems)
 
                     _uiState.update {
                         it.copy(
@@ -453,7 +461,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
         Log.d(tag, "onCleared: ${hashCode()}")
     }
 
-    private fun handleIncomingData(controlPadItems: List<ControlPadItem>){
+    private fun handleIncomingData(controlPad: ControlPad, controlPadItems: List<ControlPadItem>){
         viewModelScope.launch {
             connection?.receivedData?.collect{ jsonString ->
 
@@ -496,6 +504,15 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                     uiState.value.ledStates[ledItem.id] = ledEvent.state
                                 }
                         }
+                        else if(controlPad.logging || "type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "LOG"){
+
+                            val timestamp = SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(Date())
+                            val logEvent = LogEvent.fromJson(jsonString).copy(timestamp = timestamp)
+
+                            uiState.value.logState.add(logEvent)
+                        }
+
+
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

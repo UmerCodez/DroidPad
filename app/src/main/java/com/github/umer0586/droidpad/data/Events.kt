@@ -4,6 +4,7 @@ import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.ui.components.DPAD_BUTTON
 import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 
 
@@ -106,6 +107,19 @@ data class LedEvent(
 ){
     companion object {
         fun fromJson(json: String): LedEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
+}
+
+@Serializable
+data class LogEvent(
+    @Transient val timestamp: String = "",
+    val type: String = "LOG",
+    val message: String
+){
+    companion object {
+        fun fromJson(json: String): LogEvent {
             return JsonCon.decodeFromString(json)
         }
     }

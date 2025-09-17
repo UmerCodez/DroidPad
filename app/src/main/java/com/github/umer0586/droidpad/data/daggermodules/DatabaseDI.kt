@@ -23,6 +23,7 @@ import android.content.Context
 import androidx.room.Room
 import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.data.database.MIGRATION_4_TO_5
+import com.github.umer0586.droidpad.data.database.MIGRATION_5_TO_6
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +44,7 @@ object DatabaseDI {
             "droid-pad-database"
         )
             .addMigrations(MIGRATION_4_TO_5)
+            .addMigrations(MIGRATION_5_TO_6)
             .build()
     }
 
