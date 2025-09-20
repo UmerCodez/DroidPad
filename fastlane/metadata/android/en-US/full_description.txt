@@ -9,4 +9,4 @@ Create custom control interfaces easily with a simple drag-and-drop and transfor
     - For <b>WebSocket, MQTT, TCP, UDP and Bluetooth</b>, the app acts as a client, connecting to servers and enabling real-time interaction through control pad components.
     - For <b>Bluetooth Low Energy (BLE)</b>, the app acts as a <b>peripheral (GATT server)</b>, notifying interactions such as button presses, slider changes, and switch toggles via BLE notifications.  
 
-For complete guidance please visit https://github.com/umer0586/DroidPad
+For complete guidance please visit https://github.com/UmerCodez/DroidPad
