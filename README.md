@@ -28,7 +28,7 @@ Easily configure your control pad to support network protocols such as **Bluetoo
    You can change the connection type of a control pad at any time without creating a duplicate for a different connection.
 
 4. **Update UI From your Script**  
-   You can change the state of SWITCH,SLIDER and LED from your script    
+   You can change the state of SWITCH,SLIDER,LED and GAUGE from your script    
    
    
 ## Supported Components
@@ -39,8 +39,9 @@ Easily configure your control pad to support network protocols such as **Bluetoo
 5. Joystick
 6. Steering Wheel
 7. LED
-8. LOG
-9. Accelerometer and Gyroscope (If supported by the device)
+8. GAUGE
+9. LOG
+10. Accelerometer and Gyroscope (If supported by the device)
 
 ## How It Works (4 steps) 
 
@@ -207,6 +208,19 @@ To update the LED, send the following JSON message to the app:
  
 ---
 
+### **GAUGE**
+To update the Gauge, send the following JSON message to the app::
+```json
+{
+  "id": "the id you specified",
+  "type": "GAUGE",
+  "value": 120
+}
+```
+- `value` is a number input used to update the gauge reading (such as speed, temperature, or progress).
+  
+---
+
 ### **LOG**
 
 Each control pad includes an associated log terminal that displays logs sent from your script.  
@@ -278,7 +292,7 @@ You can send JSON messages to DroidPad to update the UI. All connection types ar
 - SLIDER
 - LED
 
-To update a **SWITCH**, **SLIDER** or **LED** send a JSON object message similar to the ones specified in the [SWITCH](#switch), [SLIDER](#slider) and [LED](#led) sections, with the desired value or state.
+To update a **SWITCH**, **SLIDER**, **LED**, or **GAUGE** send a JSON object message similar to the ones specified in the [SWITCH](#switch), [SLIDER](#slider), [LED](#led), [GAUGE](#gauge) sections, with the desired value or state.
 
 For **Bluetooth Classic** and **TCP** connections, you must send each JSON message on a new line. This is because DroidPad reads the incoming stream line by line. Each JSON message should be on a single line, and multiple messages should be separated by a line feed (`\n`).
 
