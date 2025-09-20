@@ -1,5 +1,5 @@
 /*
- *     This file is a part of DroidPad (https://www.github.com/umer0586/DroidPad)
+ *     This file is a part of DroidPad (https://www.github.com/UmerCodez/DroidPad)
  *     Copyright (C) 2025 Umer Farooq (umerfarooq2383@gmail.com)
  *
  *     DroidPad is free software: you can redistribute it and/or modify
@@ -157,7 +157,7 @@ fun ControlPadsScreen(
                 is ControlPadsScreenEvent.OnShareClick -> {
                     val intent = Intent(Intent.ACTION_VIEW)
                     if(intent.resolveActivity(context.packageManager) != null){
-                        intent.data = Uri.parse("https://www.github.com/umer0586/DroidPad")
+                        intent.data = Uri.parse("https://www.github.com/UmerCodez/DroidPad")
                         context.startActivity(Intent.createChooser(intent,"Select Browser"))
                     } else {
                         Toast.makeText(context,"No browser found", Toast.LENGTH_SHORT).show()

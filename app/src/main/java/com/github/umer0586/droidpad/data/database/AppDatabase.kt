@@ -1,5 +1,5 @@
 /*
- *     This file is a part of DroidPad (https://www.github.com/umer0586/DroidPad)
+ *     This file is a part of DroidPad (https://www.github.com/UmerCodez/DroidPad)
  *     Copyright (C) 2024 Umer Farooq (umerfarooq2383@gmail.com)
  *
  *     DroidPad is free software: you can redistribute it and/or modify
