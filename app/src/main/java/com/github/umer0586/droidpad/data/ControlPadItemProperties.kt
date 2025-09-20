@@ -165,16 +165,6 @@ data class LEDProperties(
 }
 
 @Serializable
-data class LogProperties(
-    val color: ULong = Color(0xFFDBC66E).value
-){
-    fun toJson() = JsonCon.encodeToString(this)
-    companion object {
-        fun fromJson(json: String) = JsonCon.decodeFromString<LogProperties>(json)
-    }
-}
-
-@Serializable
 data class GaugeProperties(
     val color: ULong = Color(0xFFDBC66E).value,
     val minValue: Float = 0f,
