@@ -174,6 +174,20 @@ data class LogProperties(
     }
 }
 
+@Serializable
+data class GaugeProperties(
+    val color: ULong = Color(0xFFDBC66E).value,
+    val minValue: Float = 0f,
+    val maxValue: Float = 100f,
+    val unit: String = "m/s",
+    val needle: Boolean = true
+){
+    fun toJson() = JsonCon.encodeToString(this)
+    companion object {
+        fun fromJson(json: String) = JsonCon.decodeFromString<GaugeProperties>(json)
+    }
+}
+
 
 private val idToIconMap = mapOf(
     0 to R.drawable.ic_power,

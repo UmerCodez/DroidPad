@@ -124,3 +124,16 @@ data class LogEvent(
         }
     }
 }
+
+@Serializable
+data class GaugeEvent(
+    val id: String,
+    val type: ItemType = ItemType.GAUGE,
+    val value: Float
+){
+    companion object {
+        fun fromJson(json: String): GaugeEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
+}

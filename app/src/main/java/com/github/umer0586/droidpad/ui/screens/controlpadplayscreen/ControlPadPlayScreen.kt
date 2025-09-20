@@ -88,6 +88,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.data.DpadProperties
+import com.github.umer0586.droidpad.data.GaugeProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LEDProperties
 import com.github.umer0586.droidpad.data.LabelProperties
@@ -106,6 +107,7 @@ import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.ui.bottomBarHeight
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
+import com.github.umer0586.droidpad.ui.components.ControlPadGauge
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLED
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
@@ -480,6 +482,18 @@ fun ControlPlayScreenContent(
                         state = uiState.ledStates[controlPadItem.id] ?: LEDSTATE.OFF,
                         showControls = false,
                         properties = LEDProperties.fromJson(controlPadItem.properties),
+                    )
+                }
+
+                else if(controlPadItem.itemType == ItemType.GAUGE){
+                    ControlPadGauge(
+                        modifier = Modifier.size(250.dp),
+                        value = uiState.gaugeStates[controlPadItem.id] ?: 0f,
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        showControls = false,
+                        properties = GaugeProperties.fromJson(controlPadItem.properties),
                     )
                 }
 

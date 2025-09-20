@@ -201,6 +201,17 @@ fun ItemPropertiesEditorSheet(
                 }
             )
         }
+        else if(controlPadItem.itemType == ItemType.GAUGE){
+            GaugePropertiesEditor(
+                controlPadItem = controlPadItem,
+                onGaugePropertiesChange = { gaugeProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = gaugeProperties.toJson()
+                    )
+                },
+                hasError = { hasError = it }
+            )
+        }
 
 
         TextButton(

@@ -82,6 +82,7 @@ import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.ExternalData
+import com.github.umer0586.droidpad.data.GaugeProperties
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LEDProperties
 import com.github.umer0586.droidpad.data.LabelProperties
@@ -98,6 +99,7 @@ import com.github.umer0586.droidpad.data.database.entities.offset
 import com.github.umer0586.droidpad.ui.bottomBarHeight
 import com.github.umer0586.droidpad.ui.components.ControlPadButton
 import com.github.umer0586.droidpad.ui.components.ControlPadDpad
+import com.github.umer0586.droidpad.ui.components.ControlPadGauge
 import com.github.umer0586.droidpad.ui.components.ControlPadJoyStick
 import com.github.umer0586.droidpad.ui.components.ControlPadLED
 import com.github.umer0586.droidpad.ui.components.ControlPadLabel
@@ -573,6 +575,35 @@ fun ControlPadBuilderScreenContent(
                     )
                 }
 
+                else if(controlPadItem.itemType == ItemType.GAUGE && uiState.transformableStatesMap[controlPadItem.id] != null){
+
+                    ControlPadGauge(
+                        modifier = Modifier.size(250.dp),
+                        value = 10f,
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        properties = GaugeProperties.fromJson(controlPadItem.properties).copy(minValue = 0f, maxValue = 20f),
+                        onDeleteClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnEditItemClick(
+                                    controlPad = controlPad,
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        }
+                    )
+                }
+
 
 
 
@@ -623,7 +654,9 @@ fun ControlPadBuilderScreenContent(
                                 ItemType.LED -> LEDProperties(
                                     color = primary.value
                                 ).toJson()
-
+                                ItemType.GAUGE -> GaugeProperties(
+                                    color = primary.value
+                                ).toJson()
                             }
 
                             onUiEvent(
@@ -698,6 +731,7 @@ private fun ItemSelectionBottomSheetContent(
                             ItemType.LABEL -> R.drawable.ic_label
                             ItemType.BUTTON -> R.drawable.ic_button_circle
                             ItemType.LED -> R.drawable.ic_light
+                            ItemType.GAUGE -> R.drawable.ic_gauge
                         }
                     ),
                     contentDescription = item.name,

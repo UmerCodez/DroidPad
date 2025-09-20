@@ -122,6 +122,7 @@ dependencies {
     implementation(libs.zxing.android.embedded)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.accompanist.permissions)
+    implementation(libs.speedometer.android)
 
 
     ksp(libs.hilt.compiler)

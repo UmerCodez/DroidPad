@@ -29,6 +29,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umer0586.droidpad.data.ButtonEvent
 import com.github.umer0586.droidpad.data.DPadEvent
+import com.github.umer0586.droidpad.data.GaugeEvent
+import com.github.umer0586.droidpad.data.GaugeProperties
 import com.github.umer0586.droidpad.data.JoyStickEvent
 import com.github.umer0586.droidpad.data.LedEvent
 import com.github.umer0586.droidpad.data.LogEvent
@@ -81,6 +83,7 @@ data class ControlPadPlayScreenState(
     val sliderStates: SnapshotStateMap<Long,Float> = mutableStateMapOf(),
     val ledStates: SnapshotStateMap<Long, LEDSTATE> = mutableStateMapOf(),
     val logState: SnapshotStateList<LogEvent> = mutableStateListOf(),
+    val gaugeStates: SnapshotStateMap<Long, Float> = mutableStateMapOf(),
     val connectionType: ConnectionType = ConnectionType.TCP,
     val isConnecting: Boolean = false,
     val isConnected: Boolean = false,
@@ -193,6 +196,12 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 .filter { it.itemType == ItemType.SLIDER }.forEach { slider ->
                     val sliderProperties = SliderProperties.fromJson(slider.properties)
                     uiState.value.sliderStates[slider.id] = sliderProperties.minValue
+                }
+
+            controlPadRepository.getControlPadItemsOf(controlPad)
+                .filter { it.itemType == ItemType.GAUGE }.forEach { gauge ->
+                    val gaugeProperties = GaugeProperties.fromJson(gauge.properties)
+                    uiState.value.gaugeStates[gauge.id] = gaugeProperties.minValue
                 }
 
             connectionConfigRepository.getConfigForControlPad(controlPad.id)
@@ -510,6 +519,15 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                             val logEvent = LogEvent.fromJson(jsonString).copy(timestamp = timestamp)
 
                             uiState.value.logState.add(logEvent)
+                        }
+                        else if("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "GAUGE"){
+                            val gaugeEvent = GaugeEvent.fromJson(jsonString)
+                            controlPadItems.filter { it.itemType == ItemType.GAUGE }
+                                .find { gaugeItem ->
+                                    gaugeItem.itemIdentifier == gaugeEvent.id
+                                }?.also { gaugeItem ->
+                                    uiState.value.gaugeStates[gaugeItem.id] = gaugeEvent.value
+                                }
                         }
 
 

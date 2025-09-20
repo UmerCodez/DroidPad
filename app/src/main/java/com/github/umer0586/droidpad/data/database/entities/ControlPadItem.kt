@@ -34,7 +34,8 @@ enum class ItemType{
     BUTTON,
     DPAD,
     STEERING_WHEEL,
-    LED
+    LED,
+    GAUGE
 }
 
 @Serializable
