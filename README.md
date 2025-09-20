@@ -203,6 +203,8 @@ To update the LED, send the following JSON message to the app:
   - `"OFF"` – Turns the LED off
   - `"BLINK"` – Makes the LED blink
  
+🎥 [Video Demo | Changing LED state in DroidPad](https://youtu.be/yC-jo941l2Y)  
+ 
 ---
 
 ### **LOG**
