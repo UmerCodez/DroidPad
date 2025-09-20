@@ -81,7 +81,7 @@ These string messages enable receivers to understand and process interactions se
 
 ---
 
-### **Switch**  
+### **SWITCH**  
 Toggling a switch generates the following JSON:  
 ```json
 {
@@ -96,7 +96,7 @@ For **Bluetooth** and **Bluetooth LE** connections, toggling a switch generates 
 
 ---
 
-### **Button**  
+### **BUTTON**  
 Pressing or releasing a button generates this JSON:  
 ```json
 {
@@ -152,7 +152,7 @@ For **Bluetooth** and **Bluetooth LE** connections the `CSV` is `<id>,STEERING_W
 
 ---
 
-### **JoyStick**  
+### **JOYSTICK**  
 Moving joystick handle generates this JSON:  
 ```json
 {
@@ -173,7 +173,7 @@ The values of x and y range:
  - Positive x values indicate movement to the right, and negative values indicate movement to the left.
  - Positive y values indicate upward movement, and negative values indicate downward movement.    
 
-### **Slider**  
+### **SLIDER**  
 Dragging the slider thumb generates the following JSON:  
 ```json
 {
@@ -218,6 +218,8 @@ To update the Gauge, send the following JSON message to the app::
 }
 ```
 - `value` is a number input used to update the gauge reading (such as speed, temperature, or progress).
+
+🎥 [Video Demo | Updating GAUGE value in DroidPad](https://youtu.be/qz2xfBvb8k8)
   
 ---
 
