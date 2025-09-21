@@ -313,10 +313,10 @@ A long Bluetooth device name can cause advertisement failure (In case of BLE). T
 For devices running **Android 12 or higher**, you also need to ensure that your app has the necessary Bluetooth permissions. To do this, go to the app's system settings and grant the required **Nearby Devices** permission. Without this permission, the app won't be able to advertise Bluetooth LE services or access paired devices when using Bluetooth Classic.
 
 ## Testing the connection
-You can test the connections with Websocket,TCP, UDP servers and BLE client provided in [https://github.com/umer0586/droidpad-python-examples](https://github.com/umer0586/droidpad-python-examples)
+You can test the connections with Websocket,TCP, UDP servers and BLE client provided in [https://github.com/UmerCodez/droidpad-python-examples](https://github.com/UmerCodez/droidpad-python-examples)
 
 ## Ardunio Template
-See Ardunio code template for CSV and JSON parsing [umer0586/DroidPad-Arduino-template](https://github.com/umer0586/DroidPad-Arduino-template)
+See Ardunio code template for CSV and JSON parsing [UmerCodez/DroidPad-Arduino-template](https://github.com/UmerCodez/DroidPad-Arduino-template)
 
 ## Projects
 1. A Tank controlled by an Arduino Uno R4 WiFi using the DroidPad App [https://github.com/Klixxy/ArduTank](https://github.com/Klixxy/ArduTank) by [Klixxy](https://github.com/Klixxy)
