@@ -1,0 +1,1 @@
+Fixed : GAUGE not reacting to messages, when LOG is enabled
