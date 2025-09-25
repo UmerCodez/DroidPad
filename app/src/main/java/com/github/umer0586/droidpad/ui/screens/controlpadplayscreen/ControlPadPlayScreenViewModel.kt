@@ -513,7 +513,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                     uiState.value.ledStates[ledItem.id] = ledEvent.state
                                 }
                         }
-                        else if(controlPad.logging || "type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "LOG"){
+                        else if(controlPad.logging && "type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "LOG"){
 
                             val timestamp = SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(Date())
                             val logEvent = LogEvent.fromJson(jsonString).copy(timestamp = timestamp)
