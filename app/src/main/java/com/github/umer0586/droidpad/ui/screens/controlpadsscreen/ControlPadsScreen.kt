@@ -24,6 +24,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -125,8 +127,12 @@ fun ControlPadsScreen(
     onImportJsonClick: (() -> Unit)? = null,
     onPreferenceClick:(() -> Unit)? = null,
     onAttachSensorsClick: ((ControlPad) -> Unit)? = null,
+    window: Window? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // Disable Keep Screen On after exiting ControlPadPlayScreen
+    window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
     LaunchedEffect(Unit) {
         viewModel.loadConnectionTypes()

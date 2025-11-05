@@ -20,6 +20,8 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.util.Log
+import android.view.Window
+import android.view.WindowManager
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -131,6 +133,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
     private var sendJsonOverBluetooth = false
     private var samplingRate = 200000
     private var vibrate = false
+    private var keepScreenOn = false
 
     private val tag = javaClass.simpleName
 
@@ -148,6 +151,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 sendJsonOverBluetooth = preference.sendJsonOverBluetooth
                 samplingRate = preference.sensorSamplingRate
                 vibrate = preference.vibrate
+                keepScreenOn = preference.keepScreenOn
             }
         }
 
@@ -168,7 +172,11 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
 
     }
-
+    fun enableKeepScreenOn(window: Window?){
+        if (keepScreenOn.equals(true)){
+            window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
 
     fun loadControlPadItemsFor(controlPad: ControlPad) {
 

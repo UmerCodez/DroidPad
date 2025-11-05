@@ -39,6 +39,8 @@ class MainActivity : ComponentActivity() {
             // TODO: Add dark/light theme switch
             DroidPadTheme {
                 NavScreen(
+                    // Passing window down to set the KeepScreenOn flag in individual screens.
+                    window = window,
                     onExitClick = {
                         finish()
                         exitProcess(0)

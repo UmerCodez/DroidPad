@@ -20,6 +20,7 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.content.pm.ActivityInfo
+import android.view.Window
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -118,11 +119,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ControlPadPlayScreen(
+    window: Window? = null,
     controlPad: ControlPad,
     viewModel: ControlPadPlayScreenViewModel = hiltViewModel(),
     onBackPress: (() -> Unit)? = null,
 ) {
 
+    viewModel.enableKeepScreenOn(window = window)
     LockScreenOrientation(
         orientation = when(controlPad.orientation){
             Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

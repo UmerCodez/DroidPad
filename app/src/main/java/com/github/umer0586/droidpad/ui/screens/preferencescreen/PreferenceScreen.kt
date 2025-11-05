@@ -131,6 +131,20 @@ fun PreferenceScreenContent(
                 }
 
             )
+
+            ListItem(
+                headlineContent = {Text("Keep screen on")},
+                supportingContent = { Text("Keep the screen on when on a control pad screen.") },
+                trailingContent = {
+                    Switch(
+                        checked = uiState.keepScreenOn,
+                        onCheckedChange = {
+                            onEvent(PreferenceScreenEvent.OnKeepScreenOnChange(it))
+                        }
+                    )
+                }
+
+            )
         }
     }
 

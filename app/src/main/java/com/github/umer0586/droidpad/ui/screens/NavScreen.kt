@@ -20,6 +20,7 @@
 package com.github.umer0586.droidpad.ui.screens
 
 
+import android.view.Window
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -91,6 +92,7 @@ object Route{
 
 @Composable
 fun NavScreen(
+    window: Window? = null,
     onExitClick: (() -> Unit)? = null,
 ) {
     val navController = rememberNavController()
@@ -111,6 +113,7 @@ fun NavScreen(
         composable<Route.ControlPadListScreen> {
 
             ControlPadsScreen(
+                window = window,
 
                 onCreateClick = {
                     navController.navigateTo(Route.NewControlPadScreen)
@@ -222,6 +225,7 @@ fun NavScreen(
             val controlPad = controlPadPlayScreenRoute.controlPad
 
             ControlPadPlayScreen(
+                window= window,
                 controlPad = controlPad,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)

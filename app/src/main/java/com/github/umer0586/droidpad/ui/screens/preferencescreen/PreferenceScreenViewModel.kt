@@ -15,13 +15,15 @@ import javax.inject.Inject
 data class PreferenceScreenState(
     val jsonForBluetooth: Boolean = false,
     val sensorSamplingRate: Int = 200000,
-    val vibrate: Boolean = false
+    val vibrate: Boolean = false,
+    val keepScreenOn: Boolean = false
 )
 
 sealed interface PreferenceScreenEvent{
     data class OnJsonForBluetoothChange(val jsonForBluetooth: Boolean) : PreferenceScreenEvent
     data class OnSensorSamplingRateChange(val sensorSamplingRate: Int) : PreferenceScreenEvent
     data class OnVibrateChange(val vibrate: Boolean) : PreferenceScreenEvent
+    data class OnKeepScreenOnChange(val keepScreenOn: Boolean) : PreferenceScreenEvent
     data object OnSensorSamplingRateChangeFinished : PreferenceScreenEvent
     data object OnBackClick : PreferenceScreenEvent
 }
@@ -50,7 +52,8 @@ class PreferenceScreenViewModel @Inject constructor(
                     it.copy(
                         jsonForBluetooth = pref.sendJsonOverBluetooth,
                         sensorSamplingRate = pref.sensorSamplingRate,
-                        vibrate = pref.vibrate
+                        vibrate = pref.vibrate,
+                        keepScreenOn = pref.keepScreenOn
                     )
                 }
             }
@@ -88,6 +91,16 @@ class PreferenceScreenViewModel @Inject constructor(
                 viewModelScope.launch {
                     preferenceRepository.updatePreference {
                         it.copy(vibrate = event.vibrate)
+                    }
+                }
+            }
+            is PreferenceScreenEvent.OnKeepScreenOnChange -> {
+                _uiState.update {
+                    it.copy(keepScreenOn = event.keepScreenOn)
+                }
+                viewModelScope.launch {
+                    preferenceRepository.updatePreference {
+                        it.copy(keepScreenOn = event.keepScreenOn)
                     }
                 }
             }
