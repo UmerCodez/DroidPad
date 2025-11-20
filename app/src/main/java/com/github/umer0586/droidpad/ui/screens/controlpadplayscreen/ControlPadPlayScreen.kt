@@ -20,7 +20,6 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.content.pm.ActivityInfo
-import android.view.Window
 import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -141,8 +140,10 @@ fun ControlPadPlayScreen(
     }
 
     val window = LocalActivity.current?.window
-    LaunchedEffect(Unit) {
-        viewModel.enableKeepScreenOn(window = window)
+    LaunchedEffect(uiState.keepScreenOn) {
+        if(uiState.keepScreenOn){
+            window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 
 
