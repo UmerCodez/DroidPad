@@ -20,6 +20,8 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.util.Log
+import android.view.Window
+import android.view.WindowManager
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -89,7 +91,8 @@ data class ControlPadPlayScreenState(
     val isConnected: Boolean = false,
     val controlPadBackgroundColor : Long = Color.Red.value.toLong(),
     val hostAddress: String = "",
-    val isBluetoothEnabled: Boolean = false
+    val isBluetoothEnabled: Boolean = false,
+    val keepScreenOn: Boolean = false
 )
 sealed interface ControlPadPlayScreenEvent {
     data object OnConnectClick : ControlPadPlayScreenEvent
@@ -148,6 +151,9 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 sendJsonOverBluetooth = preference.sendJsonOverBluetooth
                 samplingRate = preference.sensorSamplingRate
                 vibrate = preference.vibrate
+                _uiState.update {
+                    it.copy(keepScreenOn = preference.keepScreenOn)
+                }
             }
         }
 
@@ -168,7 +174,6 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
 
     }
-
 
     fun loadControlPadItemsFor(controlPad: ControlPad) {
 

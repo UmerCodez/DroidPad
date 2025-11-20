@@ -26,5 +26,6 @@ data class Preference(
     val builderScreenLandscapeResolution : Resolution,
     val sendJsonOverBluetooth: Boolean,
     val sensorSamplingRate: Int,
-    val vibrate: Boolean
+    val vibrate: Boolean,
+    val keepScreenOn: Boolean
 )

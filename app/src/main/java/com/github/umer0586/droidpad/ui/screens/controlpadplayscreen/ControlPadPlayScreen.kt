@@ -20,7 +20,9 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.content.pm.ActivityInfo
+import android.view.WindowManager
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -123,6 +125,7 @@ fun ControlPadPlayScreen(
     onBackPress: (() -> Unit)? = null,
 ) {
 
+
     LockScreenOrientation(
         orientation = when(controlPad.orientation){
             Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -136,6 +139,13 @@ fun ControlPadPlayScreen(
         viewModel.loadControlPadItemsFor(controlPad)
     }
 
+    val window = LocalActivity.current?.window
+    LaunchedEffect(uiState.keepScreenOn) {
+        if(uiState.keepScreenOn){
+            window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
 
     ControlPlayScreenContent(
         controlPad = controlPad,
@@ -143,8 +153,10 @@ fun ControlPadPlayScreen(
         onUiEvent = {event->
             viewModel.onEvent(event)
             
-            if(event is ControlPadPlayScreenEvent.OnBackPress)
+            if(event is ControlPadPlayScreenEvent.OnBackPress) {
                 onBackPress?.invoke()
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
         }
     )
 }

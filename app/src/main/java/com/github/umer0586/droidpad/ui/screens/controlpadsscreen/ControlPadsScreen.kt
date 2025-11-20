@@ -24,6 +24,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
