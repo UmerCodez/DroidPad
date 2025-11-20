@@ -125,7 +125,7 @@ fun ControlPadPlayScreen(
     onBackPress: (() -> Unit)? = null,
 ) {
 
-    viewModel.enableKeepScreenOn(window = window)
+
     LockScreenOrientation(
         orientation = when(controlPad.orientation){
             Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -137,6 +137,10 @@ fun ControlPadPlayScreen(
 
     LaunchedEffect(Unit) {
         viewModel.loadControlPadItemsFor(controlPad)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.enableKeepScreenOn(window = window)
     }
 
 
