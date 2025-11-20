@@ -225,7 +225,6 @@ fun NavScreen(
             val controlPad = controlPadPlayScreenRoute.controlPad
 
             ControlPadPlayScreen(
-                window= window,
                 controlPad = controlPad,
                 onBackPress = {
                     navController.navigateTo(Route.ControlPadListScreen)
