@@ -21,6 +21,7 @@ package com.github.umer0586.droidpad.ui.screens.controlpadplayscreen
 
 import android.content.pm.ActivityInfo
 import android.view.Window
+import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
@@ -151,8 +152,10 @@ fun ControlPadPlayScreen(
         onUiEvent = {event->
             viewModel.onEvent(event)
             
-            if(event is ControlPadPlayScreenEvent.OnBackPress)
+            if(event is ControlPadPlayScreenEvent.OnBackPress) {
                 onBackPress?.invoke()
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
         }
     )
 }

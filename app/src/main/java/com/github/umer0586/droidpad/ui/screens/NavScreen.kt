@@ -92,7 +92,6 @@ object Route{
 
 @Composable
 fun NavScreen(
-    window: Window? = null,
     onExitClick: (() -> Unit)? = null,
 ) {
     val navController = rememberNavController()
@@ -113,7 +112,6 @@ fun NavScreen(
         composable<Route.ControlPadListScreen> {
 
             ControlPadsScreen(
-                window = window,
 
                 onCreateClick = {
                     navController.navigateTo(Route.NewControlPadScreen)

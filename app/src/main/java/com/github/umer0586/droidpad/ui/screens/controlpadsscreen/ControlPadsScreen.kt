@@ -127,12 +127,8 @@ fun ControlPadsScreen(
     onImportJsonClick: (() -> Unit)? = null,
     onPreferenceClick:(() -> Unit)? = null,
     onAttachSensorsClick: ((ControlPad) -> Unit)? = null,
-    window: Window? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    // Disable Keep Screen On after exiting ControlPadPlayScreen
-    window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
     LaunchedEffect(Unit) {
         viewModel.loadConnectionTypes()
