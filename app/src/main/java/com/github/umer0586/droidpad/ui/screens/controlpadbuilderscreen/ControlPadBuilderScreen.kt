@@ -120,7 +120,6 @@ import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import com.github.umer0586.droidpad.ui.components.propertieseditor.ItemPropertiesEditorSheet
 import com.github.umer0586.droidpad.ui.components.rotateBy
-import com.github.umer0586.droidpad.ui.screens.preferencescreen.PreferenceScreenEvent
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.github.umer0586.droidpad.ui.utils.LockScreenOrientation
 import kotlinx.coroutines.delay

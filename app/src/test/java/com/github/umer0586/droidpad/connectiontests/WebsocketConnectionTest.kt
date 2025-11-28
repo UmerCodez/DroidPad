@@ -3,8 +3,8 @@ package com.github.umer0586.droidpad.connectiontests
 import app.cash.turbine.test
 import com.github.umer0586.droidpad.MainDispatcherRule
 import com.github.umer0586.droidpad.data.connection.ConnectionState
-import com.github.umer0586.droidpad.data.connectionconfig.WebsocketConfig
 import com.github.umer0586.droidpad.data.connection.WebsocketConnection
+import com.github.umer0586.droidpad.data.connectionconfig.WebsocketConfig
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
@@ -17,7 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.lang.Exception
 import java.net.InetSocketAddress
 
 @Ignore("This Tests times out with 'gradlew test' but works fine when run manually")

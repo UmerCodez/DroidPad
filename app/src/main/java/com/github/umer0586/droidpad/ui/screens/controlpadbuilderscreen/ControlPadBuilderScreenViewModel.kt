@@ -126,17 +126,29 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                             val controlPadItem = uiState.value.controlPadItems[index]
 
                             val newScale = controlPadItem.scale * zoomChange
-                            val newRotation = temporalRotation + rotationChange
+
+                            val newRotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
+                                else if (_uiState.value.useAngleSnap){ temporalRotation + rotationChange }
+                                else{ controlPadItem.rotation + rotationChange }
+
                             temporalRotation = newRotation
-                            val newOffset = controlPadItem.offset + offsetChange.rotateBy(newRotation) * newScale
+                            
+                            val snappedNewRotation = snappedRotation(newRotation)
+
+                            val newOffset = controlPadItem.offset + offsetChange.rotateBy(
+                                if (rotationChange == 0f) controlPadItem.rotation
+                                else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                else newRotation
+                            ) * newScale
 
                             uiState.value.controlPadItems[index] =
                                 controlPadItem.copy(
                                     offsetX = newOffset.x,
                                     offsetY = newOffset.y,
                                     // Joystick and steering wheel should not be rotatable
-                                    rotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
-                                    else if (_uiState.value.useAngleSnap) snappedRotation(newRotation) else newRotation,
+                                    rotation = if (rotationChange == 0f) controlPadItem.rotation
+                                            else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                            else newRotation,
                                     scale = newScale.coerceIn(minScale,maxScale)
                                 )
 
@@ -228,17 +240,29 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                                     val controlPadItem = uiState.value.controlPadItems[index]
 
                                     val newScale = controlPadItem.scale * zoomChange
-                                    val newRotation = temporalRotation + rotationChange
+
+                                    val newRotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
+                                    else if (_uiState.value.useAngleSnap){ temporalRotation + rotationChange }
+                                    else{ controlPadItem.rotation + rotationChange }
+
                                     temporalRotation = newRotation
-                                    val newOffset = controlPadItem.offset + offsetChange.rotateBy(newRotation) * newScale
+
+                                    val snappedNewRotation = snappedRotation(newRotation)
+
+                                    val newOffset = controlPadItem.offset + offsetChange.rotateBy(
+                                        if (rotationChange == 0f) controlPadItem.rotation
+                                        else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                        else newRotation
+                                    ) * newScale
 
                                     uiState.value.controlPadItems[index] =
                                         controlPadItem.copy(
                                             offsetX = newOffset.x,
                                             offsetY = newOffset.y,
                                             // Joystick and steering wheel should not be rotatable
-                                            rotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
-                                                    else if (_uiState.value.useAngleSnap) snappedRotation(newRotation) else newRotation,
+                                            rotation = if (rotationChange == 0f) controlPadItem.rotation
+                                            else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                            else newRotation,
                                             scale = newScale.coerceIn(minScale,maxScale)
                                         )
 
