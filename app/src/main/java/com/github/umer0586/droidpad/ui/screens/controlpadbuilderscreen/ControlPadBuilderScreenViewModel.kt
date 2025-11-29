@@ -99,10 +99,12 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
         Log.d(tag,"onCleared() ${hashCode()}")
     }
 
-    private fun snappedRotation(input: Float):Float{
-        return input.div(360).times(_uiState.value.angleSnapDivision)// Scale the input into [-angleSnapDivision,angleSnapDivision]
+    private fun snappedRotation(input: Float): Float {
+        return input.div(360)
+            .times(_uiState.value.angleSnapDivision)// Scale the input into [-angleSnapDivision,angleSnapDivision]
             .roundToInt()// Snap!
-            .times(360).toFloat().div(_uiState.value.angleSnapDivision)// Scale back to normal and convert
+            .times(360).toFloat()
+            .div(_uiState.value.angleSnapDivision)// Scale back to normal and convert
     }
     fun loadControlPadItemsFor(controlPad: ControlPad){
         _uiState.update {
