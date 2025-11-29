@@ -110,7 +110,6 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
         _uiState.update {
             it.copy(isModified = false)
         }
-        var temporalRotation: Float
         viewModelScope.launch {
             Log.d(tag, "loadControlPadItemsFor: ")
             controlPadRepository.getControlPadItemsOf(controlPad).also{ items ->
