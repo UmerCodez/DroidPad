@@ -48,7 +48,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -63,10 +62,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -74,7 +70,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
@@ -123,7 +118,6 @@ import com.github.umer0586.droidpad.ui.components.rotateBy
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.github.umer0586.droidpad.ui.utils.LockScreenOrientation
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 // TODO: Add color picker for choosing background color of ControlPad
@@ -947,6 +941,7 @@ fun EditorAidsBottomSheetContent(
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
             headlineContent = { Text(text = "Enable Angle Snap") },
+            supportingContent = { Text("Snap to specific angle automatically") },
             trailingContent = {
                 Switch(
                     checked = uiState.useAngleSnap,
@@ -968,37 +963,7 @@ fun EditorAidsBottomSheetContent(
                         }
                     )
                 },
-                overlineContent = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-
-                        val tooltipState = rememberTooltipState()
-                        val scope = rememberCoroutineScope()
-
-                        Text(text = "Angle Snap")
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        TooltipBox(
-                            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-                            tooltip = {
-                                Text(text = "Snaps to specific angles automaticly")
-                            },
-                            state = tooltipState,
-                        ) {
-                            Icon(
-                                modifier = Modifier.clickable {
-                                    scope.launch {
-                                        tooltipState.show()
-                                    }
-                                },
-                                imageVector = Icons.Filled.Info,
-                                contentDescription = null,
-                            )
-                        }
-                    }
-                },
                 supportingContent = {
-                    //Text("Ratio of handle radius to joystick radius")
                     Text("per ${360f / uiState.angleSnapDivision}°(360/${uiState.angleSnapDivision})")
                 },
             )
