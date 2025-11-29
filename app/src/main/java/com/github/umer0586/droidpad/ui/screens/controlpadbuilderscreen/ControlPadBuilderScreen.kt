@@ -964,7 +964,8 @@ fun EditorAidsBottomSheetContent(
                     )
                 },
                 supportingContent = {
-                    Text("per ${360f / uiState.angleSnapDivision}°(360/${uiState.angleSnapDivision})")
+                    val angle = 360f / uiState.angleSnapDivision
+                    Text("per ${"%.2f".format(angle)}°(360/${uiState.angleSnapDivision})")
                 },
             )
 
