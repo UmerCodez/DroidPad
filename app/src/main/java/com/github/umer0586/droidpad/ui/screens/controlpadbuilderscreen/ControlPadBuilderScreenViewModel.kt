@@ -131,8 +131,6 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                             currentRotation = newRotation
 
                             val effectiveRotation = when {
-                                isRotationNotAllowed -> 0f
-                                rotationChange == 0f -> controlPadItem.rotation
                                 _uiState.value.useAngleSnap -> snappedRotation(newRotation)
                                 else -> newRotation
                             }
