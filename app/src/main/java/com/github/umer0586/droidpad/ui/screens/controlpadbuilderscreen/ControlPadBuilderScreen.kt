@@ -941,7 +941,12 @@ fun EditorAidsBottomSheetContent(
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
             headlineContent = { Text(text = "Enable Angle Snap") },
-            supportingContent = { Text("Snap to specific angle automatically") },
+            supportingContent = {
+                Text(
+                    text = "Snap to specific angle automatically",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            },
             trailingContent = {
                 Switch(
                     checked = uiState.useAngleSnap,
