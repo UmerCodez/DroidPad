@@ -52,7 +52,6 @@ data class ControlPadBuilderScreenState(
     val itemToBeEdited: ControlPadItem? = null,
     val transformableStatesMap: SnapshotStateMap<Long, TransformableState> = SnapshotStateMap(),
     val isModified: Boolean = false,
-    val showEditorAids: Boolean = false,
     val useAngleSnap: Boolean = false,
     val angleSnapDivision:Int = 36,
     )
@@ -69,8 +68,6 @@ sealed interface ControlPadBuilderScreenEvent {
     data object OnBackPress: ControlPadBuilderScreenEvent
     data class OnResolutionReported(val controlPad: ControlPad, val builderScreenResolution: Resolution, val tempOpen : Boolean = false) : ControlPadBuilderScreenEvent
     data object OnTempOpenCompleted : ControlPadBuilderScreenEvent
-    data object OnEditorAidsClick: ControlPadBuilderScreenEvent
-    data object OnEditorAidsDismissRequest: ControlPadBuilderScreenEvent
     data object OnUseAngleSnapChange: ControlPadBuilderScreenEvent
     data class OnAngleSnapChange(val newValue:Float) : ControlPadBuilderScreenEvent
 
@@ -303,16 +300,6 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
             }
 
-            is ControlPadBuilderScreenEvent.OnEditorAidsClick -> {
-                _uiState.update {
-                    it.copy(showEditorAids = true)
-                }
-            }
-            is ControlPadBuilderScreenEvent.OnEditorAidsDismissRequest -> {
-                _uiState.update {
-                    it.copy(showEditorAids = false)
-                }
-            }
             is ControlPadBuilderScreenEvent.OnUseAngleSnapChange ->{
                 _uiState.update {
                     it.copy(useAngleSnap = !it.useAngleSnap)

@@ -176,6 +176,8 @@ fun ControlPadBuilderScreenContent(
 
 ) {
 
+    var showEditorAids by remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = {
 
@@ -265,7 +267,7 @@ fun ControlPadBuilderScreenContent(
                     )
                     IconButton(
                         onClick = {
-                            onUiEvent(ControlPadBuilderScreenEvent.OnEditorAidsClick)
+                            showEditorAids = true
                         },
                         content = {
                             Icon(
@@ -694,10 +696,10 @@ fun ControlPadBuilderScreenContent(
                     )
                 }
             }
-            if (uiState.showEditorAids) {
+            if (showEditorAids) {
                 ModalBottomSheet(
                     sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-                    onDismissRequest = { onUiEvent(ControlPadBuilderScreenEvent.OnEditorAidsDismissRequest) }
+                    onDismissRequest = { showEditorAids = false }
                 ) {
                     EditorAidsBottomSheetContent(uiState = uiState, onUiEvent = onUiEvent)
                 }
