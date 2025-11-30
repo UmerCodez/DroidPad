@@ -23,6 +23,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
@@ -46,15 +47,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -128,14 +133,14 @@ fun ControlPadBuilderScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit){
-        Log.d("ControlPadBuilderScreen","LaunchedEffect(Unit) : ${controlPad.id}")
+    LaunchedEffect(Unit) {
+        Log.d("ControlPadBuilderScreen", "LaunchedEffect(Unit) : ${controlPad.id}")
         if (!tempOpen)
             viewModel.loadControlPadItemsFor(controlPad)
     }
 
     LockScreenOrientation(
-        orientation = when(controlPad.orientation){
+        orientation = when (controlPad.orientation) {
             Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             Orientation.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
@@ -148,11 +153,11 @@ fun ControlPadBuilderScreen(
         onUiEvent = { event ->
             viewModel.onEvent(event)
 
-            if(event is ControlPadBuilderScreenEvent.OnSaveClick)
+            if (event is ControlPadBuilderScreenEvent.OnSaveClick)
                 onSaveClick?.invoke()
-            else if(event is ControlPadBuilderScreenEvent.OnBackPress)
+            else if (event is ControlPadBuilderScreenEvent.OnBackPress)
                 onBackPress?.invoke()
-            else if(event is ControlPadBuilderScreenEvent.OnTempOpenCompleted)
+            else if (event is ControlPadBuilderScreenEvent.OnTempOpenCompleted)
                 onTempOpenCompleted?.invoke(externalData)
 
         }
@@ -171,110 +176,123 @@ fun ControlPadBuilderScreenContent(
 
 ) {
 
+    var showEditorAids by remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = {
 
-                Box(
-                    modifier = Modifier
-                        .navigationBarsPadding()
-                        .fillMaxWidth()
-                        .height(bottomBarHeight)
-                        .background(MaterialTheme.colorScheme.primary),
-                    contentAlignment = Alignment.Center
-                ) {
+            Box(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .fillMaxWidth()
+                    .height(bottomBarHeight)
+                    .background(MaterialTheme.colorScheme.primary),
+                contentAlignment = Alignment.Center
+            ) {
 
-                    var showModificationAlert by remember { mutableStateOf(false) }
+                var showModificationAlert by remember { mutableStateOf(false) }
 
-                    // When back button on device is pressed
-                    BackHandler {
-                        if(uiState.isModified){
-                            showModificationAlert = true
-                            return@BackHandler
-                        }
-                        onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
+                // When back button on device is pressed
+                BackHandler {
+                    if (uiState.isModified) {
+                        showModificationAlert = true
+                        return@BackHandler
                     }
+                    onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
+                }
 
-                    if(showModificationAlert){
-                        AlertDialog(
-                            onDismissRequest = { showModificationAlert = false },
-                            title = { Text(text = "Unsaved Changes") },
-                            text = { Text(text = "Interface has been modified") },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        showModificationAlert = false
-                                        onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
-                                    }
-                                ) { Text("Discard Changes")}
+                if (showModificationAlert) {
+                    AlertDialog(
+                        onDismissRequest = { showModificationAlert = false },
+                        title = { Text(text = "Unsaved Changes") },
+                        text = { Text(text = "Interface has been modified") },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    showModificationAlert = false
+                                    onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
+                                }
+                            ) { Text("Discard Changes") }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    showModificationAlert = false
+                                    onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
+                                }
+                            ) { Text("Save Changes") }
+                        }
+                    )
+                }
+
+                IconButton(
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    onClick = {
+                        onUiEvent(ControlPadBuilderScreenEvent.OnAddItemClick)
+                    },
+                    content = {
+                        Icon(
+                            modifier = Modifier.clickable {
+
+                                if (uiState.isModified) {
+                                    showModificationAlert = true
+                                    return@clickable
+                                }
+
+                                onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
                             },
-                            dismissButton = {
-                                TextButton(
-                                    onClick = {
-                                        showModificationAlert = false
-                                        onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
-                                    }
-                                ) { Text("Save Changes")}
-                            }
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "AddIcon",
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
+                )
+
+                Row(
+                    Modifier
+                        .clip(shape = RoundedCornerShape(50.dp))
+                        .background(MaterialTheme.colorScheme.onPrimary),
+                ) {
 
                     IconButton(
-                        modifier = Modifier.align(Alignment.CenterStart),
                         onClick = {
                             onUiEvent(ControlPadBuilderScreenEvent.OnAddItemClick)
                         },
                         content = {
                             Icon(
-                                modifier = Modifier.clickable {
-
-                                    if(uiState.isModified){
-                                        showModificationAlert = true
-                                        return@clickable
-                                    }
-
-                                    onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
-                                },
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "AddIcon",
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "AddIcon"
+                            )
+                        }
+                    )
+                    IconButton(
+                        onClick = {
+                            showEditorAids = true
+                        },
+                        content = {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = "AidsIcon"
+                            )
+                        }
+                    )
+                    IconButton(
+                        onClick = {
+                            onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
+                        },
+                        content = {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "SaveIcon"
                             )
                         }
                     )
 
-                    Row(
-                        Modifier
-                            .clip(shape = RoundedCornerShape(50.dp))
-                            .background(MaterialTheme.colorScheme.onPrimary),
-                    ) {
-
-                        IconButton(
-                            onClick = {
-                                onUiEvent(ControlPadBuilderScreenEvent.OnAddItemClick)
-                            },
-                            content = {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = "AddIcon"
-                                )
-                            }
-                        )
-                        IconButton(
-                            onClick = {
-                                onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
-                            },
-                            content = {
-                                Icon(
-                                    imageVector = Icons.Filled.Done,
-                                    contentDescription = "SaveIcon"
-                                )
-                            }
-                        )
-
-                    }
                 }
+            }
 
         }
-    ) { innerPadding->
+    ) { innerPadding ->
         BoxWithConstraints(
             Modifier
                 .fillMaxSize()
@@ -299,13 +317,13 @@ fun ControlPadBuilderScreenContent(
                     )
                 )
 
-                if(tempOpen) {
+                if (tempOpen) {
                     delay(5000)
                     onUiEvent(ControlPadBuilderScreenEvent.OnTempOpenCompleted)
                 }
             }
 
-            if(tempOpen){
+            if (tempOpen) {
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -319,7 +337,7 @@ fun ControlPadBuilderScreenContent(
             }
 
 
-            uiState.controlPadItems.forEach{controlPadItem ->
+            uiState.controlPadItems.forEach { controlPadItem ->
 
                 if (controlPadItem.itemType == ItemType.SWITCH && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
@@ -348,9 +366,7 @@ fun ControlPadBuilderScreenContent(
                         }
 
                     )
-                }
-
-                else if (controlPadItem.itemType == ItemType.SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
+                } else if (controlPadItem.itemType == ItemType.SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     val properties = SliderProperties.fromJson(controlPadItem.properties)
                     ControlPadSlider(
                         offset = controlPadItem.offset,
@@ -359,7 +375,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = properties,
                         enabled = false,
-                        value = (properties.minValue + properties.maxValue)/2,
+                        value = (properties.minValue + properties.maxValue) / 2,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -379,9 +395,7 @@ fun ControlPadBuilderScreenContent(
 
 
                     )
-                }
-
-                else if (controlPadItem.itemType == ItemType.STEP_SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
+                } else if (controlPadItem.itemType == ItemType.STEP_SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     val properties = StepSliderProperties.fromJson(controlPadItem.properties)
                     ControlPadStepSlider(
                         offset = controlPadItem.offset,
@@ -390,7 +404,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = properties,
                         enabled = false,
-                        value = (properties.minValue + properties.maxValue)/2,
+                        value = (properties.minValue + properties.maxValue) / 2,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -408,9 +422,7 @@ fun ControlPadBuilderScreenContent(
                             )
                         }
                     )
-                }
-
-                else if(controlPadItem.itemType == ItemType.LABEL && uiState.transformableStatesMap[controlPadItem.id] != null){
+                } else if (controlPadItem.itemType == ItemType.LABEL && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     ControlPadLabel(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
@@ -434,9 +446,7 @@ fun ControlPadBuilderScreenContent(
                             )
                         }
                     )
-                }
-
-                else if(controlPadItem.itemType == ItemType.BUTTON && uiState.transformableStatesMap[controlPadItem.id] != null){
+                } else if (controlPadItem.itemType == ItemType.BUTTON && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadButton(
                         offset = controlPadItem.offset,
@@ -462,9 +472,7 @@ fun ControlPadBuilderScreenContent(
                             )
                         }
                     )
-                }
-
-                else if(controlPadItem.itemType == ItemType.DPAD && uiState.transformableStatesMap[controlPadItem.id] != null){
+                } else if (controlPadItem.itemType == ItemType.DPAD && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadDpad(
                         offset = controlPadItem.offset,
@@ -490,9 +498,7 @@ fun ControlPadBuilderScreenContent(
                             )
                         }
                     )
-                }
-
-                else if(controlPadItem.itemType == ItemType.JOYSTICK && uiState.transformableStatesMap[controlPadItem.id] != null){
+                } else if (controlPadItem.itemType == ItemType.JOYSTICK && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadJoyStick(
                         offset = controlPadItem.offset,
@@ -518,8 +524,7 @@ fun ControlPadBuilderScreenContent(
                             )
                         }
                     )
-                }
-                else if(controlPadItem.itemType == ItemType.STEERING_WHEEL && uiState.transformableStatesMap[controlPadItem.id] != null){
+                } else if (controlPadItem.itemType == ItemType.STEERING_WHEEL && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     ControlPadSteeringWheel(
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
@@ -544,9 +549,7 @@ fun ControlPadBuilderScreenContent(
                             )
                         }
                     )
-                }
-
-                else if(controlPadItem.itemType == ItemType.LED && uiState.transformableStatesMap[controlPadItem.id] != null){
+                } else if (controlPadItem.itemType == ItemType.LED && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadLED(
                         offset = controlPadItem.offset,
@@ -573,9 +576,7 @@ fun ControlPadBuilderScreenContent(
                         }
 
                     )
-                }
-
-                else if(controlPadItem.itemType == ItemType.GAUGE && uiState.transformableStatesMap[controlPadItem.id] != null){
+                } else if (controlPadItem.itemType == ItemType.GAUGE && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadGauge(
                         modifier = Modifier.size(250.dp),
@@ -584,7 +585,8 @@ fun ControlPadBuilderScreenContent(
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
-                        properties = GaugeProperties.fromJson(controlPadItem.properties).copy(minValue = 0f, maxValue = 20f),
+                        properties = GaugeProperties.fromJson(controlPadItem.properties)
+                            .copy(minValue = 0f, maxValue = 20f),
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -605,8 +607,6 @@ fun ControlPadBuilderScreenContent(
                 }
 
 
-
-
             }
 
             val primary = MaterialTheme.colorScheme.primary
@@ -621,39 +621,47 @@ fun ControlPadBuilderScreenContent(
                     ItemSelectionBottomSheetContent(
                         onItemClick = { itemType ->
 
-                            val properties = when(itemType){
+                            val properties = when (itemType) {
                                 ItemType.LABEL -> LabelProperties().toJson()
                                 ItemType.BUTTON -> ButtonProperties(
                                     buttonColor = primary.value,
                                     textColor = onPrimary.value,
                                     iconColor = onPrimary.value,
                                 ).toJson()
+
                                 ItemType.SWITCH -> SwitchProperties(
                                     trackColor = primary.value,
                                     thumbColor = onPrimary.value,
                                 ).toJson()
+
                                 ItemType.SLIDER -> SliderProperties(
                                     trackColor = primary.value,
                                     thumbColor = primary.value,
                                 ).toJson()
+
                                 ItemType.STEP_SLIDER -> StepSliderProperties(
                                     trackColor = primary.value,
                                     thumbColor = primary.value,
                                 ).toJson()
+
                                 ItemType.DPAD -> DpadProperties(
                                     backgroundColor = primary.value,
                                     buttonColor = onPrimary.value,
                                 ).toJson()
+
                                 ItemType.JOYSTICK -> JoyStickProperties(
                                     backgroundColor = primary.value,
                                     handleColor = onPrimary.value,
                                 ).toJson()
+
                                 ItemType.STEERING_WHEEL -> SteeringWheelProperties(
                                     color = primary.value
                                 ).toJson()
+
                                 ItemType.LED -> LEDProperties(
                                     color = primary.value
                                 ).toJson()
+
                                 ItemType.GAUGE -> GaugeProperties(
                                     color = primary.value
                                 ).toJson()
@@ -664,9 +672,8 @@ fun ControlPadBuilderScreenContent(
                                     itemType = itemType,
                                     controlPad = controlPad,
                                     properties = properties
-                                    )
+                                )
                             )
-
 
 
                         }
@@ -689,7 +696,14 @@ fun ControlPadBuilderScreenContent(
                     )
                 }
             }
-
+            if (showEditorAids) {
+                ModalBottomSheet(
+                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                    onDismissRequest = { showEditorAids = false }
+                ) {
+                    EditorAidsBottomSheetContent(uiState = uiState, onUiEvent = onUiEvent)
+                }
+            }
         }
     }
 
@@ -717,7 +731,7 @@ private fun ItemSelectionBottomSheetContent(
                     .padding(20.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Icon(
                     modifier = Modifier.size(25.dp),
                     painter = painterResource(
@@ -760,7 +774,7 @@ private fun ItemSelectionBottomSheetContentPreview() {
 }
 
 
-@Preview(showBackground = true,uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ControlPadBuilderScreenContentInteractiveXPreview() {
     val uiState = remember {
@@ -780,7 +794,7 @@ fun ControlPadBuilderScreenContentInteractiveXPreview() {
         orientation = Orientation.LANDSCAPE,
     )
 
-    val controlPadItems = remember{
+    val controlPadItems = remember {
         mutableStateListOf(
             ControlPadItem(
                 id = 1000,
@@ -834,20 +848,22 @@ fun ControlPadBuilderScreenContentInteractiveXPreview() {
                         uiState.value.transformableStatesMap[newItem.id] =
                             TransformableState { zoomChange, offsetChange, rotationChange ->
 
-                                val index = uiState.value.controlPadItems.indexOfFirst { it.id == newItem.id }
+                                val index =
+                                    uiState.value.controlPadItems.indexOfFirst { it.id == newItem.id }
 
                                 val controlPadItem = uiState.value.controlPadItems[index]
 
                                 val newScale = controlPadItem.scale * zoomChange
                                 val newRotation = controlPadItem.rotation + rotationChange
-                                val newOffset = controlPadItem.offset + offsetChange.rotateBy(newRotation) * newScale
+                                val newOffset =
+                                    controlPadItem.offset + offsetChange.rotateBy(newRotation) * newScale
 
                                 uiState.value.controlPadItems[index] =
                                     controlPadItem.copy(
                                         offsetX = newOffset.x,
                                         offsetY = newOffset.y,
                                         rotation = newRotation,
-                                        scale = newScale.coerceIn(minScale,maxScale)
+                                        scale = newScale.coerceIn(minScale, maxScale)
                                     )
 
                             }
@@ -871,7 +887,8 @@ fun ControlPadBuilderScreenContentInteractiveXPreview() {
                     is ControlPadBuilderScreenEvent.OnItemEditSubmit -> {
                         uiState.value = uiState.value.copy(showItemEditor = false)
 
-                        val index = uiState.value.controlPadItems.indexOfFirst { it.id == event.controlPadItem.id }
+                        val index =
+                            uiState.value.controlPadItems.indexOfFirst { it.id == event.controlPadItem.id }
                         val controlPadItem = uiState.value.controlPadItems[index]
                         uiState.value.controlPadItems[index] = controlPadItem.copy(
                             itemIdentifier = event.controlPadItem.itemIdentifier,
@@ -882,6 +899,7 @@ fun ControlPadBuilderScreenContentInteractiveXPreview() {
                         //database operation
 
                     }
+
                     else -> TODO("Not Yet Implemented")
                 }
             }
@@ -889,5 +907,76 @@ fun ControlPadBuilderScreenContentInteractiveXPreview() {
         )
     }
 
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EditorAidsBottomSheetContentPreview() {
+    val uiState = remember {
+        mutableStateOf(
+            ControlPadBuilderScreenState(
+                controlPadItems = mutableStateListOf(),
+                transformableStatesMap = SnapshotStateMap(),
+                isModified = true
+            )
+        )
+    }
+    DroidPadTheme {
+        Surface {
+            EditorAidsBottomSheetContent(uiState = uiState.value, onUiEvent = {})
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditorAidsBottomSheetContent(
+    modifier: Modifier = Modifier,
+    uiState: ControlPadBuilderScreenState,
+    onUiEvent: (ControlPadBuilderScreenEvent) -> Unit)
+{
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Enable Angle Snap") },
+            supportingContent = {
+                Text(
+                    text = "Snap to specific angle automatically",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            },
+            trailingContent = {
+                Switch(
+                    checked = uiState.useAngleSnap,
+                    onCheckedChange = {
+                        onUiEvent(ControlPadBuilderScreenEvent.OnUseAngleSnapChange)
+                    }
+                )
+            }
+        )
+        AnimatedVisibility(uiState.useAngleSnap) {
+            ListItem(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                headlineContent = {
+                    Slider(
+                        valueRange = 4f..36f,
+                        value = uiState.angleSnapDivision.toFloat(),
+                        onValueChange = {newValue ->
+                            onUiEvent(ControlPadBuilderScreenEvent.OnAngleSnapChange(newValue))
+                        }
+                    )
+                },
+                supportingContent = {
+                    val angle = 360f / uiState.angleSnapDivision
+                    Text("Snap per ${"%.2f".format(angle)}°(360/${uiState.angleSnapDivision})")
+                },
+            )
+
+        }
+    }
 }
 

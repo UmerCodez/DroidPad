@@ -2,15 +2,14 @@ package com.github.umer0586.droidpad.daotests
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.MainDispatcherRule
+import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.data.database.dao.ControlPadDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadItemDao
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.data.database.entities.Orientation
-
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals

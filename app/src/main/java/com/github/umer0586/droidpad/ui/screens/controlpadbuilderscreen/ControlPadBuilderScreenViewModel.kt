@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 data class ControlPadBuilderScreenState(
@@ -50,8 +51,10 @@ data class ControlPadBuilderScreenState(
     val showItemEditor: Boolean = false,
     val itemToBeEdited: ControlPadItem? = null,
     val transformableStatesMap: SnapshotStateMap<Long, TransformableState> = SnapshotStateMap(),
-    val isModified: Boolean = false
-)
+    val isModified: Boolean = false,
+    val useAngleSnap: Boolean = false,
+    val angleSnapDivision:Int = 36,
+    )
 
 sealed interface ControlPadBuilderScreenEvent {
     data object OnAddItemClick : ControlPadBuilderScreenEvent
@@ -65,6 +68,8 @@ sealed interface ControlPadBuilderScreenEvent {
     data object OnBackPress: ControlPadBuilderScreenEvent
     data class OnResolutionReported(val controlPad: ControlPad, val builderScreenResolution: Resolution, val tempOpen : Boolean = false) : ControlPadBuilderScreenEvent
     data object OnTempOpenCompleted : ControlPadBuilderScreenEvent
+    data object OnUseAngleSnapChange: ControlPadBuilderScreenEvent
+    data class OnAngleSnapChange(val newValue:Float) : ControlPadBuilderScreenEvent
 
 }
 
@@ -91,6 +96,13 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
         Log.d(tag,"onCleared() ${hashCode()}")
     }
 
+    private fun snappedRotation(input: Float): Float {
+        return input.div(360)
+            .times(_uiState.value.angleSnapDivision)// Scale the input into [-angleSnapDivision,angleSnapDivision]
+            .roundToInt()// Snap!
+            .times(360).toFloat()
+            .div(_uiState.value.angleSnapDivision)// Scale back to normal and convert
+    }
     fun loadControlPadItemsFor(controlPad: ControlPad){
         _uiState.update {
             it.copy(isModified = false)
@@ -101,6 +113,8 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 Log.d(tag, items.toString())
                 _uiState.value.controlPadItems.clear()
                 items.forEach { item ->
+                    var temporalRotation: Float =item.rotation// I have little understanding on kotlin, thanks closure isolation
+
                     uiState.value.controlPadItems.add(item)
                     uiState.value.transformableStatesMap[item.id] =
                         TransformableState { zoomChange, offsetChange, rotationChange ->
@@ -110,15 +124,29 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                             val controlPadItem = uiState.value.controlPadItems[index]
 
                             val newScale = controlPadItem.scale * zoomChange
-                            val newRotation = controlPadItem.rotation + rotationChange
-                            val newOffset = controlPadItem.offset + offsetChange.rotateBy(newRotation) * newScale
+
+                            val newRotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
+                                else if (_uiState.value.useAngleSnap){ temporalRotation + rotationChange }
+                                else{ controlPadItem.rotation + rotationChange }
+
+                            temporalRotation = newRotation
+                            
+                            val snappedNewRotation = snappedRotation(newRotation)
+
+                            val newOffset = controlPadItem.offset + offsetChange.rotateBy(
+                                if (rotationChange == 0f) controlPadItem.rotation
+                                else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                else newRotation
+                            ) * newScale
 
                             uiState.value.controlPadItems[index] =
                                 controlPadItem.copy(
                                     offsetX = newOffset.x,
                                     offsetY = newOffset.y,
                                     // Joystick and steering wheel should not be rotatable
-                                    rotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f else newRotation,
+                                    rotation = if (rotationChange == 0f) controlPadItem.rotation
+                                            else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                            else newRotation,
                                     scale = newScale.coerceIn(minScale,maxScale)
                                 )
 
@@ -198,29 +226,41 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                     properties = event.properties
                 )
                 viewModelScope.launch {
+                    var temporalRotation: Float =newItem.rotation
                     controlPadItemRepository.save(newItem).also { newId ->
                         controlPadItemRepository.getById(newId).also { newItem ->
 
                             uiState.value.controlPadItems.add(newItem!!)
 
-
                             uiState.value.transformableStatesMap[newItem.id] =
                                 TransformableState { zoomChange, offsetChange, rotationChange ->
-
                                     val index = uiState.value.controlPadItems.indexOfFirst { it.id == newItem.id }
-
                                     val controlPadItem = uiState.value.controlPadItems[index]
 
                                     val newScale = controlPadItem.scale * zoomChange
-                                    val newRotation = controlPadItem.rotation + rotationChange
-                                    val newOffset = controlPadItem.offset + offsetChange.rotateBy(newRotation) * newScale
+
+                                    val newRotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
+                                    else if (_uiState.value.useAngleSnap){ temporalRotation + rotationChange }
+                                    else{ controlPadItem.rotation + rotationChange }
+
+                                    temporalRotation = newRotation
+
+                                    val snappedNewRotation = snappedRotation(newRotation)
+
+                                    val newOffset = controlPadItem.offset + offsetChange.rotateBy(
+                                        if (rotationChange == 0f) controlPadItem.rotation
+                                        else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                        else newRotation
+                                    ) * newScale
 
                                     uiState.value.controlPadItems[index] =
                                         controlPadItem.copy(
                                             offsetX = newOffset.x,
                                             offsetY = newOffset.y,
                                             // Joystick and steering wheel should not be rotatable
-                                            rotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f else newRotation,
+                                            rotation = if (rotationChange == 0f) controlPadItem.rotation
+                                            else if (_uiState.value.useAngleSnap) snappedNewRotation
+                                            else newRotation,
                                             scale = newScale.coerceIn(minScale,maxScale)
                                         )
 
@@ -259,6 +299,18 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 )
 
             }
+
+            is ControlPadBuilderScreenEvent.OnUseAngleSnapChange ->{
+                _uiState.update {
+                    it.copy(useAngleSnap = !it.useAngleSnap)
+                }
+            }
+            is ControlPadBuilderScreenEvent.OnAngleSnapChange -> {
+                _uiState.update {
+                    it.copy(angleSnapDivision = event.newValue.toInt())
+                }
+            }
+
 
             ControlPadBuilderScreenEvent.OnBackPress -> {}
             ControlPadBuilderScreenEvent.OnTempOpenCompleted -> {}

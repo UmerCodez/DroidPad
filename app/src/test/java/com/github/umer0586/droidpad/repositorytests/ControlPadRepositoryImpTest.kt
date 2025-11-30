@@ -2,8 +2,8 @@ package com.github.umer0586.droidpad.repositorytests
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.MainDispatcherRule
+import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType

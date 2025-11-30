@@ -2,8 +2,8 @@ package com.github.umer0586.droidpad.daotests
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.MainDispatcherRule
+import com.github.umer0586.droidpad.data.database.AppDatabase
 import com.github.umer0586.droidpad.data.database.dao.ConnectionConfigurationDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadDao
 import com.github.umer0586.droidpad.data.database.entities.ConnectionConfig
