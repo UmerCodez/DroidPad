@@ -113,40 +113,40 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 Log.d(tag, items.toString())
                 _uiState.value.controlPadItems.clear()
                 items.forEach { item ->
-                    var temporalRotation: Float =item.rotation// I have little understanding on kotlin, thanks closure isolation
+                    var temporalRotation: Float = item.rotation
 
                     uiState.value.controlPadItems.add(item)
                     uiState.value.transformableStatesMap[item.id] =
                         TransformableState { zoomChange, offsetChange, rotationChange ->
 
                             val index = uiState.value.controlPadItems.indexOfFirst { it.id == item.id }
-
                             val controlPadItem = uiState.value.controlPadItems[index]
 
-                            val newScale = controlPadItem.scale * zoomChange
+                            // Rotation not allowed for JOYSTICK and STEERING WHEEL
+                            val isRotationNotAllowed = controlPadItem.itemType == ItemType.JOYSTICK ||
+                                    controlPadItem.itemType == ItemType.STEERING_WHEEL
 
-                            val newRotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
-                                else if (_uiState.value.useAngleSnap){ temporalRotation + rotationChange }
-                                else{ controlPadItem.rotation + rotationChange }
+                            val newRotation = if (isRotationNotAllowed) 0f else temporalRotation + rotationChange
 
                             temporalRotation = newRotation
-                            
-                            val snappedNewRotation = snappedRotation(newRotation)
 
-                            val newOffset = controlPadItem.offset + offsetChange.rotateBy(
-                                if (rotationChange == 0f) controlPadItem.rotation
-                                else if (_uiState.value.useAngleSnap) snappedNewRotation
-                                else newRotation
-                            ) * newScale
+                            val effectiveRotation = when {
+                                isRotationNotAllowed -> 0f
+                                rotationChange == 0f -> controlPadItem.rotation
+                                _uiState.value.useAngleSnap -> snappedRotation(newRotation)
+                                else -> newRotation
+                            }
+
+                            val newScale = controlPadItem.scale * zoomChange
+                            val newOffset = controlPadItem.offset +
+                                    offsetChange.rotateBy(effectiveRotation) * newScale
 
                             uiState.value.controlPadItems[index] =
                                 controlPadItem.copy(
                                     offsetX = newOffset.x,
                                     offsetY = newOffset.y,
                                     // Joystick and steering wheel should not be rotatable
-                                    rotation = if (rotationChange == 0f) controlPadItem.rotation
-                                            else if (_uiState.value.useAngleSnap) snappedNewRotation
-                                            else newRotation,
+                                    rotation = effectiveRotation,
                                     scale = newScale.coerceIn(minScale,maxScale)
                                 )
 
