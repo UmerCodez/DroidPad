@@ -113,7 +113,7 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 Log.d(tag, items.toString())
                 _uiState.value.controlPadItems.clear()
                 items.forEach { item ->
-                    var temporalRotation: Float = item.rotation
+                    var currentRotation: Float = item.rotation
 
                     uiState.value.controlPadItems.add(item)
                     uiState.value.transformableStatesMap[item.id] =
@@ -126,9 +126,9 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                             val isRotationNotAllowed = controlPadItem.itemType == ItemType.JOYSTICK ||
                                     controlPadItem.itemType == ItemType.STEERING_WHEEL
 
-                            val newRotation = if (isRotationNotAllowed) 0f else temporalRotation + rotationChange
+                            val newRotation = if (isRotationNotAllowed) 0f else currentRotation + rotationChange
 
-                            temporalRotation = newRotation
+                            currentRotation = newRotation
 
                             val effectiveRotation = when {
                                 isRotationNotAllowed -> 0f
