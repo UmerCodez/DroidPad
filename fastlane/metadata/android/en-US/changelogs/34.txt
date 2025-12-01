@@ -1,0 +1,1 @@
+New Feature: Angle snapping in control pad builder
