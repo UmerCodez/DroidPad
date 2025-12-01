@@ -17,12 +17,12 @@ room {
 
 android {
     namespace = "com.github.umer0586.droidpad"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.github.umer0586.droidpad"
         minSdk = 21
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 33
         versionName = "3.4.0"
 
