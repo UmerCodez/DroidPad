@@ -69,19 +69,23 @@ class BluetoothUtilImp(private val applicationContext: Context): BluetoothUtil {
 
     override fun getPairedDevices(): List<RemoteBluetoothDevice> {
 
-        // On Android 12+ BLUETOOTH_CONNECT runtime permission is required to get paired/bounded devices
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(
+        // 1. Determine if we have permission on Android 12+
+        // BLUETOOTH_CONNEC Runtime permission is required on Android 12+ device to get paired/bounded devices
+        val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ActivityCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.BLUETOOTH_CONNECT
             ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            return bluetoothManager.adapter.bondedDevices?.map {
-                RemoteBluetoothDevice(
-                    it.name,
-                    it.address
-                )
-            }?.toList() ?: emptyList()
+        } else {
+            // On Android 11 and below, BLUETOOTH and BLUETOOTH_ADMIN (declared in Manifest)
+            // are usually sufficient and don't require runtime checks for this specific call.
+            true
+        }
 
+        if (hasPermission) {
+            return bluetoothManager.adapter.bondedDevices?.map {
+                RemoteBluetoothDevice(it.name ?: "Unknown Device", it.address)
+            } ?: emptyList()
         }
 
         return emptyList()
