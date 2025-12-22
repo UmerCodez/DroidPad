@@ -293,6 +293,7 @@ You can send JSON messages to DroidPad to update the UI. All connection types ar
 - SWITCH
 - SLIDER
 - LED
+- GAUGE
 
 To update a **SWITCH**, **SLIDER**, **LED**, or **GAUGE** send a JSON object message similar to the ones specified in the [SWITCH](#switch), [SLIDER](#slider), [LED](#led), [GAUGE](#gauge) sections, with the desired value or state.
 
@@ -311,6 +312,9 @@ For **MQTT**, **WebSocket**, and **UDP** connections, you can send formatted JSO
 A long Bluetooth device name can cause advertisement failure (In case of BLE). To avoid this issue, use a shorter name. In your device's Bluetooth settings, change the Bluetooth device name to five or fewer characters, such as `dev`.
 
 For devices running **Android 12 or higher**, you also need to ensure that your app has the necessary Bluetooth permissions. To do this, go to the app's system settings and grant the required **Nearby Devices** permission. Without this permission, the app won't be able to advertise Bluetooth LE services or access paired devices when using Bluetooth Classic.
+
+## Limitations of Control Pad Sharing via QRCode and Json file
+Although DroidPad allows you to share your control pads via QR code and JSON file, this feature has certain limitations. The app does not implement a grid system for item placement; instead, all items are positioned relative to the origin point at the top-left corner (0,0) of the control pad. As a result, when you import a control pad onto a device with a different screen size, DroidPad applies an offset shift to all items to adapt them to the new dimensions. In some cases, this automatic adjustment may require manual fine-tuning by the user importing it
 
 ## Testing the connection
 You can test the connections with Websocket,TCP, UDP servers and BLE client provided in [https://github.com/UmerCodez/droidpad-python-examples](https://github.com/UmerCodez/droidpad-python-examples)
