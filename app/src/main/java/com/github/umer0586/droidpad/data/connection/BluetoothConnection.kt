@@ -26,6 +26,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.app.ActivityCompat
 import com.github.umer0586.droidpad.data.connectionconfig.BluetoothConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
@@ -72,11 +73,7 @@ class BluetoothConnection(
             return
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (!hasPermissionToConnect()) {
             notifyConnectionState(ConnectionState.BLUETOOTH_PERMISSION_REQUIRED)
             return
         }
@@ -153,6 +150,20 @@ class BluetoothConnection(
                 e.printStackTrace()
                 notifyConnectionState(ConnectionState.BLUETOOTH_DISCONNECTED)
             }
+        }
+    }
+
+    private fun hasPermissionToConnect(): Boolean {
+        // BLUETOOTH_CONNECT runtime permission is required on Android 12 (API level 31) or higher to retrieve paired devices and establish connections.
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            // On Android 11 and below, BLUETOOTH and BLUETOOTH_ADMIN (declared in Manifest)
+            // are usually sufficient and don't require runtime checks for this specific call.
+            true
         }
     }
 }
