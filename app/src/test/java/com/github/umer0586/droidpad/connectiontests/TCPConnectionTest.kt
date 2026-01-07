@@ -69,7 +69,8 @@ class TCPConnectionTest {
 
         val tcpConnection: Connection = TCPConnection(
             TCPConfig("127.0.0.1", 9002),
-            ioDispatcher = testDispatcher
+            ioDispatcher = testDispatcher,
+            scope = this
         )
 
 
@@ -98,7 +99,7 @@ class TCPConnectionTest {
 
         val job = launch(testDispatcher) {
             val tcpConfig = TCPConfig("127.0.0.1", 8090)
-            val tcpConnection = TCPConnection(tcpConfig, testDispatcher)
+            val tcpConnection = TCPConnection(tcpConfig, ioDispatcher = testDispatcher, scope = this@runTest)
             tcpConnection.setup()
             tcpConnection.connectionState.test {
                 assertEquals(ConnectionState.TCP_CONNECTION_TIMEOUT,  awaitItem())
