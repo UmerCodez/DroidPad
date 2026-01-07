@@ -34,7 +34,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -42,12 +41,13 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import kotlinx.io.IOException
 
 class TCPConnection(
     val tcpConfig: TCPConfig,
+    private val scope: CoroutineScope,
     // Dispatchers should be injected for making testing easier
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 ) : Connection() {
 
     private var selectorManager: SelectorManager? = null
@@ -63,7 +63,7 @@ class TCPConnection(
     override val connectionType: ConnectionType
         get() = ConnectionType.TCP
 
-    override suspend fun setup() = withContext(ioDispatcher) {
+    override suspend fun setup() = withContext<Unit>(ioDispatcher) {
 
         notifyConnectionState(ConnectionState.TCP_CONNECTING)
         try {
@@ -79,30 +79,51 @@ class TCPConnection(
                         .connect(tcpConfig.host, tcpConfig.port)
                 }
 
+                notifyConnectionState(ConnectionState.TCP_CONNECTED)
+
                 writeChannel = socket?.openWriteChannel(autoFlush = true)
 
-                dataReceivingJob = scope.launch {
+                dataReceivingJob = scope.launch(ioDispatcher) {
+
+                    // TCP sockets are byte streams with no built-in message boundaries.
+                    // When the remote peer closes (or half-closes) the connection, the local side detects EOF during a read operation.
+                    // A read function (like Ktor's readUTF8Line()) returns null or throws an exception when it hits EOF — this means the server has shut down the connection gracefully, and no more data will arrive.
+
                     try {
                         val readChannel = socket?.openReadChannel()
                         while (isActive) {
-                            val data = readChannel?.readUTF8Line()
-                            if (data != null) {
+                            try {
+                                val data = readChannel?.readUTF8Line() ?: break // EOF
                                 notifyReceivedData(data)
+                            } catch (e: Throwable) {
+                                if (isActive) {
+                                    Log.e(TAG, "Error reading from socket", e)
+                                    e.printStackTrace()
+                                    notifyConnectionState(ConnectionState.TCP_ERROR)
+                                }
+                                break
                             }
                         }
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        if (isActive) {
+                            Log.e(TAG, "Receiving job exception", e)
+                            e.printStackTrace()
+                            notifyConnectionState(ConnectionState.TCP_ERROR)
+                        }
                     }
                 }
             }
 
-            notifyConnectionState(ConnectionState.TCP_CONNECTED)
 
         }catch (e : TimeoutCancellationException){
+            e.printStackTrace()
             notifyConnectionState(ConnectionState.TCP_CONNECTION_TIMEOUT)
+            selectorManager?.close()
         }
         catch (e: Exception) {
+            e.printStackTrace()
             notifyConnectionState(ConnectionState.TCP_CONNECTION_FAILED)
+            selectorManager?.close()
         }
 
 
@@ -113,30 +134,41 @@ class TCPConnection(
 
         try {
             writeMutex.withLock {
-                writeChannel?.writeStringUtf8(data)
+                val channel = writeChannel
+                if (channel == null || channel.isClosedForWrite) {
+                    // Channel not available → connection broken
+                    notifyConnectionState(ConnectionState.TCP_ERROR)
+                    return@withLock
+                }
+                channel.writeStringUtf8(data)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "sendData: $e")
-            e.printStackTrace()
+        } catch (e: IOException) {
+            // Most common: actual network/socket failure
+            Log.e(TAG, "Send failed due to IO error - connection likely dead", e)
             notifyConnectionState(ConnectionState.TCP_ERROR)
         }
-
     }
 
-    override suspend fun tearDown() = withContext(ioDispatcher) {
+    override suspend fun tearDown() = withContext<Unit>(ioDispatcher) {
+
+        notifyConnectionState(ConnectionState.TCP_DISCONNECTING)
+
+        // Cancel the receiving job first
+        dataReceivingJob?.cancel()
+        dataReceivingJob = null
 
         try {
-            notifyConnectionState(ConnectionState.TCP_DISCONNECTING)
             socket?.close()
             writeChannel?.flushAndClose()
             selectorManager?.close()
-            dataReceivingJob?.cancel()
-            notifyConnectionState(ConnectionState.TCP_DISCONNECTED)
         } catch (e: Exception) {
-            e.printStackTrace()
-            notifyConnectionState(ConnectionState.TCP_ERROR)
+            Log.e(TAG, "Error closing resources", e)
+        } finally {
+            socket = null
+            writeChannel = null
+            selectorManager = null
+            notifyConnectionState(ConnectionState.TCP_DISCONNECTED)
         }
-
     }
 
 }
