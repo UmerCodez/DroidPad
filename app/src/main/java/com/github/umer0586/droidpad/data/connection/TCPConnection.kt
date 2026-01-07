@@ -85,21 +85,35 @@ class TCPConnection(
 
                 dataReceivingJob = scope.launch(ioDispatcher) {
 
+
+                    val readChannel = try {
+                        socket?.openReadChannel()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        notifyConnectionState(ConnectionState.TCP_ERROR)
+                        return@launch
+                    }
+
                     // TCP sockets are byte streams with no built-in message boundaries.
                     // When the remote peer closes (or half-closes) the connection, the local side detects EOF during a read operation.
                     // A read function (like Ktor's readUTF8Line()) returns null or throws an exception when it hits EOF — this means the server has shut down the connection gracefully, and no more data will arrive.
 
                     try {
-                        val readChannel = socket?.openReadChannel()
                         while (isActive) {
                             try {
-                                val data = readChannel?.readUTF8Line() ?: break // EOF
+                                val data = readChannel?.readUTF8Line() ?: run {
+                                    // EOF → remote closed connection
+                                    // The remote peer closed the connection gracefully (FIN)
+                                    notifyConnectionState(ConnectionState.TCP_DISCONNECTED)
+                                    return@launch
+                                }
                                 notifyReceivedData(data)
                             } catch (e: Throwable) {
                                 if (isActive) {
                                     Log.e(TAG, "Error reading from socket", e)
                                     e.printStackTrace()
                                     notifyConnectionState(ConnectionState.TCP_ERROR)
+                                    tearDown()
                                 }
                                 break
                             }
@@ -109,6 +123,7 @@ class TCPConnection(
                             Log.e(TAG, "Receiving job exception", e)
                             e.printStackTrace()
                             notifyConnectionState(ConnectionState.TCP_ERROR)
+                            tearDown()
                         }
                     }
                 }
@@ -127,7 +142,6 @@ class TCPConnection(
         }
 
 
-
     }
 
     override suspend fun sendData(data: String) = withContext<Unit>(ioDispatcher){
@@ -138,6 +152,7 @@ class TCPConnection(
                 if (channel == null || channel.isClosedForWrite) {
                     // Channel not available → connection broken
                     notifyConnectionState(ConnectionState.TCP_ERROR)
+                    tearDown()
                     return@withLock
                 }
                 channel.writeStringUtf8(data)
@@ -146,6 +161,7 @@ class TCPConnection(
             // Most common: actual network/socket failure
             Log.e(TAG, "Send failed due to IO error - connection likely dead", e)
             notifyConnectionState(ConnectionState.TCP_ERROR)
+            tearDown()
         }
     }
 
