@@ -313,7 +313,7 @@ A long Bluetooth device name can cause advertisement failure (In case of BLE). T
 
 For devices running **Android 12 or higher**, you also need to ensure that your app has the necessary Bluetooth permissions. To do this, go to the app's system settings and grant the required **Nearby Devices** permission. Without this permission, the app won't be able to advertise Bluetooth LE services or access paired devices when using Bluetooth Classic.
 
-## Limitations of Control Pad Sharing via QRCode and Json file
+## ⚠️ Limitations of Control Pad Sharing via QRCode and Json file
 Although DroidPad allows you to share your control pads via QR code and JSON file, this feature has certain limitations. The app does not implement a grid system for item placement; instead, all items are positioned relative to the origin point at the top-left corner (0,0) of the control pad. As a result, when you import a control pad onto a device with a different screen size, DroidPad applies an offset shift to all items to adapt them to the new dimensions. In some cases, this automatic adjustment may require manual fine-tuning by the user importing it
 
 ## Testing the connection
@@ -329,6 +329,7 @@ See Ardunio code template for CSV and JSON parsing [UmerCodez/DroidPad-Arduino-t
 4.  A simple server for DroidPad, that can convert DroidPad messages into actual input events on your PC. It can be used alongside DroidPad, to emulate joysticks/keyboards/mouses, and is scriptable using Janet. [https://github.com/agent-kilo/jumper](https://github.com/agent-kilo/jumper)
 5. Parse structured data from Sockets Services for Vizzy, written to parse data sended by Droid Pad to control vehicles in Juno:New Origins with a mobile phone or tablet [https://github.com/FourthDing/DataProcessingHelper](https://github.com/FourthDing/DataProcessingHelper)
 6. [droidpad.py](https://github.com/mlimonv12/MISE/blob/main/sw/MaqueenLib_proj/droidpad.py) is a Python script that serves as a network bridge between an Android device running DroidPad and the Maqueen robot. It receives commands from DroidPad and translates them into Maqueen’s actions, such as movement, LED control, and buzzer activation.
+7. Linux app that can run commands based on YAML configuration. [https://github.com/filintodelgado/droidpad-companion](https://github.com/filintodelgado/droidpad-companion)
 
 
 
