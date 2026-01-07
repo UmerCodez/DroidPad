@@ -23,8 +23,8 @@ android {
         applicationId = "com.github.umer0586.droidpad"
         minSdk = 21
         targetSdk = 36
-        versionCode = 37
-        versionName = "3.5.3"
+        versionCode = 38
+        versionName = "3.5.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
