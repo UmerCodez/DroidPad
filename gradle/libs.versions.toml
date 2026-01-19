@@ -32,6 +32,7 @@ zxingCore = "3.5.2"
 zxingAndroidEmbedded = "4.3.0"
 datastorePreferences = "1.1.7"
 accompanistPermissions = "0.36.0"
+materialIconsCore = "1.7.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,6 +77,7 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
 
 
 [plugins]
