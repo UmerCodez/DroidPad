@@ -30,7 +30,7 @@ speedometerAndroid = "1.0.0-ALPHA02"
 turbine = "1.2.0"
 zxingCore = "3.5.2"
 zxingAndroidEmbedded = "4.3.0"
-datastorePreferences = "1.1.7"
+datastorePreferences = "1.2.0"
 accompanistPermissions = "0.36.0"
 materialIconsCore = "1.7.8"
 
