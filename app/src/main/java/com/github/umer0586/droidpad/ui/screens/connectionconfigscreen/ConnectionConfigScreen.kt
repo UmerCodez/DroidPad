@@ -75,7 +75,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.chargemap.compose.numberpicker.NumberPicker
 import com.github.umer0586.droidpad.data.connectionconfig.RemoteBluetoothDevice
 import com.github.umer0586.droidpad.data.connectionconfig.UUID_SSP

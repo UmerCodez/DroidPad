@@ -45,7 +45,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.util.ImageShareUtil

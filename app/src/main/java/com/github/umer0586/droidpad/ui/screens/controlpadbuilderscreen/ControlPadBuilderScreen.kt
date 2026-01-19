@@ -82,7 +82,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.data.DpadProperties

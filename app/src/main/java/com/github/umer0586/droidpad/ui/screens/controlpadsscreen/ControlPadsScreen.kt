@@ -99,7 +99,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
