@@ -26,6 +26,7 @@ import com.github.umer0586.droidpad.data.connectionconfig.MqttConfig
 import com.github.umer0586.droidpad.data.connectionconfig.TCPConfig
 import com.github.umer0586.droidpad.data.connectionconfig.UDPConfig
 import com.github.umer0586.droidpad.data.connectionconfig.WebsocketConfig
+import com.github.umer0586.droidpad.data.connectionconfig.WebsocketServerConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +43,7 @@ class ConnectionFactoryImpl(private val appContext: Context) : ConnectionFactory
             ConnectionType.TCP -> TCPConnection(TCPConfig.fromJson(connectionConfig.configJson), scope = scope)
             ConnectionType.UDP -> UDPConnection(UDPConfig.fromJson(connectionConfig.configJson))
             ConnectionType.WEBSOCKET -> WebsocketConnection(WebsocketConfig.fromJson(connectionConfig.configJson), scope = scope)
+            ConnectionType.WEBSOCKET_SERVER -> WebsocketServerConnection(WebsocketServerConfig.fromJson(connectionConfig.configJson), context = appContext, scope = scope)
             ConnectionType.MQTT_V5 -> Mqttv5Connection(MqttConfig.fromJson(connectionConfig.configJson))
             ConnectionType.MQTT_V3 -> Mqttv3Connection(MqttConfig.fromJson(connectionConfig.configJson))
             ConnectionType.BLUETOOTH_LE -> BluetoothLEConnection(context = appContext , config = BluetoothLEConfig.fromJson(connectionConfig.configJson))

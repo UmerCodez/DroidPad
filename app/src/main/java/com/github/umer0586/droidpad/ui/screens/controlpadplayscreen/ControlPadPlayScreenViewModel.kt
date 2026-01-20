@@ -48,6 +48,7 @@ import com.github.umer0586.droidpad.data.connection.Mqttv5Connection
 import com.github.umer0586.droidpad.data.connection.TCPConnection
 import com.github.umer0586.droidpad.data.connection.UDPConnection
 import com.github.umer0586.droidpad.data.connection.WebsocketConnection
+import com.github.umer0586.droidpad.data.connection.WebsocketServerConnection
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
@@ -65,6 +66,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -170,7 +172,6 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             }
         }
 
-
     }
 
     fun loadControlPadItemsFor(controlPad: ControlPad) {
@@ -223,6 +224,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionType.TCP -> (connection as TCPConnection).tcpConfig.address
                                 ConnectionType.UDP -> (connection as UDPConnection).udpConfig.address
                                 ConnectionType.WEBSOCKET -> (connection as WebsocketConnection).webSocketConfig.address
+                                ConnectionType.WEBSOCKET_SERVER -> (connection as WebsocketServerConnection).websocketServerConfig.address
                                 ConnectionType.MQTT_V5 -> (connection as Mqttv5Connection).mqttConfig.brokerAddress
                                 ConnectionType.MQTT_V3 -> (connection as Mqttv3Connection).mqttConfig.brokerAddress
                                 ConnectionType.BLUETOOTH_LE -> (connection as BluetoothLEConnection).bluetoothDisplayName
@@ -236,6 +238,14 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                         viewModelScope.launch {
                             val controlPadSensorsTypes = controlPadSensorRepository.getControlPadSensorsByControlPadId(controlPad.id).map { it.sensorType }
                             sensorEventProvider.provideEventsFor(controlPadSensorsTypes, samplingRate)
+                        }
+                    }
+
+                    if(connectionConfig.connectionType == ConnectionType.WEBSOCKET_SERVER){
+                        launch {
+                            (connection as WebsocketServerConnection).hostAddress.filterNotNull().collect{ hostAddress ->
+                                _uiState.update { it.copy(hostAddress = hostAddress) }
+                            }
                         }
                     }
 
@@ -259,6 +269,9 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 ConnectionState.MQTT_CONNECTED -> true
                                 ConnectionState.BLUETOOTH_CLIENT_CONNECTED -> true
                                 ConnectionState.BLUETOOTH_CONNECTED -> true
+                                // Treat WebSocket server start as a connected state
+                                // to avoid introducing a separate state variable and additional logic
+                                ConnectionState.WEBSOCKET_SERVER_STARTED -> true
                                 else -> false
                             }
 

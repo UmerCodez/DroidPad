@@ -189,19 +189,23 @@ fun ConnectionConfigScreenContent(
             if(uiState.connectionType == ConnectionType.TCP ||
                 uiState.connectionType == ConnectionType.UDP ||
                 uiState.connectionType == ConnectionType.WEBSOCKET ||
+                uiState.connectionType == ConnectionType.WEBSOCKET_SERVER ||
                 uiState.connectionType == ConnectionType.MQTT_V5 ||
                 uiState.connectionType == ConnectionType.MQTT_V3
             ){
 
-                OutlinedTextField(
-                    value = uiState.host,
-                    singleLine = true,
-                    onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnHostChange(it))},
-                    shape = RoundedCornerShape(50),
-                    label = { Text("Host") },
-                    isError = uiState.host.isEmpty(),
-                    maxLines = 1
-                )
+                // Host field not required in case of Websocket server
+                if(uiState.connectionType != ConnectionType.WEBSOCKET_SERVER) {
+                    OutlinedTextField(
+                        value = uiState.host,
+                        singleLine = true,
+                        onValueChange = { onUiEvent(ConnectionConfigScreenEvent.OnHostChange(it)) },
+                        shape = RoundedCornerShape(50),
+                        label = { Text("Host") },
+                        isError = uiState.host.isEmpty(),
+                        maxLines = 1
+                    )
+                }
                 OutlinedTextField(
                     value = uiState.port.toString(),
                     isError = !uiState.isPortNoValid,
@@ -213,7 +217,7 @@ fun ConnectionConfigScreenContent(
                     label = { Text("Port") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
-                if(uiState.connectionType != ConnectionType.UDP) {
+                if(uiState.connectionType != ConnectionType.UDP && uiState.connectionType != ConnectionType.WEBSOCKET_SERVER) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -238,6 +242,29 @@ fun ConnectionConfigScreenContent(
                 }
 
 
+            }
+
+            if(uiState.connectionType == ConnectionType.WEBSOCKET_SERVER){
+                ListItem(
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .padding(horizontal = itemPadding),
+                    headlineContent = { Text("Listen on 0.0.0.0") },
+                    supportingContent = { Text("Listen on all available interfaces") },
+                    trailingContent = {
+                        Switch(
+                            checked = uiState.listenOnAllInterfaces,
+                            onCheckedChange = {
+                                onUiEvent(
+                                    ConnectionConfigScreenEvent.OnListenOnAllInterfacesChange(
+                                        it
+                                    )
+                                )
+                            }
+                        )
+                    }
+
+                )
             }
 
             if(uiState.connectionType == ConnectionType.MQTT_V5 || uiState.connectionType == ConnectionType.MQTT_V3){
@@ -491,7 +518,9 @@ fun ConnectionConfigScreenContent(
 
 
             TextButton(
-                modifier = Modifier.width(itemWidth).padding(itemPadding),
+                modifier = Modifier
+                    .width(itemWidth)
+                    .padding(itemPadding),
                 contentPadding = PaddingValues(20.dp),
                 onClick = { onUiEvent(ConnectionConfigScreenEvent.OnSaveClick(controlPadId)) },
                 enabled = !uiState.hasInputError,

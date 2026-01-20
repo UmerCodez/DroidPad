@@ -30,6 +30,7 @@ import com.github.umer0586.droidpad.data.connectionconfig.TCPConfig
 import com.github.umer0586.droidpad.data.connectionconfig.UDPConfig
 import com.github.umer0586.droidpad.data.connectionconfig.UUID_SSP
 import com.github.umer0586.droidpad.data.connectionconfig.WebsocketConfig
+import com.github.umer0586.droidpad.data.connectionconfig.WebsocketServerConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.repositories.ConnectionConfigRepository
 import com.github.umer0586.droidpad.data.util.bluetooth.BluetoothUtil
@@ -61,7 +62,8 @@ data class ConnectionConfigScreenState(
     val bluetoothServiceUUID: String = UUID_SSP,
     val selectedBluetoothDevice: RemoteBluetoothDevice? = null,
     val hasBluetoothPermission: Boolean = false,
-    val pairedBluetoothDevices: List<RemoteBluetoothDevice> = emptyList()
+    val pairedBluetoothDevices: List<RemoteBluetoothDevice> = emptyList(),
+    val listenOnAllInterfaces: Boolean = false
 )
 
 sealed interface ConnectionConfigScreenEvent {
@@ -82,6 +84,7 @@ sealed interface ConnectionConfigScreenEvent {
     data class OnUseCredentialChange(val useCredentials: Boolean) : ConnectionConfigScreenEvent
     data class OnBluetoothUUIDChange(val uuid: String) : ConnectionConfigScreenEvent
     data class OnBluetoothDeviceSelected(val remoteBluetoothDevice: RemoteBluetoothDevice) : ConnectionConfigScreenEvent
+    data class OnListenOnAllInterfacesChange(val listenOnAllInterfaces: Boolean) : ConnectionConfigScreenEvent
     data object OnBluetoothPermissionStateChange : ConnectionConfigScreenEvent
     data object OnSelectDeviceClick : ConnectionConfigScreenEvent
     data object OnBackPress : ConnectionConfigScreenEvent
@@ -192,6 +195,18 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                             }
                         }
 
+                        ConnectionType.WEBSOCKET_SERVER -> {
+                            val websocketServerConfig = WebsocketServerConfig.fromJson(config.configJson)
+                            _uiState.update {
+                                it.copy(
+                                    connectionType = config.connectionType,
+                                    host = websocketServerConfig.host,
+                                    port = websocketServerConfig.port,
+                                    listenOnAllInterfaces = websocketServerConfig.listenOnAllInterfaces
+                                )
+                            }
+                        }
+
                         ConnectionType.MQTT_V5 -> {
                             val mqttConfig = MqttConfig.fromJson(config.configJson)
                             _uiState.update {
@@ -279,7 +294,9 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                         it.copy(port = portNo)
                     }
 
-                    if (portNo !in 0..65534)
+                    if (uiState.value.connectionType == ConnectionType.WEBSOCKET_SERVER && portNo !in 1024..49151) {
+                        _uiState.update { it.copy(isPortNoValid = false) }
+                    } else if (portNo !in 0..65534) // For tcp,udp,websocket and mqtt clients
                         _uiState.update { it.copy(isPortNoValid = false) }
                     else {
                         _uiState.update { it.copy(isPortNoValid = true) }
@@ -354,6 +371,10 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                     )
                 }
             }
+
+            is ConnectionConfigScreenEvent.OnListenOnAllInterfacesChange -> {
+                _uiState.update { it.copy(listenOnAllInterfaces = event.listenOnAllInterfaces) }
+            }
         }
     }
 
@@ -411,6 +432,13 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                     host = uiState.value.host,
                     port = uiState.value.port,
                     connectionTimeoutSecs = uiState.value.connectionTimeout
+                ).toJson()
+            }
+
+            ConnectionType.WEBSOCKET_SERVER -> {
+                WebsocketServerConfig(
+                    port = uiState.value.port,
+                    listenOnAllInterfaces = uiState.value.listenOnAllInterfaces
                 ).toJson()
             }
 
