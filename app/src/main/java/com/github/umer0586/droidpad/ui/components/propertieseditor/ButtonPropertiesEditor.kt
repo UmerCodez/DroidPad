@@ -293,7 +293,10 @@ fun ButtonPropertiesEditor(
         AnimatedVisibility(visible = buttonProperties.useIcon) {
 
 
-            Column {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 ListItem(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
