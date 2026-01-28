@@ -136,7 +136,7 @@ fun ControlPadButton(
                 BasicText(
                     /*modifier = Modifier.fillMaxSize(),*/
                     text = properties.text,
-                    style = TextStyle(textAlign = TextAlign.Center, fontWeight = FontWeight.Bold),
+                    style = TextStyle(textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, color = Color(properties.textColor)),
                     maxLines = 1,
                     autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, maxFontSize = 12.sp)
                 )
