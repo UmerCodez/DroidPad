@@ -330,6 +330,7 @@ See Ardunio code template for CSV and JSON parsing [UmerCodez/DroidPad-Arduino-t
 5. Parse structured data from Sockets Services for Vizzy, written to parse data sended by Droid Pad to control vehicles in Juno:New Origins with a mobile phone or tablet [https://github.com/FourthDing/DataProcessingHelper](https://github.com/FourthDing/DataProcessingHelper)
 6. [droidpad.py](https://github.com/mlimonv12/MISE/blob/main/sw/MaqueenLib_proj/droidpad.py) is a Python script that serves as a network bridge between an Android device running DroidPad and the Maqueen robot. It receives commands from DroidPad and translates them into Maqueen’s actions, such as movement, LED control, and buzzer activation.
 7. Linux app that can run commands based on YAML configuration. [https://github.com/filintodelgado/droidpad-companion](https://github.com/filintodelgado/droidpad-companion)
+8. Example showing controlling Arduino R4 with smartphone over BLE using DroidPad [https://github.com/Make-Your-School/mks-Arduino-UNO_R4_WiFi/tree/main/examples/dev/UNO_R4_WiFi-Bluetooth_DroidPad](https://github.com/Make-Your-School/mks-Arduino-UNO_R4_WiFi/tree/main/examples/dev/UNO_R4_WiFi-Bluetooth_DroidPad)
 
 
 
