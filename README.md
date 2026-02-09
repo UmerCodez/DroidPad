@@ -335,4 +335,5 @@ See Ardunio code template for CSV and JSON parsing [UmerCodez/DroidPad-Arduino-t
 
 ### TODOs
 1. TouchPad
+2. Allow user to Duplicate item in the layout editor
 
