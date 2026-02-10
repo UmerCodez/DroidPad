@@ -42,6 +42,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
@@ -181,7 +182,8 @@ fun JoyStickPropertiesEditor(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     TooltipBox(
-                        positionProvider = TooltipDefaults. rememberPlainTooltipPositionProvider(),
+                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                            TooltipAnchorPosition.Above ),
                         tooltip = {
                             Text(text = "Ratio of handle radius to joystick radius\n Min:0.4 Max:0.9")
                         },
