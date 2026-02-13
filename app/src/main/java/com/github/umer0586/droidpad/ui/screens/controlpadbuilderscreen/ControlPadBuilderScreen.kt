@@ -670,7 +670,7 @@ fun ControlPadBuilderScreenContent(
                     ItemPropertiesEditorSheet(
                         controlPadItem = uiState.itemToBeEdited,
                         onSaveSubmit = {
-                            onUiEvent(ControlPadBuilderScreenEvent.OnItemEditSubmit(it, controlPad))
+                            onUiEvent(ControlPadBuilderScreenEvent.OnItemEditSubmit(it))
 
                         }
                     )
