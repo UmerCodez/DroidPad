@@ -58,7 +58,7 @@ data class ControlPadBuilderScreenState(
 
 sealed interface ControlPadBuilderScreenEvent {
     data object OnAddItemClick : ControlPadBuilderScreenEvent
-    data class OnDeleteItemClick(val controlPadItem: ControlPadItem, val controlPad: ControlPad) :  ControlPadBuilderScreenEvent
+    data class OnDeleteItemClick(val controlPadItem: ControlPadItem) :  ControlPadBuilderScreenEvent
     data class OnItemTypeSelected(val itemType: ItemType, val controlPad: ControlPad, val properties: String) :  ControlPadBuilderScreenEvent
     data class OnEditItemClick(val controlPadItem: ControlPadItem, val controlPad: ControlPad) :  ControlPadBuilderScreenEvent
     data class OnItemEditSubmit(val controlPadItem: ControlPadItem, val controlPad: ControlPad) : ControlPadBuilderScreenEvent

@@ -351,7 +351,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -379,7 +378,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -408,7 +406,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -432,7 +429,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -458,7 +454,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -484,7 +479,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -510,7 +504,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -535,7 +528,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -561,7 +553,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -590,7 +581,6 @@ fun ControlPadBuilderScreenContent(
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
