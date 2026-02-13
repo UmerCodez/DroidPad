@@ -358,7 +358,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -385,7 +384,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -413,7 +411,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -436,7 +433,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -461,7 +457,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -486,7 +481,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -511,7 +505,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -535,7 +528,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -560,7 +552,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
@@ -588,7 +579,6 @@ fun ControlPadBuilderScreenContent(
                         onEditClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnEditItemClick(
-                                    controlPad = controlPad,
                                     controlPadItem = controlPadItem
                                 )
                             )
