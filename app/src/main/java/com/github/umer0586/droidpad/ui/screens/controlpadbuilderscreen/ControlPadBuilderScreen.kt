@@ -684,6 +684,28 @@ fun ControlPadBuilderScreenContent(
                     EditorAidsBottomSheetContent(uiState = uiState, onUiEvent = onUiEvent)
                 }
             }
+
+            if (uiState.showDeleteConfirmation && uiState.itemToBeDeleted != null) {
+                AlertDialog(
+                    onDismissRequest = { onUiEvent(ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest) },
+                    title = { Text(text = "Delete Item?") },
+                    text = { Text(text = "Item will be removed") },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                onUiEvent(ControlPadBuilderScreenEvent.OnDeleteItemConfirm)
+                            }
+                        ) { Text("Delete") }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                onUiEvent(ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest)
+                            }
+                        ) { Text("Cancel") }
+                    }
+                )
+            }
         }
     }
 

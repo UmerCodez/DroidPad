@@ -54,6 +54,8 @@ data class ControlPadBuilderScreenState(
     val isModified: Boolean = false,
     val useAngleSnap: Boolean = false,
     val angleSnapDivision:Int = 36,
+    val showDeleteConfirmation: Boolean = false,
+    val itemToBeDeleted: ControlPadItem? = null
     )
 
 sealed interface ControlPadBuilderScreenEvent {
@@ -70,6 +72,8 @@ sealed interface ControlPadBuilderScreenEvent {
     data object OnTempOpenCompleted : ControlPadBuilderScreenEvent
     data object OnUseAngleSnapChange: ControlPadBuilderScreenEvent
     data class OnAngleSnapChange(val newValue:Float) : ControlPadBuilderScreenEvent
+    data object OnDeleteItemConfirm: ControlPadBuilderScreenEvent
+    data object OnDeleteConfirmationDismissRequest: ControlPadBuilderScreenEvent
 
 }
 
@@ -171,11 +175,34 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 }
             }
             is ControlPadBuilderScreenEvent.OnDeleteItemClick -> {
-                viewModelScope.launch {
-                    controlPadItemRepository.delete(event.controlPadItem)
-                    _uiState.value.controlPadItems.remove(event.controlPadItem)
+                _uiState.update {
+                    it.copy(
+                        showDeleteConfirmation = true,
+                        itemToBeDeleted = event.controlPadItem
+                    )
                 }
             }
+
+            is ControlPadBuilderScreenEvent.OnDeleteItemConfirm -> {
+                viewModelScope.launch {
+                    _uiState.value.itemToBeDeleted?.also { itemToBeDeleted ->
+                        controlPadItemRepository.delete(itemToBeDeleted)
+                        _uiState.value.controlPadItems.remove(itemToBeDeleted)
+
+                        _uiState.update {
+                            it.copy(showDeleteConfirmation = false)
+                        }
+                    }
+
+                }
+            }
+
+            is ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest -> {
+                _uiState.update {
+                    it.copy(showDeleteConfirmation = false)
+                }
+            }
+
             // When user click "Edit" icon on the item
             is ControlPadBuilderScreenEvent.OnEditItemClick -> {
                 _uiState.update {
