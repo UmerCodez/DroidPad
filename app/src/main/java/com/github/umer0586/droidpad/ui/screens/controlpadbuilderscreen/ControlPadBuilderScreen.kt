@@ -965,7 +965,7 @@ fun EditorAidsBottomSheetContent(
                 Switch(
                     checked = uiState.useAngleSnap,
                     onCheckedChange = {
-                        onUiEvent(ControlPadBuilderScreenEvent.OnUseAngleSnapChange)
+                        onUiEvent(ControlPadBuilderScreenEvent.OnUseAngleSnapChange(it))
                     }
                 )
             }

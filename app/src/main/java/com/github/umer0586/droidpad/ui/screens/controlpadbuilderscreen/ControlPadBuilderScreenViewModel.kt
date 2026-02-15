@@ -71,7 +71,7 @@ sealed interface ControlPadBuilderScreenEvent {
     data object OnBackPress: ControlPadBuilderScreenEvent
     data class OnResolutionReported(val controlPad: ControlPad, val builderScreenResolution: Resolution, val tempOpen : Boolean = false) : ControlPadBuilderScreenEvent
     data object OnTempOpenCompleted : ControlPadBuilderScreenEvent
-    data object OnUseAngleSnapChange: ControlPadBuilderScreenEvent
+    data class OnUseAngleSnapChange(val useAngleSnap: Boolean): ControlPadBuilderScreenEvent
     data class OnAngleSnapChange(val newValue:Float) : ControlPadBuilderScreenEvent
     data object OnDeleteItemConfirm: ControlPadBuilderScreenEvent
     data object OnDeleteConfirmationDismissRequest: ControlPadBuilderScreenEvent
@@ -329,7 +329,7 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
             is ControlPadBuilderScreenEvent.OnUseAngleSnapChange ->{
                 _uiState.update {
-                    it.copy(useAngleSnap = !it.useAngleSnap)
+                    it.copy(useAngleSnap = event.useAngleSnap)
                 }
             }
             is ControlPadBuilderScreenEvent.OnAngleSnapChange -> {
