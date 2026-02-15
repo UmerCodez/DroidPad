@@ -689,7 +689,7 @@ fun ControlPadBuilderScreenContent(
                 AlertDialog(
                     onDismissRequest = { onUiEvent(ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest) },
                     title = { Text(text = "Delete Item?") },
-                    text = { Text(text = "Item will be removed") },
+                    text = { Text(text = "${uiState.itemToBeDeleted.itemType} will be removed") },
                     confirmButton = {
                         TextButton(
                             onClick = {
