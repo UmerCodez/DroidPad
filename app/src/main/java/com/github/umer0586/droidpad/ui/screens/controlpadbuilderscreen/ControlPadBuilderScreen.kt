@@ -348,6 +348,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = SwitchProperties.fromJson(controlPadItem.properties),
                         enabled = false,
+                        showControls = uiState.showControls,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -373,6 +374,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = properties,
                         enabled = false,
+                        showControls = uiState.showControls,
                         value = (properties.minValue + properties.maxValue) / 2,
                         onDeleteClick = {
                             onUiEvent(
@@ -400,6 +402,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = properties,
                         enabled = false,
+                        showControls = uiState.showControls,
                         value = (properties.minValue + properties.maxValue) / 2,
                         onDeleteClick = {
                             onUiEvent(
@@ -423,6 +426,7 @@ fun ControlPadBuilderScreenContent(
                         scale = controlPadItem.scale,
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = LabelProperties.fromJson(controlPadItem.properties),
+                        showControls = uiState.showControls,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -447,6 +451,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = ButtonProperties.fromJson(controlPadItem.properties),
                         enabled = false,
+                        showControls = uiState.showControls,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -471,6 +476,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = DpadProperties.fromJson(controlPadItem.properties),
                         enabled = false,
+                        showControls = uiState.showControls,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -495,6 +501,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = JoyStickProperties.fromJson(controlPadItem.properties),
                         enabled = false,
+                        showControls = uiState.showControls,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -518,6 +525,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = SteeringWheelProperties.fromJson(controlPadItem.properties),
                         enabled = false,
+                        showControls = uiState.showControls,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -542,6 +550,7 @@ fun ControlPadBuilderScreenContent(
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = LEDProperties.fromJson(controlPadItem.properties),
                         state = LEDSTATE.OFF,
+                        showControls = uiState.showControls,
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -567,6 +576,7 @@ fun ControlPadBuilderScreenContent(
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        showControls = uiState.showControls,
                         properties = GaugeProperties.fromJson(controlPadItem.properties)
                             .copy(minValue = 0f, maxValue = 20f),
                         onDeleteClick = {
@@ -979,6 +989,25 @@ fun EditorAidsBottomSheetContent(
             )
 
         }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Show Controls") },
+            supportingContent = {
+                Text(
+                    text = "Show Item controls",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            },
+            trailingContent = {
+                Switch(
+                    checked = uiState.showControls,
+                    onCheckedChange = {
+                        onUiEvent(ControlPadBuilderScreenEvent.OnShowControlsChange(it))
+                    }
+                )
+            }
+        )
     }
 }
 

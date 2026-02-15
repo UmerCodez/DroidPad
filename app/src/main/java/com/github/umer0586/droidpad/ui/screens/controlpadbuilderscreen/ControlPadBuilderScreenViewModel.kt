@@ -55,7 +55,8 @@ data class ControlPadBuilderScreenState(
     val useAngleSnap: Boolean = false,
     val angleSnapDivision:Int = 36,
     val showDeleteConfirmation: Boolean = false,
-    val itemToBeDeleted: ControlPadItem? = null
+    val itemToBeDeleted: ControlPadItem? = null,
+    val showControls: Boolean = true
     )
 
 sealed interface ControlPadBuilderScreenEvent {
@@ -74,6 +75,7 @@ sealed interface ControlPadBuilderScreenEvent {
     data class OnAngleSnapChange(val newValue:Float) : ControlPadBuilderScreenEvent
     data object OnDeleteItemConfirm: ControlPadBuilderScreenEvent
     data object OnDeleteConfirmationDismissRequest: ControlPadBuilderScreenEvent
+    data class OnShowControlsChange(val showControls: Boolean) : ControlPadBuilderScreenEvent
 
 }
 
@@ -333,6 +335,11 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
             is ControlPadBuilderScreenEvent.OnAngleSnapChange -> {
                 _uiState.update {
                     it.copy(angleSnapDivision = event.newValue.toInt())
+                }
+            }
+            is ControlPadBuilderScreenEvent.OnShowControlsChange -> {
+                _uiState.update {
+                    it.copy(showControls = event.showControls)
                 }
             }
 
