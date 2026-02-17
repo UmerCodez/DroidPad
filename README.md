@@ -1,3 +1,5 @@
+_Check out my new Android project [WebsocketCAM](https://github.com/UmerCodez/WebsocketCAM) It lets you access your device’s camera through a WebSocket client API, enabling real-time AI and computer vision processing on a live video stream._
+
 <div align="center">
    
 ![GitHub License](https://img.shields.io/github/license/umer0586/DroidPad?style=for-the-badge)
